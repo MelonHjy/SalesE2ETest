@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-#
+from selenium.webdriver import DesiredCapabilities
 from selenium.webdriver.chrome.options import Options
 from selenium import webdriver
 from functools import wraps
@@ -39,6 +40,7 @@ def set_wait(timeout):
 
     :param timeout: 等待时间
     '''
+
     def decorator(func):
         @wraps(func)
         def wrapper(*args, **kwargs):
@@ -47,7 +49,9 @@ def set_wait(timeout):
             func1 = func(*args, **kwargs)
             g.wait = WebDriverWait(g.driver, global_time)
             return func1
+
         return wrapper
+
     return decorator
 
 
@@ -76,7 +80,9 @@ def get_browser(browser="chrome", download_location=None, headless=False):
     elif browser == "firefox":
         driver = webdriver.Firefox(executable_path=BROWSER_PATH_DIC[browser])
     elif browser == "ie":
-        driver = webdriver.Ie(executable_path=BROWSER_PATH_DIC[browser])
+        caps = DesiredCapabilities.INTERNETEXPLORER
+        caps['ignoreProtectedModeSettings'] = True
+        driver = webdriver.Ie(executable_path=BROWSER_PATH_DIC[browser], capabilities=caps)
     else:
         raise NameError("Not found {} browser, You can enter 'ie', 'firefox', 'chrome'.".format(browser))
 
@@ -115,4 +121,3 @@ def enable_download_in_headless_chrome(driver, download_dir):
     print("response from browser:")
     for key in command_result:
         print("result:" + key + ":" + str(command_result[key]))
-
