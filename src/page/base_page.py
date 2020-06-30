@@ -18,20 +18,48 @@ from os import path, remove
 class BasePage:
     # ------------------------  菜单 ------------------------#
 
+    # 三农模块
+    snmk = "//li[@class='m1_4']/a[text()='三农模块']"
+    # 经营机构模块
+    jyjg = "//li[@class='m1_4']/a[text()='经营机构']"
+    # 直销渠道模块
+    zxqd = "//li[@class='m1_4']/a[text()='直销渠道']"
+    # 个代渠道模块
+    gdqd = "//li[@class='m1_4']/a[text()='个代渠道']"
+    # 农村保险事业部模块
+    ncbxsyb = "//li[@class='m1_7']/a[text()='农村保险事业部']"
+    # 登录日志查询模块
+    dlrzcx = "//li[@class='m1_6']/a[text()='登录日志查询']"
+    # 经代渠道模块
+    jdqd = "//li[@class='m1_4']/a[text()='经代渠道']"
+    # 银保渠道模块
+    ybqd = "//li[@class='m1_4']/a[text()='银保渠道']"
+    # 车商渠道模块
+    csqd = "//li[@class='m1_4']/a[text()='车商渠道']"
+    # 综合管理模块
+    zhgl = "//li[@class='m1_4']/a[text()='综合管理']"
+    #--------------展开------------#
+    #销售团队展开
+    xstdzk = "//td[@id='ygtvt356']"
+    #销售人员展开
+    xsryzk = "//td[@id='ygtvt362']"
+    #--------------子菜单----------#
+    #代理制销售人员代码管理
+    dlzxsrydmgl = "//a[@id='ygtvlabelel363']"
 
     # ------------------------  页面元素 ------------------------#
 
-    username_path = "//input[@id='username1']"
-    pwd_xpath = "//input[@id='password1']"
-    login = "//input[@id='button']"
-    #经营机构模块
-    jyjg_xpath = "//li[@class='m1_4']/a[text()='经营机构']"
-    #销售人员前的加号
-    xsry_xpath = "//td[@id='ygtvt9']"
+
+
+
 
     # ------------------------  常用操作封装 ------------------------#
 
-
+    #页面切换
+    # 进入第一层iFrame
+    def switch_to_first_iFrame(self, first_iFrame_id):
+        self.switch_to_default_content()
+        self.select_frame_id(first_iFrame_id)
 
     # ------------------------  同名api ------------------------#
 
@@ -78,8 +106,9 @@ class BasePage:
     @set_wait(1)
     def is_element_exist(self, xpath):
         try:
-            g.wait.until(
+            el = g.wait.until(
                 expected_conditions.element_to_be_clickable((By.XPATH, xpath)))
+            high_light(element=el)
             return True
         except BaseException:
             return False
@@ -90,17 +119,22 @@ class BasePage:
 
     @catch_except
     def get_element_xpath(self, xpath):
-        return g.driver.find_element_by_xpath(xpath)
+        el = g.driver.find_element_by_xpath(xpath)
+        high_light(element=el)
+        return el
 
     @catch_except
     def right_click(self, xpath):
         right_click = g.driver.find_element_by_xpath(xpath)
+        high_light(element=right_click)
         ActionChains(g.driver).context_click(right_click).perform()
 
     @catch_except
     def is_selected(self, xpath):
-        return g.wait.until(
+        el = g.wait.until(
             expected_conditions.element_to_be_clickable((By.XPATH, xpath))).is_selected()
+        high_light(element=el)
+        return el
 
     @catch_except
     def open_url(self, url):
@@ -119,6 +153,18 @@ class BasePage:
     @catch_except
     def active_el(self):
         return g.driver.switch_to.active_element
+
+    @catch_except
+    def switch_to_default_content(self):
+        g.driver.switch_to.default_content()
+
+    @catch_except
+    def select_frame_id(self, id):
+        g.driver.switch_to.frame(id)
+
+    @catch_except
+    def maximize_window(self):
+        g.driver.maximize_window()
 
     # ------------------------  assert api ------------------------#
 
