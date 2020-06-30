@@ -166,6 +166,14 @@ class BasePage:
     def maximize_window(self):
         g.driver.maximize_window()
 
+    @catch_except
+    def current_window(self):
+        g.driver.current_window_handle()
+
+    @catch_except
+    def execute_script(self, ele):
+        g.driver.execute_script( ele)
+
     # ------------------------  assert api ------------------------#
 
     # 断言方法
