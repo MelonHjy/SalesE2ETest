@@ -17,15 +17,15 @@ import jaydebeapi
 class DBUtils:
     __limit = 100
 
-    # def __init__(self, url, user, password):
-    #     print(os.path.abspath('./config/ifxjdbc.jar'))
-    #     self.conn = jaydebeapi.connect('com.informix.jdbc.IfxDriver', url, [user, password], os.path.abspath('./config/ifxjdbc.jar'))
-    #
-    # def close_connection(self):
-    #     try:
-    #         self.conn.close()
-    #     except BaseException as e:
-    #         raise
+    def __init__(self, url, user, password):
+        print(os.path.abspath('./config/ifxjdbc.jar'))
+        self.conn = jaydebeapi.connect('com.informix.jdbc.IfxDriver', url, [user, password], os.path.abspath('./config/ifxjdbc.jar'))
+
+    def close_connection(self):
+        try:
+            self.conn.close()
+        except BaseException as e:
+            raise
 
     @staticmethod
     def random_choice(results, num=1):
