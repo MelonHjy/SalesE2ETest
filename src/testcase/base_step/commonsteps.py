@@ -2,6 +2,8 @@
 #@Time : 2020/6/30 13:57
 #@Author: fyl
 #@File : commonsteps.py
+from time import sleep
+
 from config.constants import Constants
 from src.page.base_page import BasePage
 from src.utils.log import info
@@ -26,3 +28,4 @@ class CommonSteps():
         login = base_page.wait_until_el_xpath(self.login)
         info("登录账号：{0}，密码：{1}".format(cons.JIANGSU_PROVINCE_USERNAME,cons.JIANGSU_PROVINCE_PASSWORD))
         base_page.click(login)
+        sleep(10)
