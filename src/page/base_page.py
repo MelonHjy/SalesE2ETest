@@ -1,18 +1,16 @@
 # -*- coding: utf-8 -*-#
-import allure
 import pytest
 from selenium.webdriver import ActionChains
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions
+from selenium.webdriver.support.select import Select
 
 from src.utils.high_light_element import high_light
 from config.global_var import *
-import random
 from src.utils.log import *
 from src.utils.driver_util import set_wait
 from src.utils.except_util import catch_except
 from selenium import webdriver
-from os import path, remove
 
 
 class BasePage:
@@ -38,28 +36,61 @@ class BasePage:
     csqd = "//li[@class='m1_4']/a[text()='车商渠道']"
     # 综合管理模块
     zhgl = "//li[@class='m1_4']/a[text()='综合管理']"
-    #--------------展开------------#
-    #销售团队展开
-    xstdzk = "//td[@id='ygtvt356']"
-    #销售人员展开
-    xsryzk = "//td[@id='ygtvt362']"
-    #--------------子菜单----------#
-    #代理制销售人员代码管理
-    dlzxsrydmgl = "//a[@id='ygtvlabelel363']"
+    # --------------展开------------#
+    # 销售团队展开
+    xstdzk = "//td[@id='ygtvt135']"
+    # 销售人员展开
+    xsryzk = "//td[@id='ygtvt460']"
+    # --------------子菜单----------#
+    # 代理制销售人员代码管理
+    dlzxsrydmgl = "//a[@id='ygtvlabelel461']"
 
     # ------------------------  页面元素 ------------------------#
 
-
-
-
-
     # ------------------------  常用操作封装 ------------------------#
 
-    #页面切换
+    # 页面切换
     # 进入第一层iFrame
     def switch_to_first_iFrame(self, first_iFrame_id):
         self.switch_to_default_content()
         self.select_frame_id(first_iFrame_id)
+
+    def switch_to_last_window(self, except_window_num=2):
+        time.sleep(10)
+        handles = []
+        while except_window_num != len(handles):
+            handles = g.driver.window_handles
+            print(handles)
+        g.driver.switch_to.window(handles[-1])
+
+    def code_select(self, xpath, text, except_window_num):
+        '''
+        xpath:要双击组件的xpath
+        text:要选择的文本值
+        '''
+        self.double_click(self.wait_until_el_xpath(xpath))
+        self.switch_to_last_window(except_window_num)
+        option = self.wait_until_el_xpath("//select/option[text()='{0}']".format(text))
+        self.click(option)
+        confirm = self.wait_until_el_xpath("//input[@value='确定']")
+        self.click(confirm)
+        self.switch_to_last_window(except_window_num-1)
+
+    def select(self, xpath, text):
+        '''
+        针对select-option组件
+        xpath:
+        '''
+        select_ele = Select(self.wait_until_el_xpath(xpath))
+        select_ele.select_by_visible_text(text)
+        self.assertEqual("判断已选中项的文本是否与预期一致", select_ele.all_selected_options[0].text, text)
+
+    # 身份证倒数第二位，奇数为男，偶数为女
+    def get_sex_by_idCard(self, idCard):
+        return '男' if int(idCard[-2]) % 2 == 1 else '女'
+
+    def get_birthday_by_idCard(self, idCard):
+        return idCard[6:14]
 
     # ------------------------  同名api ------------------------#
 
@@ -72,15 +103,14 @@ class BasePage:
     def wait_until_el_xpath(self, xpath):
         el = g.wait.until(
             expected_conditions.element_to_be_clickable((By.XPATH, xpath)))
-        sleep(0.5)
         high_light(element=el)
+        sleep(0.5)
         return el
 
     @catch_except
     def wait_until_els_xpath(self, xpath):
         return g.wait.until(
             expected_conditions.presence_of_all_elements_located((By.XPATH, xpath)))
-
 
     @catch_except
     def close_browser(self):
@@ -172,7 +202,7 @@ class BasePage:
 
     @catch_except
     def execute_script(self, ele):
-        g.driver.execute_script( ele)
+        g.driver.execute_script(ele)
 
     # ------------------------  assert api ------------------------#
 

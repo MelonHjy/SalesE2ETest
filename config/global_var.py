@@ -13,7 +13,7 @@ class g:
     logger = None
     reportDir = None
     downloadDir = None
-    timeout = 20
+    timeout = 60
     config = None
     UserType = None
     db = None

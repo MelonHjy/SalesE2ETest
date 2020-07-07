@@ -8,6 +8,7 @@ from selenium.webdriver.support.wait import WebDriverWait
 from config.global_var import *
 from src.utils.log import *
 import configparser
+import win32api
 
 BROWSER_PATH_DIC = {
     "chrome": r".\driver\chromedriver.exe",
@@ -82,6 +83,11 @@ def get_browser(browser="chrome", download_location=None, headless=False):
     elif browser == "ie":
         caps = DesiredCapabilities.INTERNETEXPLORER
         caps['ignoreProtectedModeSettings'] = True
+        # caps['nativeEvents'] = False
+        # caps['unexpectedAlertBehaviour'] = "accept"
+        # caps['disable-popup-blocking'] = True
+        # caps['enablePersistentHover'] = True
+        # caps['ignoreZoomSetting'] = True
         driver = webdriver.Ie(executable_path=BROWSER_PATH_DIC[browser], capabilities=caps)
     else:
         raise NameError("Not found {} browser, You can enter 'ie', 'firefox', 'chrome'.".format(browser))
@@ -121,3 +127,5 @@ def enable_download_in_headless_chrome(driver, download_dir):
     print("response from browser:")
     for key in command_result:
         print("result:" + key + ":" + str(command_result[key]))
+
+

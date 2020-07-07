@@ -4,6 +4,8 @@
 # @File : conftest.py
 import allure
 import pytest
+import win32api
+import win32con
 from selenium.webdriver.support.wait import WebDriverWait
 
 from config.global_var import g
@@ -11,6 +13,7 @@ from src.page.base_page import BasePage, info
 from src.testcase.base_step.commonsteps import CommonSteps
 from src.utils.db_util import DBUtils
 from src.utils.driver_util import get_config, get_browser
+
 
 # g.config = get_config()
 # # 获取数据库连接
@@ -22,9 +25,21 @@ from src.utils.driver_util import get_config, get_browser
 #
 #
 #
-# @pytest.fixture(scope='session', autouse=True)
-# def db_conn():
-#     print('qwe123123qwe')
-#     yield
-#     print('qweqwe')
-#     # g.db.close_connection()
+@pytest.fixture(scope='session', autouse=True)
+def db_conn():
+    width = win32api.GetSystemMetrics(0)
+    height = win32api.GetSystemMetrics(1)
+    print('before-size:%s-%s' % (width, height))
+    set_windows_resolution(768, 1366)
+    yield
+    set_windows_resolution(1080, 1920)
+    # g.db.close_connection()
+
+
+def set_windows_resolution(height, width):
+    dm = win32api.EnumDisplaySettings(None, 0)
+    dm.PelsHeight = height
+    dm.PelsWidth = width
+    dm.BitsPerPel = 32
+    dm.DisplayFixedOutput = 0
+    win32api.ChangeDisplaySettings(dm, 0)
