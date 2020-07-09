@@ -9,6 +9,7 @@ from config.global_var import *
 from src.utils.log import *
 import configparser
 import win32api
+import win32con
 
 BROWSER_PATH_DIC = {
     "chrome": r".\driver\chromedriver.exe",
@@ -62,7 +63,7 @@ def get_config():
     return config
 
 
-# @logout
+@logout
 def get_browser(browser="chrome", download_location=None, headless=False):
     if browser == "chrome":
         chrome_options = Options()
@@ -81,6 +82,10 @@ def get_browser(browser="chrome", download_location=None, headless=False):
     elif browser == "firefox":
         driver = webdriver.Firefox(executable_path=BROWSER_PATH_DIC[browser])
     elif browser == "ie":
+        key = win32api.RegOpenKey(win32con.HKEY_CURRENT_USER,
+                                  'Software\\Microsoft\\Windows\\CurrentVersion\\Internet Settings\\Zones\\3',
+                                  0, win32con.KEY_ALL_ACCESS)
+        win32api.RegSetValueEx(key, '2500', 0, win32con.REG_DWORD, 0x3)
         caps = DesiredCapabilities.INTERNETEXPLORER
         caps['ignoreProtectedModeSettings'] = True
         # caps['nativeEvents'] = False

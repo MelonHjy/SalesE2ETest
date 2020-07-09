@@ -59,13 +59,12 @@ class BasePage:
 
     def switch_to_window(self, num=-1):
         time.sleep(2)
-        count = 0
-        new = g.driver.window_handles
-        new = g.driver.window_handles
-        while len(self.handles) == len(new) and count < 5:
+        # if not self.handles:
+            # current = g.driver.current_window_handle
+        new = []
+        for i in range(5):
             new = g.driver.window_handles
             print(new)
-            count += 1
         self.handles = self.update_handles(self.handles, new)
         g.driver.switch_to.window(self.handles[num])
 

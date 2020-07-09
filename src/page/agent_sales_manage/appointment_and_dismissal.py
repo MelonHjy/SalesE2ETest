@@ -77,8 +77,8 @@ class AppointmentAndDismissal(BasePage):
     @allure.step(
         "填写合同基本信息（资格证号码:{agentno0},执业证号码：{credentialno0},合同起始日期：{contractstartdate0},合同终止日期：{contractenddate0},佣金配置：{ruleNo}）")
     def input_contract(self, agentno0, credentialno0, contractstartdate0, contractenddate0, ruleNo):
-        # self.select(self.agentno0, agentno0)
-        # self.select(self.credentialno0, credentialno0)
+        self.select(self.agentno0, agentno0)
+        self.select(self.credentialno0, credentialno0)
         # 日期组件
         self.pick_date(self.contractstartdate0, contractstartdate0)
         self.pick_date(self.contractenddate0, contractenddate0)
