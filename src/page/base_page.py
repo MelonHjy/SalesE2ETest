@@ -55,26 +55,42 @@ class BasePage:
         self.switch_to_default_content()
         self.select_frame_id(first_iFrame_id)
 
-    def switch_to_last_window(self, except_window_num=2):
-        time.sleep(10)
-        handles = []
-        while except_window_num != len(handles):
-            handles = g.driver.window_handles
-            print(handles)
-        g.driver.switch_to.window(handles[-1])
+    handles = []
 
-    def code_select(self, xpath, text, except_window_num):
+    def switch_to_window(self, num=-1):
+        time.sleep(2)
+        count = 0
+        new = g.driver.window_handles
+        while len(self.handles) == len(new) and count < 5:
+            new = g.driver.window_handles
+            print(new)
+            count += 1
+        self.handles = self.update_handles(self.handles, new)
+        g.driver.switch_to.window(self.handles[num])
+
+    def update_handles(self, old, new):
+        a = []
+        for i in old:
+            for j in new:
+                if i == j:
+                    a.append(i)
+                    new.remove(j)
+                    continue
+        a.extend(new)
+        return a
+
+    def code_select(self, xpath, text):
         '''
         xpath:要双击组件的xpath
         text:要选择的文本值
         '''
         self.double_click(self.wait_until_el_xpath(xpath))
-        self.switch_to_last_window(except_window_num)
+        self.switch_to_window()
         option = self.wait_until_el_xpath("//select/option[text()='{0}']".format(text))
         self.click(option)
         confirm = self.wait_until_el_xpath("//input[@value='确定']")
         self.click(confirm)
-        self.switch_to_last_window(except_window_num-1)
+        self.switch_to_window()
 
     def select(self, xpath, text):
         '''
@@ -83,6 +99,7 @@ class BasePage:
         '''
         select_ele = Select(self.wait_until_el_xpath(xpath))
         select_ele.select_by_visible_text(text)
+        sleep(3)
         self.assertEqual("判断已选中项的文本是否与预期一致", select_ele.all_selected_options[0].text, text)
 
     # 身份证倒数第二位，奇数为男，偶数为女
@@ -91,6 +108,13 @@ class BasePage:
 
     def get_birthday_by_idCard(self, idCard):
         return idCard[6:14]
+
+    def pick_date(self, xpath, date):
+        el = self.wait_until_el_xpath(xpath)
+        g.driver.execute_script("arguments[0].removeAttribute(arguments[1]);",
+                                el, 'readOnly')
+        sleep(2)
+        self.send_keys(el, date)
 
     # ------------------------  同名api ------------------------#
 

@@ -62,7 +62,7 @@ def get_config():
     return config
 
 
-@logout
+# @logout
 def get_browser(browser="chrome", download_location=None, headless=False):
     if browser == "chrome":
         chrome_options = Options()
