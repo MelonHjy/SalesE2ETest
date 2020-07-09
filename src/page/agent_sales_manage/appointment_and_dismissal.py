@@ -28,7 +28,7 @@ class AppointmentAndDismissal(BasePage):
     com_code = "//*[@id='comCode']"
     group_code = "//input[@id='groupcode']"
     # 下拉选项
-    sex = "//*[@id='sex']"
+    sex = "//*[@id='sexmsg']"
     rolecode = "//*[@id='rolecode']"  # 团队职务选择
     nation = "//*[@id='nation']"  # 民族
     visage = "//*[@id='visage']"  # 政治面貌
@@ -47,9 +47,9 @@ class AppointmentAndDismissal(BasePage):
         self.click(self.wait_until_el_xpath(self.dlzxsrydmgl))
         self.select_frame_id(self.wait_until_el_xpath(self.iframe))
         self.click(self.wait_until_el_xpath(self.xstdjlpryjp))
-
+        self.open_url("http://10.133.247.40:8004/sales/deputy/engageOrFire.do?efOrmau=e")
         # 切换到【营销团队经理聘任与解聘】页面
-        self.switch_to_last_window()
+        # self.switch_to_last_window()
 
     @allure.step("填入姓名:{username},身份证号：{id_cards},手机号码：{mobile}")
     def input(self, username, id_cards, mobile):
@@ -58,27 +58,26 @@ class AppointmentAndDismissal(BasePage):
         self.send_keys(self.wait_until_el_xpath(self.mobile), mobile)
 
     def get_head_text(self):
-        self.get_text(
+        return self.get_text(
             self.get_element_xpath(self.case))
 
     def get_com_code_text(self):
-        self.get_text(
-            self.get_element_xpath(self.com_code))
+        return self.get_element_xpath(self.com_code).get_attribute('value')
 
     def get_make_com_text(self):
-        self.get_text(
+        return self.get_text(
             self.get_element_xpath(self.make_com))
 
     def get_sex(self):
-        self.get_text(
+        return self.get_text(
             self.get_element_xpath(self.sex))
 
     def get_birthday(self):
-        self.get_text(
+        return self.get_text(
             self.get_element_xpath(self.birthday))
 
     def get_make_com(self):
-        self.get_text(
+        return self.get_text(
             self.get_element_xpath(self.make_com))
 
     @allure.step("双击选择上级机构")
@@ -87,7 +86,7 @@ class AppointmentAndDismissal(BasePage):
 
     @allure.step("双击选择归属团队")
     def select_group(self, text):
-        self.code_select(self.group_code, text, 3)
+        self.code_select(self.group_code, text, 2)
 
     @allure.step("选择团队职务")
     def select_rolecode(self, text):

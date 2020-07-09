@@ -56,11 +56,21 @@ class BasePage:
         self.select_frame_id(first_iFrame_id)
 
     def switch_to_last_window(self, except_window_num=2):
-        time.sleep(10)
+        time.sleep(2)
         handles = []
+        i = 0
         while except_window_num != len(handles):
+            if i >=3:
+                break
+            sleep(2)
             handles = g.driver.window_handles
             print(handles)
+            print(len(handles))
+            i = i+1
+        # handles = g.driver.window_handles
+        # print(handles)
+        # print(g.driver.current_window_handle)
+        # print(g.driver.title)
         g.driver.switch_to.window(handles[-1])
 
     def code_select(self, xpath, text, except_window_num):
@@ -179,6 +189,8 @@ class BasePage:
     @catch_except
     def move_to_el(self, el):
         webdriver.ActionChains(g.driver).move_to_element(el).perform()
+        # webdriver.ActionChains(g.driver).click_and_hold(el).perform()
+        sleep(1)
 
     @catch_except
     def active_el(self):
