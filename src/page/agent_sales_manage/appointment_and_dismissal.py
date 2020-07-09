@@ -63,10 +63,12 @@ class AppointmentAndDismissal(BasePage):
     def add_user_button(self):
         self.click(self.wait_until_el_xpath(self.addUserButton))
 
-    @allure.step("填写资质信息,第{num}条（证件类型:{qualifytype},证件号码：{qualifyno},发证日期：{qualifystartdate},证件类型：{agentType}）")
+    @allure.step("填写资质信息,第{num}条（证件类型:{qualifytype},证件号码：{qualifyno},发证日期：{qualifystartdate},证件类型：{agentType}")
     def input_qualify(self, num, qualifytype, qualifyno, qualifystartdate, agentType=None):
         self.select(self.qualifytype.format(num), qualifytype)
-        self.send_keys(self.wait_until_el_xpath(self.qualifyno.format(num)), qualifyno)
+        ele = self.wait_until_el_xpath(self.qualifyno.format(num))
+        self.execute_script(ele, "arguments[0].focus();")
+        self.send_keys(ele, qualifyno)
         # 日期组件
         self.pick_date(self.qualifystartdate.format(num), qualifystartdate)
         if agentType:
@@ -98,7 +100,7 @@ class AppointmentAndDismissal(BasePage):
         self.click(self.wait_until_el_xpath(self.dlzxsrydmgl))
         self.select_frame_id(self.wait_until_el_xpath(self.iframe))
         self.click(self.wait_until_el_xpath(self.xstdjlpryjp))
-
+        # self.open_url("http://10.133.247.40:8004/sales/deputy/engageOrFire.do?efOrmau=e")
         # 切换到【营销团队经理聘任与解聘】页面
         self.switch_to_window()
 
@@ -109,27 +111,26 @@ class AppointmentAndDismissal(BasePage):
         self.send_keys(self.wait_until_el_xpath(self.mobile), mobile)
 
     def get_head_text(self):
-        self.get_text(
+        return self.get_text(
             self.get_element_xpath(self.case))
 
     def get_com_code_text(self):
-        self.get_text(
-            self.get_element_xpath(self.com_code))
+        return self.get_element_xpath(self.com_code).get_attribute('value')
 
     def get_make_com_text(self):
-        self.get_text(
-            self.get_element_xpath(self.make_com))
+        return self.get_element_xpath(self.make_com).get_attribute('value')
 
-    def get_sex(self):
-        self.get_text(
-            self.get_element_xpath(self.sex))
+    def get_sex(self, text):
+        value = self.get_element_xpath(self.sex).get_attribute('value')
+        sex = {'': '请选择', '1': '男', '2': '女'}
+        self.assertEqual("验证性别是否与身份证匹配", sex[value], text)
 
     def get_birthday(self):
-        self.get_text(
-            self.get_element_xpath(self.birthday))
+        value = self.get_element_xpath(self.birthday).get_attribute('value')
+        return ''.join(value.split('-'))
 
     def get_make_com(self):
-        self.get_text(
+        return self.get_text(
             self.get_element_xpath(self.make_com))
 
     @allure.step("双击选择上级机构")

@@ -61,6 +61,7 @@ class BasePage:
         time.sleep(2)
         count = 0
         new = g.driver.window_handles
+        new = g.driver.window_handles
         while len(self.handles) == len(new) and count < 5:
             new = g.driver.window_handles
             print(new)
@@ -114,6 +115,7 @@ class BasePage:
         g.driver.execute_script("arguments[0].removeAttribute(arguments[1]);",
                                 el, 'readOnly')
         sleep(2)
+        self.execute_script(el, "arguments[0].focus();")
         self.send_keys(el, date)
 
     # ------------------------  同名api ------------------------#
@@ -150,11 +152,8 @@ class BasePage:
         sleep(1)
 
     @catch_except
-    def clear(self, el):
-        el.clear()
-
-    @catch_except
     def send_keys(self, el, value):
+        el.clear()
         el.send_keys(value)
 
     @set_wait(1)
@@ -203,6 +202,8 @@ class BasePage:
     @catch_except
     def move_to_el(self, el):
         webdriver.ActionChains(g.driver).move_to_element(el).perform()
+        # webdriver.ActionChains(g.driver).click_and_hold(el).perform()
+        sleep(1)
 
     @catch_except
     def active_el(self):
@@ -225,15 +226,19 @@ class BasePage:
         g.driver.current_window_handle()
 
     @catch_except
-    def execute_script(self, ele):
-        g.driver.execute_script(ele)
+    def execute_script(self, ele, js):
+        g.driver.execute_script(js, ele)
+
+    @catch_except
+    def get_select(self, el):
+        return Select(el)
 
     # ------------------------  assert api ------------------------#
 
     # 断言方法
     def assertEqual(self, message, actual, expect):
         pytest.assume(actual == expect)
-        info('message-->{0},actual-->{1},expect-->{2}'.format(message, actual, expect))
+        info('message-->{0},actual-->{1},expect-->{2},result-->{3}'.format(message, actual, expect,actual == expect))
 
     def assertResult(self, message, result):
         pytest.assume(result)
