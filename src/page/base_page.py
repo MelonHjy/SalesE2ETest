@@ -98,7 +98,7 @@ class BasePage:
         针对select-option组件
         xpath:
         '''
-        select_ele = Select(self.wait_until_el_xpath(xpath))
+        select_ele = self.get_select(self.wait_until_el_xpath(xpath))
         select_ele.select_by_visible_text(text)
         sleep(3)
         self.assertEqual("判断已选中项的文本是否与预期一致", select_ele.all_selected_options[0].text, text)

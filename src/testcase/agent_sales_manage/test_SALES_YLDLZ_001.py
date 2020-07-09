@@ -70,8 +70,10 @@ class Test_YLDLZ_001():
         self.appointment_and_dismissal.input_qualify(0, qualifytype, qualifyno, qualifystartdate, agentType)
         info("填写'执业证'资质信息-->证件类型,证件号码,发证日期")
         self.appointment_and_dismissal.input_qualify(1, qualifytype1, qualifyno1, qualifystartdate1)
+        info("填写合同基本信息（资格证号码,执业证号码,合同起始日期,合同终止日期,佣金配置）")
         self.appointment_and_dismissal.input_contract(qualifyno, qualifyno1, contractstartdate0, contractenddate0,
                                                       ruleNo)
+        info("填写账户信息（收款人账号,卡折标志,银行名称,银行区域名称,联行号）")
         self.appointment_and_dismissal.input_account(accountno, cardtype, saDAccount_bankName, saDAccount_bankareaname,
                                                      bankName)
         self.appointment_and_dismissal.switch_user_tab()
