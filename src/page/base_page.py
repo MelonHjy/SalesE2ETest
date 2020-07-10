@@ -113,7 +113,7 @@ class BasePage:
         el = self.wait_until_el_xpath(xpath)
         g.driver.execute_script("arguments[0].removeAttribute(arguments[1]);",
                                 el, 'readOnly')
-        sleep(2)
+        sleep(1)
         self.execute_script(el, "arguments[0].focus();")
         self.send_keys(el, date)
 
