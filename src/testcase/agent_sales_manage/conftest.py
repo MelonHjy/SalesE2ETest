@@ -19,10 +19,8 @@ def login_jiangsu_p():
     url = g.config['DEFAULT']['url']
     browser = g.config['DEFAULT']['browser']
     g.driver = get_browser(browser)
-    g.wait = WebDriverWait(g.driver, 50)
+    g.wait = WebDriverWait(g.driver, 120)
     BasePage().maximize_window()
     info("进入%s", url)
     BasePage().open_url(url)
     CommonSteps().login_p()
-    yield
-    BasePage().close_browser

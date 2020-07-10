@@ -4,6 +4,7 @@
 # @File : appointment_and_dismissal.py
 import allure
 
+from config.global_var import sleep
 from src.page.base_page import BasePage
 
 
@@ -12,10 +13,12 @@ class AppointmentAndDismissal(BasePage):
     frame_id = 'main'
     # 销售团队经理聘任与解聘
     xstdjlpryjp = "//input[@value='营销团队经理聘任与解聘']"
+    query = "//input[@value='查询']"
     # iframe->营销团队经理聘任与解聘
     iframe = "//iframe[@name='page']"
     # 营销团队经理聘任
     case = "//*[@class='case']"
+
 
     # ---------------------人员基础信息填写项------------------------------ #
     user_tab = "//*[@id='folder-label-userTab']"
@@ -58,6 +61,15 @@ class AppointmentAndDismissal(BasePage):
     saDAccount_bankName = "//*[@id='saDAccount.bankName']"  # 银行名称
     saDAccount_bankareaname = "//*[@id='saDAccount.bankareaname']"  # 银行区域名称
     bankName = "//*[@id='bankName']"  # 联行号
+    usercodeAndContract = "//td[@colSpan='2']" # 人员代码，合同号
+    close = "//input[@class='button_ty']"
+
+    # ---------------------查询table表格信息------------------------------ #
+    table_first_usercode = "//td[@id='yui-dt0-bdrow0-cell2']"   # 内部流转码
+    table_first_name = "td[@id='yui-dt0-bdrow0-cell3']"     # 姓名
+    table_first_id_cards = "td[@id='yui-dt0-bdrow0-cell4']"     # 身份证
+    table_first_sjjg = "td[@id='yui-dt0-bdrow0-cell6']"     # 上级机构
+    table_first_group = "td[@id='yui-dt0-bdrow0-cell7']"    # 归属团队
 
     @allure.step("增加资质信息两条（资格证、执业证）")
     def add_user_button(self):
@@ -88,7 +100,6 @@ class AppointmentAndDismissal(BasePage):
     def input_account(self, accountno, cardtype, saDAccount_bankName, saDAccount_bankareaname, bankName):
         self.send_keys(self.wait_until_el_xpath(self.accountno), accountno)
         self.select(self.cardtype, cardtype)
-        # self.send_keys(self.wait_until_el_xpath(self.cardtype), cardtype)
         self.send_keys(self.wait_until_el_xpath(self.saDAccount_bankName), saDAccount_bankName)
         self.send_keys(self.wait_until_el_xpath(self.saDAccount_bankareaname), saDAccount_bankareaname)
         self.send_keys(self.wait_until_el_xpath(self.bankName), bankName)
@@ -101,9 +112,10 @@ class AppointmentAndDismissal(BasePage):
         self.click(self.wait_until_el_xpath(self.dlzxsrydmgl))
         self.select_frame_id(self.wait_until_el_xpath(self.iframe))
         self.click(self.wait_until_el_xpath(self.xstdjlpryjp))
-        # self.open_url("http://10.133.247.40:8004/sales/deputy/engageOrFire.do?efOrmau=e")
+        self.open_url("http://10.133.247.40:8004/sales/deputy/engageOrFire.do?efOrmau=e")
+        sleep(2)
         # 切换到【营销团队经理聘任与解聘】页面
-        self.switch_to_window()
+        # self.switch_to_window()
 
     @allure.step("填入姓名:{username},身份证号：{id_cards},手机号码：{mobile}")
     def user_tab_input(self, username, id_cards, mobile):
@@ -174,4 +186,36 @@ class AppointmentAndDismissal(BasePage):
 
     @allure.step("聘任保存")
     def prepare_save(self):
-        self.wait_until_el_xpath(self.save_button)
+        self.click(self.wait_until_el_xpath(self.save_button))
+
+    @allure.step("获取人员代码，合同号")
+    def get_msg(self):
+        text = self.get_text(self.wait_until_el_xpath(self.usercodeAndContract))
+        a = text.split(' ')
+        msg = {'usercode': a[0].split('：')[1], "contract": a[1].split('：')[1]}
+        return msg
+
+    def close_btn(self):
+        self.click(self.wait_until_el_xpath(self.close))
+        sleep(3)
+
+    @allure.step("经营机构->销售人员->代理制销售人员代码管理->查询")
+    def into_page_query(self):
+        self.select_frame_id(self.frame_id)
+        self.move_to_el(self.wait_until_el_xpath(self.jyjg))
+        self.click(self.wait_until_el_xpath(self.xsryzk))
+        self.click(self.wait_until_el_xpath(self.dlzxsrydmgl))
+        self.select_frame_id(self.wait_until_el_xpath(self.iframe))
+        self.click(self.wait_until_el_xpath(self.query))
+
+    def assert_table_msg(self, usercode, name, id_cards, sjjg, group):
+        usercode1 = self.get_text(self.wait_until_el_xpath(self.table_first_usercode))
+        name1 = self.get_text(self.wait_until_el_xpath(self.table_first_name))
+        id_cards1 = self.get_text(self.wait_until_el_xpath(self.table_first_id_cards))
+        sjjg1 =  self.get_text(self.wait_until_el_xpath(self.table_first_sjjg))
+        group1 = self.get_text(self.wait_until_el_xpath(self.table_first_group))
+        self.assertEqual("验证内部扭转码", usercode1, usercode)
+        self.assertEqual("验证姓名", name1, name)
+        self.assertEqual("验证身份证", id_cards1, id_cards)
+        self.assertEqual("验证上级机构", sjjg1, sjjg)
+        self.assertEqual("验证归属机构", group1, group)
