@@ -31,7 +31,7 @@ class ManagementOfAgentSalesmen(BasePage):
     # 人员属性
     rysx = "//select[@id='usertype22']"
     #销售团队经理聘任与解聘
-    xstdjlpryjp = "//input[@name='add' and text()='营销团队经理聘任与解聘']"
+    xstdjlpryjp = "//input[@value='营销团队经理聘任与解聘']"
     query = "//input[@value='查询']"
     # iframe->营销团队经理聘任与解聘
     iframe = "//iframe[@name='page']"
