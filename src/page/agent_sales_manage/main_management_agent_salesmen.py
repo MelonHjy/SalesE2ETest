@@ -44,12 +44,6 @@ class ManagementOfAgentSalesmen(BasePage):
     table_first_sjjg = "//td[@id='yui-dt0-bdrow0-cell6']"     # 上级机构
     table_first_group = "//td[@id='yui-dt0-bdrow0-cell7']"    # 归属团队
 
-    def into_page(self):
-        self.select_frame_id(self.frame_id)
-        self.move_to_el(self.get_element_xpath(self.jyjg))
-        self.click(self.wait_until_el_xpath(self.xsryzk))
-        self.click(self.wait_until_el_xpath(self.dlzxsrydmgl))
-
     @allure.step("经营机构->销售人员->代理制销售人员代码管理->查询")
     def into_page_query(self, user_code1):
         self.select_frame_id(self.frame_id)
