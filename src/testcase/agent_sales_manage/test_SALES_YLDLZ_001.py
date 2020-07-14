@@ -5,11 +5,13 @@
 import pytest
 
 from src.page.agent_sales_manage.appointment_and_dismissal import AppointmentAndDismissal
+from src.page.agent_sales_manage.main_management_agent_salesmen import ManagementOfAgentSalesmen
 from src.utils.driver_util import *
 
 
 class Test_YLDLZ_001():
     appointment_and_dismissal = AppointmentAndDismissal()
+    main_management_agent_salesmen = ManagementOfAgentSalesmen()
     # try:
     #     sql = "select * from SaUUser"
     #     data = g.db.select(sql)
@@ -26,7 +28,7 @@ class Test_YLDLZ_001():
               "新疆维吾尔自治区_巴音郭楞蒙古自治州", "中国工商银行股份有限公司库尔勒人民东路支行")]
 
     data2 = [("尉迟茗潮", "530421198904150153", "32000000", "测试0506营销")]
-    msg = {}
+    msg = None
 
     @pytest.mark.dependency(name="one")
     @pytest.mark.usefixtures("login_jiangsu_p")
@@ -82,16 +84,18 @@ class Test_YLDLZ_001():
         self.appointment_and_dismissal.switch_user_tab()
         info("聘任保存")
         self.appointment_and_dismissal.prepare_save()
+        # self.appointment_and_dismissal.submit_()
         self.appointment_and_dismissal.choose_ok_on_alert()
         sleep(3)
         info("获取人员代码，合同号")
-        self.msg = self.appointment_and_dismissal.get_msg()
-        info(self.msg)
+        Test_YLDLZ_001.msg = self.appointment_and_dismissal.get_msg()
+        info(Test_YLDLZ_001.msg)
+        # self.appointment_and_dismissal.close_over_btn()
         self.appointment_and_dismissal.close_btn()
 
-    # @pytest.mark.parametrize("name, id_cards, sjjg, group", data2)
-    # @pytest.mark.usefixtures("login_jiangsu_p")
-    # def test_YLDLZ_001_assert(self, name, id_cards, sjjg, group):
-    #     self.appointment_and_dismissal.into_page_query()
-    #     self.appointment_and_dismissal.assert_table_msg(self.msg['usercode'], name, id_cards, sjjg, group)
-
+    @pytest.mark.dependency(name="three", depends=["two"])
+    @pytest.mark.parametrize("name, id_cards, sjjg, group", data2)
+    @pytest.mark.usefixtures("login_jiangsu_p")
+    def test_YLDLZ_001_assert(self, name, id_cards, sjjg, group):
+        self.main_management_agent_salesmen.into_page_query(Test_YLDLZ_001.msg['usercode'])
+        self.main_management_agent_salesmen.assert_table_msg(self.msg['usercode'], name, id_cards, sjjg, group)

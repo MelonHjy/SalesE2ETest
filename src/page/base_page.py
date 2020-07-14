@@ -63,10 +63,10 @@ class BasePage:
             # current = g.driver.current_window_handle
         new = []
         for i in range(5):
-            new = g.driver.window_handles
+            new = self.get_handles()
             print(new)
         self.handles = self.update_handles(self.handles, new)
-        g.driver.switch_to.window(self.handles[num])
+        self.switch_to_win(self.handles[num])
 
     def update_handles(self, old, new):
         a = []
@@ -86,21 +86,21 @@ class BasePage:
         '''
         self.double_click(self.wait_until_el_xpath(xpath))
         self.switch_to_window()
-        option = self.wait_until_el_xpath("//select/option[text()='{0}']".format(text))
+        option = self.wait_until_el_xpath("//select/option[contains(@value,'{0}')]".format(text.split('--')[0]))
         self.click(option)
         confirm = self.wait_until_el_xpath("//input[@value='确定']")
         self.click(confirm)
         self.switch_to_window()
 
+    @catch_except
     def select(self, xpath, text):
         '''
         针对select-option组件
         xpath:
         '''
-        select_ele = self.get_select(self.wait_until_el_xpath(xpath))
+        select_ele = Select(g.driver.find_element_by_xpath(xpath))
         select_ele.select_by_visible_text(text)
-        sleep(3)
-        self.assertEqual("判断已选中项的文本是否与预期一致", select_ele.all_selected_options[0].text, text)
+        sleep(1)
 
     # 身份证倒数第二位，奇数为男，偶数为女
     def get_sex_by_idCard(self, idCard):
@@ -109,12 +109,12 @@ class BasePage:
     def get_birthday_by_idCard(self, idCard):
         return idCard[6:14]
 
-    def pick_date(self, xpath, date):
+    def pick_date_simple(self, xpath, date):
         el = self.wait_until_el_xpath(xpath)
-        g.driver.execute_script("arguments[0].removeAttribute(arguments[1]);",
+        self.execute_script_s("arguments[0].removeAttribute(arguments[1]);",
                                 el, 'readOnly')
         sleep(1)
-        self.execute_script(el, "arguments[0].focus();")
+        self.execute_script("arguments[0].focus();", el)
         self.send_keys(el, date)
 
     # ------------------------  同名api ------------------------#
@@ -225,12 +225,28 @@ class BasePage:
         g.driver.current_window_handle()
 
     @catch_except
-    def execute_script(self, ele, js):
+    def execute_script(self, js, ele):
         g.driver.execute_script(js, ele)
+
+    @catch_except
+    def execute_script_s(self, js, ele, value):
+        g.driver.execute_script(js, ele, value)
 
     @catch_except
     def get_select(self, el):
         return Select(el)
+
+    @catch_except
+    def get_attribute(self, el, att_name):
+        return el.get_attribute(att_name)
+
+    @catch_except
+    def get_handles(self):
+        return g.driver.window_handles
+
+    @catch_except
+    def switch_to_win(self, handle):
+        g.driver.switch_to.window(handle)
 
     # ------------------------  assert api ------------------------#
 
