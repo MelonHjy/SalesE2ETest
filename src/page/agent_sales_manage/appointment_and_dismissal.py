@@ -1,7 +1,7 @@
 # -*- coding:utf-8 -*-
 # @Time : 2020/6/30 15:01
 # @Author: fyl
-# @File : appointment_and_dismissal.py
+# @File : appointment_and_dismissal.py 营销团队经理聘任与解聘
 import allure
 
 from config.global_var import sleep
@@ -13,12 +13,10 @@ class AppointmentAndDismissal(BasePage):
     frame_id = 'main'
     # 销售团队经理聘任与解聘
     xstdjlpryjp = "//input[@value='营销团队经理聘任与解聘']"
-    query = "//input[@value='查询']"
     # iframe->营销团队经理聘任与解聘
     iframe = "//iframe[@name='page']"
     # 营销团队经理聘任
     case = "//*[@class='case']"
-
 
     # ---------------------人员基础信息填写项------------------------------ #
     user_tab = "//*[@id='folder-label-userTab']"
@@ -39,8 +37,10 @@ class AppointmentAndDismissal(BasePage):
     culture = "//*[@id='culture']"  # 学历
     # 聘任保存
     save_button = "//input[@id='prepareadddeputy']"
+    # 聘任保存并提交
+    save_commit = "//input[@id='adddeputy']"
 
-    # ---------------------人员基础信息填写项------------------------------ #
+    # ---------------------合同信息填写项------------------------------ #
     contract_tab = "//*[@id='folder-label-contractTab']"
 
     addUserButton = "//*[@id='addUserButton']"  # 增加资质信息
@@ -63,13 +63,10 @@ class AppointmentAndDismissal(BasePage):
     bankName = "//*[@id='bankName']"  # 联行号
     usercodeAndContract = "//td[@colSpan='2']" # 人员代码，合同号
     close = "//input[@class='button_ty']"
-
-    # ---------------------查询table表格信息------------------------------ #
-    table_first_usercode = "//td[@id='yui-dt0-bdrow0-cell2']"   # 内部流转码
-    table_first_name = "td[@id='yui-dt0-bdrow0-cell3']"     # 姓名
-    table_first_id_cards = "td[@id='yui-dt0-bdrow0-cell4']"     # 身份证
-    table_first_sjjg = "td[@id='yui-dt0-bdrow0-cell6']"     # 上级机构
-    table_first_group = "td[@id='yui-dt0-bdrow0-cell7']"    # 归属团队
+    submit_dlg = "//div[@id='submitDlg_c']"
+    submit_iframe = "submitFrame"
+    submit_btn = "//*[@id='save1']"
+    close_over = "//input[@class='button_ty_over']"
 
     @allure.step("增加资质信息两条（资格证、执业证）")
     def add_user_button(self):
@@ -79,10 +76,10 @@ class AppointmentAndDismissal(BasePage):
     def input_qualify(self, num, qualifytype, qualifyno, qualifystartdate, agentType=None):
         self.select(self.qualifytype.format(num), qualifytype)
         ele = self.wait_until_el_xpath(self.qualifyno.format(num))
-        self.execute_script(ele, "arguments[0].focus();")
+        self.execute_script("arguments[0].focus();", ele)
         self.send_keys(ele, qualifyno)
         # 日期组件
-        self.pick_date(self.qualifystartdate.format(num), qualifystartdate)
+        self.pick_date_simple(self.qualifystartdate.format(num), qualifystartdate)
         if agentType:
             self.select(self.agentType.format(num), agentType)
 
@@ -92,8 +89,8 @@ class AppointmentAndDismissal(BasePage):
         self.select(self.agentno0, agentno0)
         self.select(self.credentialno0, credentialno0)
         # 日期组件
-        self.pick_date(self.contractstartdate0, contractstartdate0)
-        self.pick_date(self.contractenddate0, contractenddate0)
+        self.pick_date_simple(self.contractstartdate0, contractstartdate0)
+        self.pick_date_simple(self.contractenddate0, contractenddate0)
         self.code_select(self.ruleNo, ruleNo)
 
     @allure.step("填写账户信息（收款人账号:{accountno},卡折标志:{cardtype},银行名称：{saDAccount_bankName},银行区域名称：{saDAccount_bankareaname},联行号：{bankName}）")
@@ -186,7 +183,7 @@ class AppointmentAndDismissal(BasePage):
 
     @allure.step("聘任保存")
     def prepare_save(self):
-        self.click(self.wait_until_el_xpath(self.save_button))
+        self.click(self.wait_until_el_xpath(self.save_commit))
 
     @allure.step("获取人员代码，合同号")
     def get_msg(self):
@@ -197,25 +194,20 @@ class AppointmentAndDismissal(BasePage):
 
     def close_btn(self):
         self.click(self.wait_until_el_xpath(self.close))
-        sleep(3)
+        sleep(5)
 
-    @allure.step("经营机构->销售人员->代理制销售人员代码管理->查询")
-    def into_page_query(self):
-        self.select_frame_id(self.frame_id)
-        self.move_to_el(self.wait_until_el_xpath(self.jyjg))
-        self.click(self.wait_until_el_xpath(self.xsryzk))
-        self.click(self.wait_until_el_xpath(self.dlzxsrydmgl))
-        self.select_frame_id(self.wait_until_el_xpath(self.iframe))
-        self.click(self.wait_until_el_xpath(self.query))
+    def submit_(self):
+        #判断id = submitDlg_c是否显示 VISIBILITY:visible
+        #切换iframe name = submitFrame
+        #定位id = save1 提交任务
+        # submit_d = self.wait_until_el_xpath(self.submit_dlg)
+        # att = self.get_attribute(submit_d, "VISIBILITY")
+        # while (att != "visible"):
+        #     sleep(2)
+        self.switch_to_first_iFrame(self.submit_iframe)
+        self.click(self.wait_until_el_xpath(self.submit_btn))
+        sleep(2)
 
-    def assert_table_msg(self, usercode, name, id_cards, sjjg, group):
-        usercode1 = self.get_text(self.wait_until_el_xpath(self.table_first_usercode))
-        name1 = self.get_text(self.wait_until_el_xpath(self.table_first_name))
-        id_cards1 = self.get_text(self.wait_until_el_xpath(self.table_first_id_cards))
-        sjjg1 =  self.get_text(self.wait_until_el_xpath(self.table_first_sjjg))
-        group1 = self.get_text(self.wait_until_el_xpath(self.table_first_group))
-        self.assertEqual("验证内部扭转码", usercode1, usercode)
-        self.assertEqual("验证姓名", name1, name)
-        self.assertEqual("验证身份证", id_cards1, id_cards)
-        self.assertEqual("验证上级机构", sjjg1, sjjg)
-        self.assertEqual("验证归属机构", group1, group)
+    def close_over_btn(self):
+        self.click(self.wait_until_el_xpath(self.close_over))
+        sleep(2)
