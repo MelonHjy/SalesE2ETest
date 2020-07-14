@@ -101,19 +101,6 @@ class AppointmentAndDismissal(BasePage):
         self.send_keys(self.wait_until_el_xpath(self.saDAccount_bankareaname), saDAccount_bankareaname)
         self.send_keys(self.wait_until_el_xpath(self.bankName), bankName)
 
-    @allure.step("经营机构->销售人员->代理制销售人员代码管理->营销团队经理聘任与解聘")
-    def into_page(self):
-        self.select_frame_id(self.frame_id)
-        self.move_to_el(self.wait_until_el_xpath(self.jyjg))
-        self.click(self.wait_until_el_xpath(self.xsryzk))
-        self.click(self.wait_until_el_xpath(self.dlzxsrydmgl))
-        self.select_frame_id(self.wait_until_el_xpath(self.iframe))
-        self.click(self.wait_until_el_xpath(self.xstdjlpryjp))
-        self.open_url("http://10.133.247.40:8004/sales/deputy/engageOrFire.do?efOrmau=e")
-        sleep(2)
-        # 切换到【营销团队经理聘任与解聘】页面
-        # self.switch_to_window()
-
     @allure.step("填入姓名:{username},身份证号：{id_cards},手机号码：{mobile}")
     def user_tab_input(self, username, id_cards, mobile):
         self.send_keys(self.wait_until_el_xpath(self.username), username)
@@ -183,6 +170,10 @@ class AppointmentAndDismissal(BasePage):
 
     @allure.step("聘任保存")
     def prepare_save(self):
+        self.click(self.wait_until_el_xpath(self.save_button))
+
+    @allure.step("聘任保存并提交")
+    def prepare_save_commit(self):
         self.click(self.wait_until_el_xpath(self.save_commit))
 
     @allure.step("获取人员代码，合同号")
@@ -194,16 +185,9 @@ class AppointmentAndDismissal(BasePage):
 
     def close_btn(self):
         self.click(self.wait_until_el_xpath(self.close))
-        sleep(5)
+        sleep(3)
 
     def submit_(self):
-        #判断id = submitDlg_c是否显示 VISIBILITY:visible
-        #切换iframe name = submitFrame
-        #定位id = save1 提交任务
-        # submit_d = self.wait_until_el_xpath(self.submit_dlg)
-        # att = self.get_attribute(submit_d, "VISIBILITY")
-        # while (att != "visible"):
-        #     sleep(2)
         self.switch_to_first_iFrame(self.submit_iframe)
         self.click(self.wait_until_el_xpath(self.submit_btn))
         sleep(2)

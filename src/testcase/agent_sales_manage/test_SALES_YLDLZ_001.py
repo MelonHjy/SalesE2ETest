@@ -7,6 +7,7 @@ import pytest
 from src.page.agent_sales_manage.appointment_and_dismissal import AppointmentAndDismissal
 from src.page.agent_sales_manage.main_management_agent_salesmen import ManagementOfAgentSalesmen
 from src.utils.driver_util import *
+from src.utils.except_util import get_screenshot
 
 
 class Test_YLDLZ_001():
@@ -21,13 +22,13 @@ class Test_YLDLZ_001():
     # finally:
     #     g.db.close_connection()
 
-    data = [("尉迟茗潮", "530421198904150153", "13313313313", "32990038--测试0506营销", "经理", "汉族", "中共党员", "研究生")]
+    data = [("苏嘉秀iu测试", "120101198407019965", "13313313313", "32990038--测试0506营销", "经理", "汉族", "中共党员", "研究生")]
 
     data1 = [("资格证", "123456", "2019-01-01", "B", "执业证", "654321", "2019-02-02", "2020-07-08", '2022-07-08',
               "RULE20120000000000001--保险经纪公司", "111222333444", "折", "中国工商银行股份有限公司",
               "新疆维吾尔自治区_巴音郭楞蒙古自治州", "中国工商银行股份有限公司库尔勒人民东路支行")]
 
-    data2 = [("尉迟茗潮", "530421198904150153", "32000000", "测试0506营销")]
+    data2 = [("苏嘉秀iu测试", "120101198407019965", "32000000", "测试0506营销")]
     msg = None
 
     @pytest.mark.dependency(name="one")
@@ -35,12 +36,12 @@ class Test_YLDLZ_001():
     @pytest.mark.parametrize("userName, idCard, mobile, group, rolecode, nation, visage, culture", data)
     def test_YLDLZ_001_basemag(self, userName, idCard, mobile, group, rolecode, nation, visage, culture):
         info("经营机构->销售人员->代理制销售人员代码管理->营销团队经理聘任与解聘")
-        self.appointment_and_dismissal.into_page()
+        self.main_management_agent_salesmen.into_page()
         info("营销团队经理聘任与解聘检查")
         self.appointment_and_dismissal.assertEqual("验证标签文字", self.appointment_and_dismissal.get_head_text(), "营销团队经理聘任")
         self.appointment_and_dismissal.assertEqual("验证上级机构是否默认‘32000000’",
                                                    self.appointment_and_dismissal.get_com_code_text(), "32000000")
-        info("填入信息")
+        info("填入基本信息")
         self.appointment_and_dismissal.user_tab_input(userName, idCard, mobile)
         self.appointment_and_dismissal.select_group(group)
         self.appointment_and_dismissal.select_rolecode(rolecode)
@@ -56,6 +57,7 @@ class Test_YLDLZ_001():
         self.appointment_and_dismissal.assertEqual("验证出单归属机构是否与所选归属团队匹配",
                                                    self.appointment_and_dismissal.get_make_com_text(),
                                                    group.split('--')[0])
+        get_screenshot("基本信息")
 
     @pytest.mark.dependency(name="two", depends=["one"])
     @pytest.mark.parametrize("qualifytype, qualifyno,"
@@ -81,17 +83,20 @@ class Test_YLDLZ_001():
         info("填写账户信息（收款人账号,卡折标志,银行名称,银行区域名称,联行号）")
         self.appointment_and_dismissal.input_account(accountno, cardtype, saDAccount_bankName, saDAccount_bankareaname,
                                                      bankName)
+        get_screenshot("合同信息")
         self.appointment_and_dismissal.switch_user_tab()
         info("聘任保存")
-        self.appointment_and_dismissal.prepare_save()
-        # self.appointment_and_dismissal.submit_()
-        self.appointment_and_dismissal.choose_ok_on_alert()
+        self.appointment_and_dismissal.prepare_save_commit()
+        self.appointment_and_dismissal.submit_()
+        # self.appointment_and_dismissal.prepare_save()
+        # self.appointment_and_dismissal.choose_ok_on_alert()
         sleep(3)
         info("获取人员代码，合同号")
         Test_YLDLZ_001.msg = self.appointment_and_dismissal.get_msg()
         info(Test_YLDLZ_001.msg)
-        # self.appointment_and_dismissal.close_over_btn()
-        self.appointment_and_dismissal.close_btn()
+        get_screenshot("保存提交")
+        self.appointment_and_dismissal.close_over_btn()
+        # self.appointment_and_dismissal.close_btn()
 
     @pytest.mark.dependency(name="three", depends=["two"])
     @pytest.mark.parametrize("name, id_cards, sjjg, group", data2)
@@ -99,3 +104,4 @@ class Test_YLDLZ_001():
     def test_YLDLZ_001_assert(self, name, id_cards, sjjg, group):
         self.main_management_agent_salesmen.into_page_query(Test_YLDLZ_001.msg['usercode'])
         self.main_management_agent_salesmen.assert_table_msg(self.msg['usercode'], name, id_cards, sjjg, group)
+        get_screenshot("查询验证")
