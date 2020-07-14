@@ -4,6 +4,7 @@
 #@File : main_management_agent_salesmen.py  代理制销售人员代码管理
 import allure
 
+from config.global_var import sleep
 from src.page.base_page import BasePage
 
 
@@ -71,5 +72,18 @@ class ManagementOfAgentSalesmen(BasePage):
         self.assertEqual("验证身份证", id_cards1, id_cards)
         self.assertEqual("验证上级机构", sjjg1, sjjg)
         self.assertEqual("验证归属机构", group1, group)
+
+    @allure.step("经营机构->销售人员->代理制销售人员代码管理->营销团队经理聘任与解聘")
+    def into_page(self):
+        self.select_frame_id(self.frame_id)
+        self.move_to_el(self.wait_until_el_xpath(self.jyjg))
+        self.click(self.wait_until_el_xpath(self.xsryzk))
+        self.click(self.wait_until_el_xpath(self.dlzxsrydmgl))
+        self.select_frame_id(self.wait_until_el_xpath(self.iframe))
+        self.click(self.wait_until_el_xpath(self.xstdjlpryjp))
+        self.open_url("http://10.133.247.40:8004/sales/deputy/engageOrFire.do?efOrmau=e")
+        sleep(2)
+        # 切换到【营销团队经理聘任与解聘】页面
+        # self.switch_to_window()
 
 
