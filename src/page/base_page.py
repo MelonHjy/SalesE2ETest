@@ -214,6 +214,12 @@ class BasePage:
         sleep(1)
 
     @catch_except
+    def get_alert_text(self):
+        sleep(2)
+        text = g.driver.switch_to.alert.text
+        return text
+
+    @catch_except
     def send_keys(self, el, value):
         el.clear()
         el.send_keys(value)
@@ -310,6 +316,9 @@ class BasePage:
     @catch_except
     def switch_to_win(self, handle):
         g.driver.switch_to.window(handle)
+
+    def alert_persent(self):
+        return expected_conditions.alert_is_present()
 
     # ------------------------  assert api ------------------------#
 

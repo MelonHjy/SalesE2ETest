@@ -24,3 +24,5 @@ def login_jiangsu_p():
     info("进入%s", url)
     BasePage().open_url(url)
     CommonSteps().login_p()
+    yield
+    BasePage().close_browser()
