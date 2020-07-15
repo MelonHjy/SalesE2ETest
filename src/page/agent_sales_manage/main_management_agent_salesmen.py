@@ -75,9 +75,9 @@ class ManagementOfAgentSalesmen(BasePage):
         self.click(self.wait_until_el_xpath(self.dlzxsrydmgl))
         self.select_frame_id(self.wait_until_el_xpath(self.iframe))
         self.click(self.wait_until_el_xpath(self.xstdjlpryjp))
-        self.open_url("http://10.133.247.40:8004/sales/deputy/engageOrFire.do?efOrmau=e")
+        # self.open_url("http://10.133.247.40:8004/sales/deputy/engageOrFire.do?efOrmau=e")
         sleep(2)
         # 切换到【营销团队经理聘任与解聘】页面
-        # self.switch_to_window()
-
+        self.switch_to_window()
+        self.maximize_window()
 

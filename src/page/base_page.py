@@ -1,16 +1,17 @@
 # -*- coding: utf-8 -*-#
 import pytest
+from selenium import webdriver
 from selenium.webdriver import ActionChains
 from selenium.webdriver.common.by import By
+from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support import expected_conditions
 from selenium.webdriver.support.select import Select
 
-from src.utils.high_light_element import high_light
 from config.global_var import *
-from src.utils.log import *
 from src.utils.driver_util import set_wait
 from src.utils.except_util import catch_except
-from selenium import webdriver
+from src.utils.high_light_element import high_light
+from src.utils.log import *
 
 
 class BasePage:
@@ -46,6 +47,21 @@ class BasePage:
     dlzxsrydmgl = "//a[@id='ygtvlabelel461']"
 
     # ------------------------  页面元素 ------------------------#
+
+    # ------------------------  日期控件 ------------------------#
+    # 新日期控件
+    year_input_new = "//div[@class='menuSel YMenu']/following-sibling::input"
+    month_input_new = "//div[@class='menuSel MMenu']/following-sibling::input"
+    month_select = "//div[@class='menuSel MMenu']/table/tbody/tr/td[text()='{0}']"
+    day_select_new = "//table[@class='WdayTable']/tbody/tr/td[text()='{0}']"
+    date_iframe = "//div[@skin='default']/iframe"
+    Month = {1: '一月', 2: '二月', 3: '三月', 4: '四月', 5: '五月', 6: '六月', 7: '七月', 8: '八月', 9: '九月', 10: '十月', 11: '十一',
+             12: '十二'}
+
+    # 旧日期控件
+    year_select_old = "//select[@id='tbSelYear']"
+    month_select_old = "//select[@id='tbSelMonth']"
+    day_select_old = "//font[@id='cellText' and text()='{0}']"
 
     # ------------------------  常用操作封装 ------------------------#
 
@@ -102,6 +118,16 @@ class BasePage:
         select_ele.select_by_visible_text(text)
         sleep(1)
 
+    @catch_except
+    def select_by_value(self, xpath, text):
+        '''
+        针对select-option组件
+        xpath:
+        '''
+        select_ele = Select(g.driver.find_element_by_xpath(xpath))
+        select_ele.select_by_value(text)
+        sleep(1)
+
     # 身份证倒数第二位，奇数为男，偶数为女
     def get_sex_by_idCard(self, idCard):
         return '男' if int(idCard[-2]) % 2 == 1 else '女'
@@ -116,6 +142,43 @@ class BasePage:
         sleep(1)
         self.execute_script("arguments[0].focus();", el)
         self.send_keys(el, date)
+
+    def pick_date_new(self, xpath, date):
+        self.click(self.wait_until_el_xpath(xpath))
+
+        iframe = g.wait.until(
+            expected_conditions.element_to_be_clickable((By.XPATH, self.date_iframe)))
+        self.select_frame_id(iframe)
+        year, month, day = date.split('-')
+        # d = self.wait_until_el_xpath("//div[@class='WdateDiv']")
+        # 选择年
+        y = self.wait_until_el_xpath(self.year_input_new)
+        self.click(y)
+        y.send_keys(Keys.BACK_SPACE)
+        self.send_keys(y, str(int(year)))
+        # 选择月
+        self.click(self.wait_until_el_xpath(self.month_input_new))
+        self.click(self.wait_until_el_xpath(self.month_select.format(self.Month.get(int(month)))))
+        # 选择日
+        days = self.wait_until_els_xpath(self.day_select_new.format(int(day)))
+        day_select = days[1] if len(days) > 1 and int(day) in range(23, 32) else days[0]
+        self.click(day_select)
+
+        self.switch_to_default_content()
+
+    def pick_date_old(self, xpath, date):
+        el = self.wait_until_el_xpath(xpath)
+        self.click(el)
+
+        year, month, day = date.split('-')
+        # 选择月
+        self.select_by_value(self.month_select_old, str(int(month)))
+        # 选择年
+        self.select_by_value(self.year_select_old, year)
+        # 选择日
+        days = self.wait_until_els_xpath(self.day_select_old.format(int(day)))
+        day_select = days[1] if len(days) > 1 and int(day) in range(23, 32) else days[0]
+        self.click(day_select)
 
     # ------------------------  同名api ------------------------#
 
