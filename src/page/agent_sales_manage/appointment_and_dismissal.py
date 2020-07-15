@@ -208,12 +208,8 @@ class AppointmentAndDismissal(BasePage):
 
     # 输入合同起始终止日期
     def input_contract_date(self, start_date, end_date):
-        self.pick_date_simple(self.contractstartdate0, start_date)
-        self.pick_date_simple(self.contractenddate0, end_date)
+        self.pick_date_old(self.imgBtncon1, start_date)
+        self.pick_date_old(self.imgBtncon2, end_date)
 
-    def input_contract1(self, agentno0, credentialno0, ruleNo):
-        self.select(self.agentno0, agentno0)
-        self.select(self.credentialno0, credentialno0)
-        # 日期组件
-        self.code_select(self.ruleNo, ruleNo)
+
 
