@@ -68,6 +68,10 @@ class AppointmentAndDismissal(BasePage):
     submit_btn = "//*[@id='save1']"
     close_over = "//input[@class='button_ty_over']"
 
+    # ---------------------输入验证相关------------------------------ #
+    id_cards_msg = "//span[@id='idcardmsg']"
+
+
     @allure.step("增加资质信息两条（资格证、执业证）")
     def add_user_button(self):
         self.click(self.wait_until_el_xpath(self.addUserButton))
@@ -195,3 +199,19 @@ class AppointmentAndDismissal(BasePage):
     def close_over_btn(self):
         self.click(self.wait_until_el_xpath(self.close_over))
         sleep(2)
+
+    # 以下输入信息验证相关
+    def get_id_card_msg(self):
+        return self.get_text(self.wait_until_el_xpath(self.id_cards_msg))
+
+    # 输入合同起始终止日期
+    def input_contract_date(self, start_date, end_date):
+        self.pick_date_simple(self.contractstartdate0, start_date)
+        self.pick_date_simple(self.contractenddate0, end_date)
+
+    def input_contract1(self, agentno0, credentialno0, ruleNo):
+        self.select(self.agentno0, agentno0)
+        self.select(self.credentialno0, credentialno0)
+        # 日期组件
+        self.code_select(self.ruleNo, ruleNo)
+
