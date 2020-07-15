@@ -53,7 +53,9 @@ class AppointmentAndDismissal(BasePage):
     agentno0 = "//*[@id='agentno0']"  # 资格证号码
     credentialno0 = "//*[@id='credentialno0']"  # 执业证号码
     contractstartdate0 = "//*[@id='contractstartdate0']"  # 合同起始日期
+    imgBtncon1 = "//*[@id='imgBtncon1[0]']"  # 合同起始日期按钮
     contractenddate0 = "//*[@id='contractenddate0']"  # 合同终止日期
+    imgBtncon2 = "//*[@id='imgBtncon2[0]']"  # 合同终止日期按钮
     ruleNo = "//*[@id='ruleNo']/following-sibling::input[1]"  # 佣金配置
     # 账户信息中的各项
     accountno = "//*[@id='accountno']"  # 收款人账号
@@ -79,7 +81,7 @@ class AppointmentAndDismissal(BasePage):
         self.execute_script("arguments[0].focus();", ele)
         self.send_keys(ele, qualifyno)
         # 日期组件
-        self.pick_date_simple(self.qualifystartdate.format(num), qualifystartdate)
+        self.pick_date_new(self.qualifystartdate.format(num), qualifystartdate)
         if agentType:
             self.select(self.agentType.format(num), agentType)
 
@@ -89,8 +91,8 @@ class AppointmentAndDismissal(BasePage):
         self.select(self.agentno0, agentno0)
         self.select(self.credentialno0, credentialno0)
         # 日期组件
-        self.pick_date_simple(self.contractstartdate0, contractstartdate0)
-        self.pick_date_simple(self.contractenddate0, contractenddate0)
+        self.pick_date_old(self.imgBtncon1, contractstartdate0)
+        self.pick_date_old(self.imgBtncon2, contractenddate0)
         self.code_select(self.ruleNo, ruleNo)
 
     @allure.step("填写账户信息（收款人账号:{accountno},卡折标志:{cardtype},银行名称：{saDAccount_bankName},银行区域名称：{saDAccount_bankareaname},联行号：{bankName}）")
@@ -132,7 +134,7 @@ class AppointmentAndDismissal(BasePage):
 
     @allure.step("双击选择上级机构")
     def select_com(self):
-        self.code_select(self.com_code, "32000000--中国人民财产保险股份有限公司江苏省分公司", 3)
+        self.code_select(self.com_code, "32000000--中国人民财产保险股份有限公司江苏省分公司")
 
     @allure.step("双击选择归属团队")
     def select_group(self, text):
