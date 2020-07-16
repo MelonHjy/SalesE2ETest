@@ -221,3 +221,13 @@ class AppointmentAndDismissal(BasePage):
     def get_title_att(self, xpath):
         return self.get_attribute(self.wait_until_el_xpath(xpath),
                                   'title')
+
+    # 保存提交->弹出提示—>关闭提示
+    def submit_step(self, expect):
+        self.switch_user_tab()
+        self.prepare_save_commit()
+        if expect:
+            self.close_submit()
+        else:
+            self.choose_ok_on_alert()
+        self.switch_contract_tab()

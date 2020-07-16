@@ -24,13 +24,13 @@ class Test_YLDLZ_001():
     # finally:
     #     g.db.close_connection()
 
-    data = [("苏嘉秀ui测试", "120101198407019965", "13313313313", "32990038--测试0506营销", "经理", "汉族", "中共党员", "研究生")]
+    data = [("左元业ui测试", "120103198410021399", "13311212121", "32990038--测试0506营销", "经理", "汉族", "中共党员", "研究生")]
 
     data1 = [("资格证", "123456", "2019-01-01", "B", "执业证", "654321", "2019-02-02", "2020-07-08", '2022-07-08',
-              "RULE20120000000000001--保险经纪公司", "111222333444", "折", "中国工商银行股份有限公司",
+              "RULE20120000000000001--保险经纪公司", "111222333446", "折", "中国工商银行股份有限公司",
               "新疆维吾尔自治区_巴音郭楞蒙古自治州", "中国工商银行股份有限公司库尔勒人民东路支行")]
 
-    data2 = [("苏嘉秀iu测试", "120101198407019965", "32000000", "测试0506营销")]
+    data2 = [("左元业ui测试", "120103198410021399", "32000000", "测试0506营销")]
     msg = None
 
     @allure.story("填写基本信息")
@@ -102,11 +102,12 @@ class Test_YLDLZ_001():
         self.appointment_and_dismissal.close_over_btn()
         # self.appointment_and_dismissal.close_btn()
 
-    @allure.story("查询是否存在该数据")
-    @pytest.mark.dependency(name="three", depends=["two"])
-    @pytest.mark.parametrize("name, id_cards, sjjg, group", data2)
-    @pytest.mark.usefixtures("login_jiangsu_p")
-    def test_YLDLZ_001_assert(self, name, id_cards, sjjg, group):
-        self.main_management_agent_salesmen.into_page_query(Test_YLDLZ_001.msg['usercode'])
-        self.main_management_agent_salesmen.assert_table_msg(self.msg['usercode'], name, id_cards, sjjg, group)
-        get_screenshot("查询验证")
+    # @pytest.mark.skip(reason='开发中')
+    # @allure.story("查询是否存在该数据")
+    # @pytest.mark.dependency(name="three", depends=["two"])
+    # @pytest.mark.parametrize("name, id_cards, sjjg, group", data2)
+    # @pytest.mark.usefixtures("login_jiangsu_p")
+    # def test_YLDLZ_001_assert(self, name, id_cards, sjjg, group):
+    #     self.main_management_agent_salesmen.into_page_query(Test_YLDLZ_001.msg['usercode'])
+    #     self.main_management_agent_salesmen.assert_table_msg(self.msg['usercode'], name, id_cards, sjjg, group)
+    #     get_screenshot("查询验证")

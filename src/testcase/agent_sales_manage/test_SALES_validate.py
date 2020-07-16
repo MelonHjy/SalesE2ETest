@@ -5,7 +5,6 @@
 import allure
 import pytest
 
-from config.global_var import sleep
 from src.page.agent_sales_manage.appointment_and_dismissal import AppointmentAndDismissal
 from src.page.agent_sales_manage.main_management_agent_salesmen import ManagementOfAgentSalesmen
 from src.utils.except_util import get_screenshot
@@ -28,12 +27,11 @@ class Test_not_empty():
     data2 = [['2020-07-03', '2020-07-03', False], ['2020-07-03', '2020-02-03', False],
              ['2020-04-03', '2020-07-03', False],
              ['2020-05-05', '2020-02-03', True], ['2020-02-03', '2020-05-05', True], ['2020-05-03', '2020-05-03', True]]
-    data3 = [['2020-01-01', '2019-02-02', False], ['2020-01-01', '2020-01-01', True], ['2019-02-02', '2020-01-01', True]]
 
     @allure.story("验证前基本信息填入")
     @pytest.mark.vervify
     @pytest.mark.dependency(name="one")
-    @pytest.mark.usefixtures("login_jiangsu_p_v")
+    @pytest.mark.usefixtures("login_jiangsu_p")
     @pytest.mark.parametrize(
         "userName, idCard, mobile, group, rolecode, nation, visage, culture, qualifytype, qualifyno,"
         "qualifystartdate, agentType, qualifytype1, qualifyno1, qualifystartdate1, contractstartdate0,"
@@ -75,37 +73,24 @@ class Test_not_empty():
     @allure.description("合同终止日期不能小于起始日期、合同终止日期不能小于今天")
     @pytest.mark.vervify
     @pytest.mark.dependency(dency="one")
-    @pytest.mark.usefixtures("login_jiangsu_p_v")
+    @pytest.mark.usefixtures("login_jiangsu_p")
     @pytest.mark.parametrize("start_date, end_date, expect", data1)
     def test_contract_date(self, start_date, end_date, expect):
         self.appointment_and_dismissal.input_contract_date(start_date, end_date)
-        self.appointment_and_dismissal.switch_user_tab()
-        self.appointment_and_dismissal.prepare_save_commit()
-        if expect:
-            self.appointment_and_dismissal.close_submit()
-        else:
-            self.appointment_and_dismissal.choose_ok_on_alert()
-        self.appointment_and_dismissal.switch_contract_tab()
+        self.appointment_and_dismissal.submit_step(expect)
         text = self.appointment_and_dismissal.get_title_att(self.appointment_and_dismissal.contractenddate0)
         info(text)
-        get_screenshot("合同日期检验")
         self.appointment_and_dismissal.assertEqual("检查合同起始与终止日期是否符合要求", text == "", expect)
 
     @allure.story("验证合同起始日期跟证书关系")
     @allure.description("合同起始日期不能小于代理资格证、执业证发证日期")
     @pytest.mark.vervify
     @pytest.mark.dependency(dency="one")
-    @pytest.mark.usefixtures("login_jiangsu_p_v")
+    @pytest.mark.usefixtures("login_jiangsu_p")
     @pytest.mark.parametrize("qualifystartdate0, qualifystartdate1, expect", data2)
-    def test_contract_date(self, qualifystartdate0, qualifystartdate1, expect):
+    def test_qualify_date(self, qualifystartdate0, qualifystartdate1, expect):
         self.appointment_and_dismissal.input_qualify_date(qualifystartdate0, qualifystartdate1)
-        self.appointment_and_dismissal.switch_user_tab()
-        self.appointment_and_dismissal.prepare_save_commit()
-        if expect:
-            self.appointment_and_dismissal.close_submit()
-        else:
-            self.appointment_and_dismissal.choose_ok_on_alert()
-        self.appointment_and_dismissal.switch_contract_tab()
+        self.appointment_and_dismissal.submit_step(expect)
         text = self.appointment_and_dismissal.get_title_att(self.appointment_and_dismissal.contractstartdate0)
         info(text)
         self.appointment_and_dismissal.assertEqual("检查合同起始日期与证书日期关系是否符合要求", text == "", expect)
