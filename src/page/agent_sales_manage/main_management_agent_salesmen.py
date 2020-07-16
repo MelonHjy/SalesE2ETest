@@ -1,20 +1,20 @@
 # -*- coding:utf-8 -*-
-#@Time : 2020/6/30 11:00
-#@Author: fyl
-#@File : main_management_agent_salesmen.py  代理制销售人员代码管理
+# @Time : 2020/6/30 11:00
+# @Author: fyl
+# @File : main_management_agent_salesmen.py  代理制销售人员代码管理
 import allure
+from selenium import webdriver
 
-from config.global_var import sleep
+from config.global_var import sleep, g
 from src.page.base_page import BasePage
 
 
 class ManagementOfAgentSalesmen(BasePage):
-
-    #frame
+    # frame
     frame_id = 'main'
-    #上级机构选项
+    # 上级机构选项
     sjjg = "//input[@id='comCode']"
-    #归属机构选项
+    # 归属机构选项
     gsjg = "//input[@id='groupcode']"
     # 人员代码
     rydm = "//input[@id='userCode']"
@@ -30,19 +30,19 @@ class ManagementOfAgentSalesmen(BasePage):
     zyzh = "//input[@id='credentialno']"
     # 人员属性
     rysx = "//select[@id='usertype22']"
-    #销售团队经理聘任与解聘
+    # 销售团队经理聘任与解聘
     xstdjlpryjp = "//input[@value='营销团队经理聘任与解聘']"
     query = "//input[@value='查询']"
     # iframe->营销团队经理聘任与解聘
     iframe = "//iframe[@name='page']"
 
     # ---------------------查询信息------------------------------ #
-    user_code = "//input[@id='userCode']"   # 内部流转码
-    table_first_usercode = "//td[@id='yui-dt0-bdrow0-cell2']"   # 内部流转码
-    table_first_name = "//td[@id='yui-dt0-bdrow0-cell3']"     # 姓名
-    table_first_id_cards = "//td[@id='yui-dt0-bdrow0-cell4']"     # 身份证
-    table_first_sjjg = "//td[@id='yui-dt0-bdrow0-cell6']"     # 上级机构
-    table_first_group = "//td[@id='yui-dt0-bdrow0-cell7']"    # 归属团队
+    user_code = "//input[@id='userCode']"  # 内部流转码
+    table_first_usercode = "//td[@id='yui-dt0-bdrow0-cell2']"  # 内部流转码
+    table_first_name = "//td[@id='yui-dt0-bdrow0-cell3']"  # 姓名
+    table_first_id_cards = "//td[@id='yui-dt0-bdrow0-cell4']"  # 身份证
+    table_first_sjjg = "//td[@id='yui-dt0-bdrow0-cell6']"  # 上级机构
+    table_first_group = "//td[@id='yui-dt0-bdrow0-cell7']"  # 归属团队
 
     @allure.step("经营机构->销售人员->代理制销售人员代码管理->查询")
     def into_page_query(self, user_code1):
@@ -71,8 +71,17 @@ class ManagementOfAgentSalesmen(BasePage):
     def into_page(self):
         self.select_frame_id(self.frame_id)
         self.move_to_el(self.wait_until_el_xpath(self.jyjg))
+        sleep(3)
         self.click(self.wait_until_el_xpath(self.xsryzk))
         self.click(self.wait_until_el_xpath(self.dlzxsrydmgl))
+
+        # webdriver.ActionChains(g.driver).move_to_element(
+        #     self.wait_until_el_xpath("//li[@class='m1_4']/a[text()='经营机构']/..")).perform()
+        # webdriver.ActionChains(g.driver).move_to_element(
+        #     self.wait_until_el_xpath(self.xsryzk)).click(self.wait_until_el_xpath(self.xsryzk)).perform()
+        # webdriver.ActionChains(g.driver).move_to_element(self.wait_until_el_xpath(self.dlzxsrydmgl)).click(
+        #     self.wait_until_el_xpath(self.dlzxsrydmgl)).perform()
+
         self.select_frame_id(self.wait_until_el_xpath(self.iframe))
         self.click(self.wait_until_el_xpath(self.xstdjlpryjp))
         self.open_url("http://10.133.247.40:8004/sales/deputy/engageOrFire.do?efOrmau=e")
@@ -80,4 +89,3 @@ class ManagementOfAgentSalesmen(BasePage):
         # 切换到【营销团队经理聘任与解聘】页面
         # self.switch_to_window()
         # self.maximize_window()
-
