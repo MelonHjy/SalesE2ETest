@@ -2,6 +2,7 @@
 # @Time : 2020/6/28 17:22
 # @Author: fyl
 # @File : test_SALES_YLDLZ_001.py
+import allure
 import pytest
 
 from src.page.agent_sales_manage.appointment_and_dismissal import AppointmentAndDismissal
@@ -10,6 +11,7 @@ from src.utils.driver_util import *
 from src.utils.except_util import get_screenshot
 
 
+@allure.feature("经理聘任主流程")
 class Test_YLDLZ_001():
     appointment_and_dismissal = AppointmentAndDismissal()
     main_management_agent_salesmen = ManagementOfAgentSalesmen()
@@ -31,6 +33,7 @@ class Test_YLDLZ_001():
     data2 = [("苏嘉秀iu测试", "120101198407019965", "32000000", "测试0506营销")]
     msg = None
 
+    @allure.story("填写基本信息")
     @pytest.mark.dependency(name="one")
     @pytest.mark.usefixtures("login_jiangsu_p")
     @pytest.mark.parametrize("userName, idCard, mobile, group, rolecode, nation, visage, culture", data)
@@ -59,6 +62,7 @@ class Test_YLDLZ_001():
                                                    group.split('--')[0])
         get_screenshot("基本信息")
 
+    @allure.story("填写资质信息、合同信息")
     @pytest.mark.dependency(name="two", depends=["one"])
     @pytest.mark.parametrize("qualifytype, qualifyno,"
                              "qualifystartdate, agentType, qualifytype1, qualifyno1, qualifystartdate1, contractstartdate0,"
@@ -98,6 +102,7 @@ class Test_YLDLZ_001():
         self.appointment_and_dismissal.close_over_btn()
         # self.appointment_and_dismissal.close_btn()
 
+    @allure.story("查询是否存在该数据")
     @pytest.mark.dependency(name="three", depends=["two"])
     @pytest.mark.parametrize("name, id_cards, sjjg, group", data2)
     @pytest.mark.usefixtures("login_jiangsu_p")
