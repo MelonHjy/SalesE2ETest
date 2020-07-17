@@ -17,6 +17,7 @@ class AppointmentAndDismissal(BasePage):
     iframe = "//iframe[@name='page']"
     # 营销团队经理聘任
     case = "//*[@class='case']"
+    close_icon = "//div[@class='container-close']"  # 提交后提示选择审核人对话框的关闭图标
 
     # ---------------------人员基础信息填写项------------------------------ #
     user_tab = "//*[@id='folder-label-userTab']"
@@ -63,16 +64,12 @@ class AppointmentAndDismissal(BasePage):
     saDAccount_bankName = "//*[@id='saDAccount.bankName']"  # 银行名称
     saDAccount_bankareaname = "//*[@id='saDAccount.bankareaname']"  # 银行区域名称
     bankName = "//*[@id='bankName']"  # 联行号
-    usercodeAndContract = "//td[@colSpan='2']" # 人员代码，合同号
+    usercodeAndContract = "//td[@colSpan='2']"  # 人员代码，合同号
     close = "//input[@class='button_ty']"
     submit_dlg = "//div[@id='submitDlg_c']"
     submit_iframe = "submitFrame"
     submit_btn = "//*[@id='save1']"
     close_over = "//input[@class='button_ty_over']"
-
-    # ---------------------输入验证相关------------------------------ #
-    id_cards_msg = "//span[@id='idcardmsg']"
-
 
     @allure.step("增加资质信息两条（资格证、执业证）")
     def add_user_button(self):
@@ -99,7 +96,8 @@ class AppointmentAndDismissal(BasePage):
         self.pick_date_old(self.imgBtncon2, contractenddate0)
         self.code_select(self.ruleNo, ruleNo)
 
-    @allure.step("填写账户信息（收款人账号:{accountno},卡折标志:{cardtype},银行名称：{saDAccount_bankName},银行区域名称：{saDAccount_bankareaname},联行号：{bankName}）")
+    @allure.step(
+        "填写账户信息（收款人账号:{accountno},卡折标志:{cardtype},银行名称：{saDAccount_bankName},银行区域名称：{saDAccount_bankareaname},联行号：{bankName}）")
     def input_account(self, accountno, cardtype, saDAccount_bankName, saDAccount_bankareaname, bankName):
         self.send_keys(self.wait_until_el_xpath(self.accountno), accountno)
         self.select(self.cardtype, cardtype)
@@ -202,18 +200,34 @@ class AppointmentAndDismissal(BasePage):
         self.click(self.wait_until_el_xpath(self.close_over))
         sleep(2)
 
-    # 以下输入信息验证相关
-    def get_id_card_msg(self):
-        return self.get_text(self.wait_until_el_xpath(self.id_cards_msg))
+    # ---------------------以下输入信息验证相关------------------------------ #
 
-    # 输入合同起始终止日期
+    @allure.step("输入合同起始日期、终止日期")
     def input_contract_date(self, start_date, end_date):
-        self.pick_date_simple(self.contractstartdate0, start_date)
-        self.pick_date_simple(self.contractenddate0, end_date)
+        self.pick_date_old(self.imgBtncon1, start_date)
+        self.pick_date_old(self.imgBtncon2, end_date)
 
-    def input_contract1(self, agentno0, credentialno0, ruleNo):
-        self.select(self.agentno0, agentno0)
-        self.select(self.credentialno0, credentialno0)
-        # 日期组件
-        self.code_select(self.ruleNo, ruleNo)
+    # 资格证、职业证输入
+    @allure.step("输入资格证、职业证的发证日期")
+    def input_qualify_date(self, qualifystartdate0, qualifystartdate1):
+        self.pick_date_new(self.qualifystartdate.format(0), qualifystartdate0)
+        self.pick_date_new(self.qualifystartdate.format(1), qualifystartdate1)
 
+    # 关闭提交对话框
+    def close_submit(self):
+        self.click(self.wait_until_el_xpath(self.close_icon))
+
+    # 获取title属性的属性值
+    def get_title_att(self, xpath):
+        return self.get_attribute(self.wait_until_el_xpath(xpath),
+                                  'title')
+
+    # 保存提交->弹出提示—>关闭提示
+    def submit_step(self, expect):
+        self.switch_user_tab()
+        self.prepare_save_commit()
+        if expect:
+            self.close_submit()
+        else:
+            self.choose_ok_on_alert()
+        self.switch_contract_tab()

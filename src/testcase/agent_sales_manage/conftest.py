@@ -12,7 +12,7 @@ from src.testcase.base_step.commonsteps import CommonSteps
 from src.utils.driver_util import get_config, get_browser
 
 
-@pytest.fixture(scope="function", autouse=False)
+@pytest.fixture(scope="class", autouse=False)
 @allure.severity('blocker')
 def login_jiangsu_p():
     g.config = get_config()
