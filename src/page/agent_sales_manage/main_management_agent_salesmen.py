@@ -5,10 +5,10 @@
 import allure
 
 from config.global_var import sleep
-from src.page.base_page import BasePage
+from src.page.table_page import TablePage
 
 
-class ManagementOfAgentSalesmen(BasePage):
+class ManagementOfAgentSalesmen(TablePage):
 
     #frame
     frame_id = 'main'
@@ -56,11 +56,19 @@ class ManagementOfAgentSalesmen(BasePage):
         self.click(self.wait_until_el_xpath(self.query))
 
     def assert_table_msg(self, usercode, name, id_cards, sjjg, group):
-        usercode1 = self.get_text(self.wait_until_el_xpath(self.table_first_usercode))
-        name1 = self.get_text(self.wait_until_el_xpath(self.table_first_name))
-        id_cards1 = self.get_text(self.wait_until_el_xpath(self.table_first_id_cards))
-        sjjg1 = self.get_text(self.wait_until_el_xpath(self.table_first_sjjg))
-        group1 = self.get_text(self.wait_until_el_xpath(self.table_first_group))
+        # usercode1 = self.get_text(self.wait_until_el_xpath(self.table_first_usercode))
+        # name1 = self.get_text(self.wait_until_el_xpath(self.table_first_name))
+        # id_cards1 = self.get_text(self.wait_until_el_xpath(self.table_first_id_cards))
+        # sjjg1 = self.get_text(self.wait_until_el_xpath(self.table_first_sjjg))
+        # group1 = self.get_text(self.wait_until_el_xpath(self.table_first_group))
+
+        # 需要加一个等待数据加载完成
+
+        usercode1 = self.get_cell_text(0, 2)
+        name1 = self.get_cell_text(0, 3)
+        id_cards1 = self.get_cell_text(0, 4)
+        sjjg1 = self.get_cell_text(0, 6)
+        group1 = self.get_cell_text(0, 7)
         self.assertEqual("验证内部流转码", usercode1, usercode)
         self.assertEqual("验证姓名", name1, name)
         self.assertEqual("验证身份证", id_cards1, id_cards)
@@ -75,9 +83,9 @@ class ManagementOfAgentSalesmen(BasePage):
         self.click(self.wait_until_el_xpath(self.dlzxsrydmgl))
         self.select_frame_id(self.wait_until_el_xpath(self.iframe))
         self.click(self.wait_until_el_xpath(self.xstdjlpryjp))
-        self.open_url("http://10.133.247.40:8004/sales/deputy/engageOrFire.do?efOrmau=e")
+        # self.open_url("http://10.133.247.40:8004/sales/deputy/engageOrFire.do?efOrmau=e")
         sleep(2)
         # 切换到【营销团队经理聘任与解聘】页面
-        # self.switch_to_window()
-        # self.maximize_window()
+        self.switch_to_window()
+        self.maximize_window()
 

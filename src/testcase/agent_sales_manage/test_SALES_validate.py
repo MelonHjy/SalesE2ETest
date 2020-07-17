@@ -29,7 +29,7 @@ class Test_not_empty():
              ['2020-05-05', '2020-02-03', True], ['2020-02-03', '2020-05-05', True], ['2020-05-03', '2020-05-03', True]]
 
     @allure.story("验证前基本信息填入")
-    @pytest.mark.vervify
+    @pytest.mark.verify
     @pytest.mark.dependency(name="one")
     @pytest.mark.usefixtures("login_jiangsu_p")
     @pytest.mark.parametrize(
@@ -71,7 +71,7 @@ class Test_not_empty():
 
     @allure.story("验证合同起始、终止日期")
     @allure.description("合同终止日期不能小于起始日期、合同终止日期不能小于今天")
-    @pytest.mark.vervify
+    @pytest.mark.verify
     @pytest.mark.dependency(dency="one")
     @pytest.mark.usefixtures("login_jiangsu_p")
     @pytest.mark.parametrize("start_date, end_date, expect", data1)
@@ -84,7 +84,7 @@ class Test_not_empty():
 
     @allure.story("验证合同起始日期跟证书关系")
     @allure.description("合同起始日期不能小于代理资格证、执业证发证日期")
-    @pytest.mark.vervify
+    @pytest.mark.verify
     @pytest.mark.dependency(dency="one")
     @pytest.mark.usefixtures("login_jiangsu_p")
     @pytest.mark.parametrize("qualifystartdate0, qualifystartdate1, expect", data2)
