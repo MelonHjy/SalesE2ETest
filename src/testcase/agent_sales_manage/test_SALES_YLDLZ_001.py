@@ -39,7 +39,7 @@ class Test_YLDLZ_001():
     @pytest.mark.parametrize("userName, idCard, mobile, group, rolecode, nation, visage, culture", data)
     def test_YLDLZ_001_basemag(self, userName, idCard, mobile, group, rolecode, nation, visage, culture):
         info("经营机构->销售人员->代理制销售人员代码管理->营销团队经理聘任与解聘")
-        self.main_management_agent_salesmen.into_page()
+        self.main_management_agent_salesmen.into_page_appointment()
         info("营销团队经理聘任与解聘检查")
         self.appointment_and_dismissal.assertEqual("验证标签文字", self.appointment_and_dismissal.get_head_text(), "营销团队经理聘任")
         self.appointment_and_dismissal.assertEqual("验证上级机构是否默认‘32000000’",
@@ -102,12 +102,13 @@ class Test_YLDLZ_001():
         self.appointment_and_dismissal.close_over_btn()
         # self.appointment_and_dismissal.close_btn()
 
-    # @pytest.mark.skip(reason='开发中')
-    # @allure.story("查询是否存在该数据")
-    # @pytest.mark.dependency(name="three", depends=["two"])
-    # @pytest.mark.parametrize("name, id_cards, sjjg, group", data2)
-    # @pytest.mark.usefixtures("login_jiangsu_p")
-    # def test_YLDLZ_001_assert(self, name, id_cards, sjjg, group):
-    #     self.main_management_agent_salesmen.into_page_query(Test_YLDLZ_001.msg['usercode'])
-    #     self.main_management_agent_salesmen.assert_table_msg(self.msg['usercode'], name, id_cards, sjjg, group)
-    #     get_screenshot("查询验证")
+    @pytest.mark.skip(reason='开发中')
+    @allure.story("查询是否存在该数据")
+    @pytest.mark.dependency(name="three", depends=["two"])
+    @pytest.mark.parametrize("name, id_cards, sjjg, group", data2)
+    @pytest.mark.usefixtures("login_jiangsu_p")
+    def test_YLDLZ_001_assert(self, name, id_cards, sjjg, group):
+        self.main_management_agent_salesmen.into_page_query(Test_YLDLZ_001.msg['usercode'])
+        self.main_management_agent_salesmen.assert_table_msg(self.msg['usercode'], name, id_cards, sjjg, group)
+        get_screenshot("查询验证")
+
