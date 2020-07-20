@@ -6,14 +6,12 @@
 import allure
 from selenium import webdriver
 
-
-from config.global_var import sleep, g
+from config.global_var import sleep
 from src.page.table_page import TablePage
 from src.utils.log import info
 
 
 class ManagementOfAgentSalesmen(TablePage):
-
     # frame
     frame_id = 'main'
     # 上级机构选项
@@ -82,14 +80,9 @@ class ManagementOfAgentSalesmen(TablePage):
 
     @allure.step("经营机构->销售人员->代理制销售人员代码管理->营销团队经理聘任与解聘")
     def into_page_appointment(self):
-        self.into_page()
         self.click(self.wait_until_el_xpath(self.xstdjlpryjp))
         # self.open_url("http://10.133.247.40:8004/sales/deputy/engageOrFire.do?efOrmau=e")
         sleep(2)
         # 切换到【营销团队经理聘任与解聘】页面
         self.switch_to_window()
         self.maximize_window()
-
-    def select_data(self):
-        self.get_cell_radio(0, 0)
-
