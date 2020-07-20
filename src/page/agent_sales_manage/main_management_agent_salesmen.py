@@ -54,7 +54,7 @@ class ManagementOfAgentSalesmen(TablePage):
         self.execute_script("arguments[0].style.visibility='visible';", self.wait_until_el_xpath(self.menu_list))
         info("销售人员展开")
         self.click(self.wait_until_el_xpath(self.dlzxsrydmgl))
-        self.execute_script("arguments[0].style.visibility='hidden';", self.wait_until_el_xpath(self.menu_list))
+        #self.execute_script("arguments[0].style.visibility='hidden';", self.wait_until_el_xpath(self.menu_list))
         info("代理制销售人员代码管理")
         sleep(1)
         info("页面操作")
