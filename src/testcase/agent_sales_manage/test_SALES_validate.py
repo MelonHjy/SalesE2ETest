@@ -37,7 +37,7 @@ class Test_not_empty():
         "qualifystartdate, agentType, qualifytype1, qualifyno1, qualifystartdate1, contractstartdate0,"
         "contractenddate0, ruleNo, accountno, cardtype, saDAccount_bankName, saDAccount_bankareaname,"
         "bankName", data)
-    def test_YLDLZ_001_basemag(self, userName, idCard, mobile, group, rolecode, nation,
+    def test_YLDLZ_001_basemsg(self, userName, idCard, mobile, group, rolecode, nation,
                                visage, culture, qualifytype, qualifyno,
                                qualifystartdate, agentType, qualifytype1, qualifyno1, qualifystartdate1,
                                contractstartdate0,
