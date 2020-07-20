@@ -45,7 +45,7 @@ class Test_not_empty():
                                saDAccount_bankareaname,
                                bankName):
         info("经营机构->销售人员->代理制销售人员代码管理->营销团队经理聘任与解聘")
-        self.main_management_agent_salesmen.into_page()
+        self.main_management_agent_salesmen.into_page_appointment()
         info("填入基本信息")
         self.appointment_and_dismissal.user_tab_input(userName, idCard, mobile)
         self.appointment_and_dismissal.select_group(group)

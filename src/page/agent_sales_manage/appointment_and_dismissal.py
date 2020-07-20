@@ -141,6 +141,7 @@ class AppointmentAndDismissal(BasePage):
     @allure.step("双击选择归属团队")
     def select_group(self, text):
         self.code_select(self.group_code, text)
+        sleep(2)
 
     @allure.step("选择团队职务")
     def select_rolecode(self, text):

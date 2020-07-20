@@ -9,7 +9,7 @@ from selenium import webdriver
 
 from config.global_var import sleep, g
 from src.page.table_page import TablePage
-
+from src.utils.log import info
 
 
 class ManagementOfAgentSalesmen(TablePage):
@@ -38,38 +38,37 @@ class ManagementOfAgentSalesmen(TablePage):
     xstdjlpryjp = "//input[@value='营销团队经理聘任与解聘']"
     query = "//input[@value='查询']"
     # iframe->营销团队经理聘任与解聘
-    iframe = "//iframe[@name='page']"
+    iframe = "page"
+    menu_list = "//*[@id='menumain8000223038']"
 
     # ---------------------查询信息------------------------------ #
 
     user_code = "//input[@id='userCode']"  # 内部流转码
-    table_first_usercode = "//td[@id='yui-dt0-bdrow0-cell2']"  # 内部流转码
-    table_first_name = "//td[@id='yui-dt0-bdrow0-cell3']"  # 姓名
-    table_first_id_cards = "//td[@id='yui-dt0-bdrow0-cell4']"  # 身份证
-    table_first_sjjg = "//td[@id='yui-dt0-bdrow0-cell6']"  # 上级机构
-    table_first_group = "//td[@id='yui-dt0-bdrow0-cell7']"  # 归属团队
+
+    def into_page(self):
+        self.select_frame_id(self.frame_id)
+        self.click(self.wait_until_el_xpath(self.jyjg))
+        self.execute_script("arguments[0].style.visibility='visible';", self.wait_until_el_xpath(self.menu_list))
+        info("经验机构")
+        self.click(self.wait_until_el_xpath(self.xsryzk))
+        self.execute_script("arguments[0].style.visibility='visible';", self.wait_until_el_xpath(self.menu_list))
+        info("销售人员展开")
+        self.click(self.wait_until_el_xpath(self.dlzxsrydmgl))
+        self.execute_script("arguments[0].style.visibility='hidden';", self.wait_until_el_xpath(self.menu_list))
+        info("代理制销售人员代码管理")
+        sleep(1)
+        info("页面操作")
+        self.select_frame_id(self.iframe)
 
     @allure.step("经营机构->销售人员->代理制销售人员代码管理->查询")
     def into_page_query(self, user_code1):
-        self.select_frame_id(self.frame_id)
-        self.move_to_el(self.wait_until_el_xpath(self.jyjg))
-        self.click(self.wait_until_el_xpath(self.xsryzk))
-        self.click(self.wait_until_el_xpath(self.dlzxsrydmgl))
-        self.select_frame_id(self.wait_until_el_xpath(self.iframe))
+        self.into_page()
         self.click(self.wait_until_el_xpath(self.user_code))
         self.send_keys(self.wait_until_el_xpath(self.user_code), user_code1)
         self.click(self.wait_until_el_xpath(self.query))
 
     def assert_table_msg(self, usercode, name, id_cards, sjjg, group):
-
-        # usercode1 = self.get_text(self.wait_until_el_xpath(self.table_first_usercode))
-        # name1 = self.get_text(self.wait_until_el_xpath(self.table_first_name))
-        # id_cards1 = self.get_text(self.wait_until_el_xpath(self.table_first_id_cards))
-        # sjjg1 = self.get_text(self.wait_until_el_xpath(self.table_first_sjjg))
-        # group1 = self.get_text(self.wait_until_el_xpath(self.table_first_group))
-
         # 需要加一个等待数据加载完成
-
         usercode1 = self.get_cell_text(0, 2)
         name1 = self.get_cell_text(0, 3)
         id_cards1 = self.get_cell_text(0, 4)
@@ -82,18 +81,15 @@ class ManagementOfAgentSalesmen(TablePage):
         self.assertEqual("验证归属机构", group1, group)
 
     @allure.step("经营机构->销售人员->代理制销售人员代码管理->营销团队经理聘任与解聘")
-    def into_page(self):
-        self.select_frame_id(self.frame_id)
-        self.click(self.wait_until_el_xpath(self.jyjg))
-        self.execute_script("arguments[0].style.visibility='visible';", self.wait_until_el_xpath("//*[@id='menumain8000223038']"))
-        self.click(self.wait_until_el_xpath(self.xsryzk))
-        self.execute_script("arguments[0].style.visibility='visible';", self.wait_until_el_xpath("//*[@id='menumain8000223038']"))
-        self.click(self.wait_until_el_xpath(self.dlzxsrydmgl))
-        self.select_frame_id(self.wait_until_el_xpath(self.iframe))
+    def into_page_appointment(self):
+        self.into_page()
         self.click(self.wait_until_el_xpath(self.xstdjlpryjp))
-        self.open_url("http://10.133.247.40:8004/sales/deputy/engageOrFire.do?efOrmau=e")
+        # self.open_url("http://10.133.247.40:8004/sales/deputy/engageOrFire.do?efOrmau=e")
         sleep(2)
         # 切换到【营销团队经理聘任与解聘】页面
-        # self.switch_to_window()
-        # self.maximize_window()
+        self.switch_to_window()
+        self.maximize_window()
+
+    def select_data(self):
+        self.get_cell_radio(0, 0)
 
