@@ -47,15 +47,10 @@ class ManagementOfAgentSalesmen(TablePage):
         self.select_frame_id(self.frame_id)
         self.click(self.wait_until_el_xpath(self.jyjg))
         self.execute_script("arguments[0].style.visibility='visible';", self.wait_until_el_xpath(self.menu_list))
-        info("经验机构")
         self.click(self.wait_until_el_xpath(self.xsryzk))
         self.execute_script("arguments[0].style.visibility='visible';", self.wait_until_el_xpath(self.menu_list))
-        info("销售人员展开")
         self.click(self.wait_until_el_xpath(self.dlzxsrydmgl))
-        #self.execute_script("arguments[0].style.visibility='hidden';", self.wait_until_el_xpath(self.menu_list))
-        info("代理制销售人员代码管理")
-        sleep(1)
-        info("页面操作")
+        # self.execute_script("arguments[0].style.visibility='hidden';", self.wait_until_el_xpath(self.menu_list))
         self.select_frame_id(self.iframe)
 
     @allure.step("经营机构->销售人员->代理制销售人员代码管理->查询")
@@ -80,6 +75,7 @@ class ManagementOfAgentSalesmen(TablePage):
 
     @allure.step("经营机构->销售人员->代理制销售人员代码管理->营销团队经理聘任与解聘")
     def into_page_appointment(self):
+        self.into_page()
         self.click(self.wait_until_el_xpath(self.xstdjlpryjp))
         # self.open_url("http://10.133.247.40:8004/sales/deputy/engageOrFire.do?efOrmau=e")
         sleep(2)
