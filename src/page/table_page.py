@@ -22,10 +22,11 @@ from time import sleep
 class TablePage(BasePage):
     def __init__(self):
         self.excel = None
-        self.heads = []
         self.set_table_num()
 
     def set_table_num(self, table_num=0):
+        self.heads = []
+
         # 第几个表格,默认是0为第一个
         self.table_num = table_num
         # ------------------------  表格元素 ------------------------#
@@ -78,22 +79,14 @@ class TablePage(BasePage):
     # 获取表格第几列第几行的值(row与col小于零时代表全部[若均小于0，默认以行为分隔]，获取第一行第一列使用row=0,col=0） 存在纯文本与有p标签的文本
     def get_cell_text(self, row=-1, col=-1, split_by_row=True):
         text = []
-        split_text = []
         cells = self.get_cell(row, col)
-        for index, cell in enumerate(cells, 0):
-            if row < 0 and col < 0:
-                split_text.append(self.get_inner_text(cell))
-                if split_by_row and (index + 1) % self.heads.__len__() == 0:
-                    text.append(split_text.copy())
-                    split_text.clear()
-                # elif not split_by_row and (index + 1) % self.get_table_show_rows() == 0:
-                #     text.append(split_text.copy())
-                else:
-                    continue
-            else:
+        if row < 0 and col < 0:     # return [[],[],[]]
+            text = self.split_by(cells, self.heads.__len__(), split_by_row)
+        elif row < 0 or col < 0:    # return []
+            for cell in cells:
                 text.append(self.get_inner_text(cell))
-        if row >= 0 and col >= 0:
-            text = text[0]
+        else:   # return str
+            text = self.get_inner_text(cells[0])
         return text
 
     def get_inner_text(self, el):
@@ -102,6 +95,23 @@ class TablePage(BasePage):
         except Exception:
             inner_text = ""
         return inner_text
+
+    def split_by(self, cells, col, split_by_row=True):
+        '''
+        根据行或列分隔元素
+        :param cells: 初始元素列表
+        :param col: 表格有多少列
+        :param split_by_row: 是否根据行分隔
+        :return: 返回多维列表
+        '''
+        num = len(cells) // col if split_by_row else col
+        texts = [[] for i in range(num)]
+        for i, cell in enumerate(cells, 0):
+            if split_by_row:
+                texts[i // col].append(self.get_inner_text(cell))
+            else:
+                texts[i % col].append(self.get_inner_text(cell))
+        return texts
 
     # 获取表格第几列第几行的元素(row与col小于零时代表全部，获取第一行第一列使用row=0,col=0）
     def get_cell(self, row=-1, col=-1, special=False):

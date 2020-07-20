@@ -6,14 +6,11 @@
 import allure
 from selenium import webdriver
 
-
 from config.global_var import sleep, g
 from src.page.table_page import TablePage
 
 
-
 class ManagementOfAgentSalesmen(TablePage):
-
     # frame
     frame_id = 'main'
     # 上级机构选项
@@ -61,7 +58,6 @@ class ManagementOfAgentSalesmen(TablePage):
         self.click(self.wait_until_el_xpath(self.query))
 
     def assert_table_msg(self, usercode, name, id_cards, sjjg, group):
-
         # usercode1 = self.get_text(self.wait_until_el_xpath(self.table_first_usercode))
         # name1 = self.get_text(self.wait_until_el_xpath(self.table_first_name))
         # id_cards1 = self.get_text(self.wait_until_el_xpath(self.table_first_id_cards))
@@ -89,11 +85,11 @@ class ManagementOfAgentSalesmen(TablePage):
         self.click(self.wait_until_el_xpath(self.xsryzk))
         self.execute_script("arguments[0].style.visibility='visible';", self.wait_until_el_xpath("//*[@id='menumain8000223038']"))
         self.click(self.wait_until_el_xpath(self.dlzxsrydmgl))
+        # self.execute_script("arguments[0].style.visibility='hidden';", self.wait_until_el_xpath("//*[@id='menumain8000223038']"))
         self.select_frame_id(self.wait_until_el_xpath(self.iframe))
         self.click(self.wait_until_el_xpath(self.xstdjlpryjp))
-        self.open_url("http://10.133.247.40:8004/sales/deputy/engageOrFire.do?efOrmau=e")
+        # self.open_url("http://10.133.247.40:8004/sales/deputy/engageOrFire.do?efOrmau=e")
         sleep(2)
         # 切换到【营销团队经理聘任与解聘】页面
-        # self.switch_to_window()
-        # self.maximize_window()
-
+        self.switch_to_window()
+        self.maximize_window()
