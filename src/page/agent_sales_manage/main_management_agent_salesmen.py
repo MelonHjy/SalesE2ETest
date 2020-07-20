@@ -85,7 +85,7 @@ class ManagementOfAgentSalesmen(TablePage):
         self.click(self.wait_until_el_xpath(self.xsryzk))
         self.execute_script("arguments[0].style.visibility='visible';", self.wait_until_el_xpath("//*[@id='menumain8000223038']"))
         self.click(self.wait_until_el_xpath(self.dlzxsrydmgl))
-        # self.execute_script("arguments[0].style.visibility='hidden';", self.wait_until_el_xpath("//*[@id='menumain8000223038']"))
+        self.execute_script("arguments[0].style.visibility='hidden';", self.wait_until_el_xpath("//*[@id='menumain8000223038']"))
         self.select_frame_id(self.wait_until_el_xpath(self.iframe))
         self.click(self.wait_until_el_xpath(self.xstdjlpryjp))
         # self.open_url("http://10.133.247.40:8004/sales/deputy/engageOrFire.do?efOrmau=e")

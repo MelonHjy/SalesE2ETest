@@ -39,7 +39,7 @@ class AppointmentAndDismissal(BasePage):
     # 聘任保存
     save_button = "//input[@id='prepareadddeputy']"
     # 聘任保存并提交
-    save_commit = "//input[@id='adddeputy']"
+    save_commit = "//input[@id='savedeputy']"
 
     # ---------------------合同信息填写项------------------------------ #
     contract_tab = "//*[@id='folder-label-contractTab']"
