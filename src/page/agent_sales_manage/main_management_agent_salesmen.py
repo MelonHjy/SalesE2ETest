@@ -34,7 +34,8 @@ class ManagementOfAgentSalesmen(TablePage):
     rysx = "//select[@id='usertype22']"
     # 销售团队经理聘任与解聘
     xstdjlpryjp = "//input[@value='营销团队经理聘任与解聘']"
-    query = "//input[@value='查询']"
+    query_btn = "//input[@value='查询']"
+    status_not_submit = "//inout[@id='taskstatus1']"   # 任务状态已提交
     # iframe->营销团队经理聘任与解聘
     iframe = "page"
     menu_list = "//*[@id='menumain8000223038']"
@@ -43,6 +44,7 @@ class ManagementOfAgentSalesmen(TablePage):
 
     user_code = "//input[@id='userCode']"  # 内部流转码
 
+    @allure.step("经营机构->销售人员->代理制销售人员代码管理")
     def into_page(self):
         self.select_frame_id(self.frame_id)
         self.click(self.wait_until_el_xpath(self.jyjg))
@@ -53,12 +55,11 @@ class ManagementOfAgentSalesmen(TablePage):
         # self.execute_script("arguments[0].style.visibility='hidden';", self.wait_until_el_xpath(self.menu_list))
         self.select_frame_id(self.iframe)
 
-    @allure.step("经营机构->销售人员->代理制销售人员代码管理->查询")
-    def into_page_query(self, user_code1):
-        self.into_page()
+    @allure.step("查询")
+    def query(self, user_code1):
         self.click(self.wait_until_el_xpath(self.user_code))
         self.send_keys(self.wait_until_el_xpath(self.user_code), user_code1)
-        self.click(self.wait_until_el_xpath(self.query))
+        self.click(self.wait_until_el_xpath(self.query_btn))
 
     def assert_table_msg(self, usercode, name, id_cards, sjjg, group):
         # 需要加一个等待数据加载完成
@@ -73,11 +74,10 @@ class ManagementOfAgentSalesmen(TablePage):
         self.assertEqual("验证上级机构", sjjg1, sjjg)
         self.assertEqual("验证归属机构", group1, group)
 
-    @allure.step("经营机构->销售人员->代理制销售人员代码管理->营销团队经理聘任与解聘")
-    def into_page_appointment(self):
-        self.into_page()
+    @allure.step("营销团队经理聘任与解聘")
+    def appointment(self):
         self.click(self.wait_until_el_xpath(self.xstdjlpryjp))
-        # self.open_url("http://10.133.247.40:8004/sales/deputy/engageOrFire.do?efOrmau=e")
+        #self.open_url("http://10.133.247.40:8004/sales/deputy/engageOrFire.do?efOrmau=e")
         sleep(2)
         # 切换到【营销团队经理聘任与解聘】页面
         self.switch_to_window()

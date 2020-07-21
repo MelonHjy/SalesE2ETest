@@ -102,8 +102,11 @@ class AppointmentAndDismissal(BasePage):
         self.send_keys(self.wait_until_el_xpath(self.accountno), accountno)
         self.select(self.cardtype, cardtype)
         self.send_keys(self.wait_until_el_xpath(self.saDAccount_bankName), saDAccount_bankName)
+        sleep(1)
         self.send_keys(self.wait_until_el_xpath(self.saDAccount_bankareaname), saDAccount_bankareaname)
+        sleep(1)
         self.send_keys(self.wait_until_el_xpath(self.bankName), bankName)
+        sleep(1)
 
     @allure.step("填入姓名:{username},身份证号：{id_cards},手机号码：{mobile}")
     def user_tab_input(self, username, id_cards, mobile):

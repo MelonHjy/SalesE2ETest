@@ -14,37 +14,24 @@ from src.utils.high_light_element import high_light
 from src.utils.log import *
 
 
-class BasePage:
+class BasePage():
     # ------------------------  菜单 ------------------------#
 
-    # 三农模块
-    snmk = "//li[@class='m1_4']/a[text()='三农模块']"
-    # 经营机构模块
-    jyjg = "//li[@class='m1_4']/a[text()='经营机构']"
-    # 直销渠道模块
-    zxqd = "//li[@class='m1_4']/a[text()='直销渠道']"
-    # 个代渠道模块
-    gdqd = "//li[@class='m1_4']/a[text()='个代渠道']"
-    # 农村保险事业部模块
-    ncbxsyb = "//li[@class='m1_7']/a[text()='农村保险事业部']"
-    # 登录日志查询模块
-    dlrzcx = "//li[@class='m1_6']/a[text()='登录日志查询']"
-    # 经代渠道模块
-    jdqd = "//li[@class='m1_4']/a[text()='经代渠道']"
-    # 银保渠道模块
-    ybqd = "//li[@class='m1_4']/a[text()='银保渠道']"
-    # 车商渠道模块
-    csqd = "//li[@class='m1_4']/a[text()='车商渠道']"
-    # 综合管理模块
-    zhgl = "//li[@class='m1_4']/a[text()='综合管理']"
+    snmk = "//li[@class='m1_4']/a[text()='三农模块']"  # 三农模块
+    jyjg = "//li[@class='m1_4']/a[text()='经营机构']"  # 经营机构模块
+    zxqd = "//li[@class='m1_4']/a[text()='直销渠道']"  # 直销渠道模块
+    gdqd = "//li[@class='m1_4']/a[text()='个代渠道']"  # 个代渠道模块
+    ncbxsyb = "//li[@class='m1_7']/a[text()='农村保险事业部']"  # 农村保险事业部模块
+    dlrzcx = "//li[@class='m1_6']/a[text()='登录日志查询']"  # 登录日志查询模块
+    jdqd = "//li[@class='m1_4']/a[text()='经代渠道']"  # 经代渠道模块
+    ybqd = "//li[@class='m1_4']/a[text()='银保渠道']"  # 银保渠道模块
+    csqd = "//li[@class='m1_4']/a[text()='车商渠道']"  # 车商渠道模块
+    zhgl = "//li[@class='m1_4']/a[text()='综合管理']"  # 综合管理模块
     # --------------展开------------#
-    # 销售团队展开
-    xstdzk = "//td[@id='ygtvt135']"
-    # 销售人员展开
-    xsryzk = "//td[@id='ygtvt460']"
+    xstdzk = "//td[@id='ygtvt135']"  # 销售团队展开
+    xsryzk = "//td[@id='ygtvt460']"  # 销售人员展开
     # --------------子菜单----------#
-    # 代理制销售人员代码管理
-    dlzxsrydmgl = "//a[@id='ygtvlabelel461']"
+    dlzxsrydmgl = "//a[@id='ygtvlabelel461']"  # 代理制销售人员代码管理
 
     # ------------------------  页面元素 ------------------------#
 
@@ -65,18 +52,12 @@ class BasePage:
 
     # ------------------------  常用操作封装 ------------------------#
 
-    # 页面切换
-    # 进入第一层iFrame
-    def switch_to_first_iFrame(self, first_iFrame_id):
-        self.switch_to_default_content()
-        self.select_frame_id(first_iFrame_id)
-
     handles = []
 
     def switch_to_window(self, num=-1):
         time.sleep(2)
         # if not self.handles:
-            # current = g.driver.current_window_handle
+        # current = g.driver.current_window_handle
         new = []
         for i in range(5):
             new = self.get_handles()
@@ -138,7 +119,7 @@ class BasePage:
     def pick_date_simple(self, xpath, date):
         el = self.wait_until_el_xpath(xpath)
         self.execute_script_s("arguments[0].removeAttribute(arguments[1]);",
-                                el, 'readOnly')
+                              el, 'readOnly')
         sleep(1)
         self.execute_script("arguments[0].focus();", el)
         self.send_keys(el, date)
@@ -294,12 +275,12 @@ class BasePage:
         g.driver.current_window_handle()
 
     @catch_except
-    def execute_script(self, js, ele):
-        g.driver.execute_script(js, ele)
+    def execute_script(self, js, el):
+        g.driver.execute_script(js, el)
 
     @catch_except
-    def execute_script_s(self, js, ele, value):
-        g.driver.execute_script(js, ele, value)
+    def execute_script_s(self, js, el, value):
+        g.driver.execute_script(js, el, value)
 
     @catch_except
     def get_select(self, el):
@@ -317,15 +298,12 @@ class BasePage:
     def switch_to_win(self, handle):
         g.driver.switch_to.window(handle)
 
-    def alert_persent(self):
-        return expected_conditions.alert_is_present()
-
     # ------------------------  assert api ------------------------#
 
     # 断言方法
     def assertEqual(self, message, actual, expect):
         pytest.assume(actual == expect)
-        info('message-->{0},actual-->{1},expect-->{2},result-->{3}'.format(message, actual, expect,actual == expect))
+        info('message-->{0},actual-->{1},expect-->{2},result-->{3}'.format(message, actual, expect, actual == expect))
 
     def assertResult(self, message, result):
         pytest.assume(result)
