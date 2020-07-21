@@ -25,6 +25,11 @@ class TablePage(BasePage):
         self.set_table_num()
 
     def set_table_num(self, table_num=0):
+        '''
+        设定当前表格
+        :param table_num:表格下标，从默认从0开始（0为第一个表格）
+        :return:
+        '''
         self.heads = []
 
         # 第几个表格,默认是0为第一个
@@ -57,39 +62,68 @@ class TablePage(BasePage):
         :param row: 第几行，默认为全部行
         :return: 默认返回对应的列的所有文本值（列表形式），指定行则返回对应行
         """
+        return self.get_cell_text(row, self.get_index_of_heads(head))
+
+    def get_radio_by_head(self, row, head):
+        '''
+        获取指定表头对应列、指定行的单选按钮元素
+        :param row: 第几行
+        :param head: 表头文本值
+        :return: 单选按钮元素
+        '''
+        return self.get_cell(row, self.get_index_of_heads(head), True)[1]
+
+    def get_a_by_head(self, row, head):
+        '''
+        获取指定表头对应列、指定行的按钮元素
+        :param row: 第几行
+        :param head: 表头文本值
+        :return: 按钮元素
+        '''
+        return self.get_cell(row, self.get_index_of_heads(head), True)[1]
+
+    def get_button_by_head(self, row, head):
+        '''
+        获取指定表头对应列、指定行的a标签元素
+        :param row: 第几行
+        :param head: 表头文本值
+        :return: a标签元素
+        '''
+        return self.get_cell(row, self.get_index_of_heads(head), True)[1]
+
+    # 获取head文本对应表头的下标
+    def get_index_of_heads(self, head):
         heads = self.get_table_heads_text()
         if head not in heads:
             raise ValueError('{0} is not in {1}'.format(head, self.heads))
-        return self.get_cell_text(row, self.heads.index(head))
-
-    # 单选按钮
-    def get_cell_radio(self, row, col):
-        # 下标0为td标签，1为对应标签
-        return self.get_cell(row, col, True)[1]
-
-    # 按钮
-    def get_cell_a(self, row, col):
-        return self.get_cell(row, col, True)[1]
-
-    # a标签
-    def get_cell_button(self, row, col):
-        return self.get_cell(row, col, True)[1]
+        return heads.index(head)
 
     @set_wait(1)
-    # 获取表格第几列第几行的值(row与col小于零时代表全部[若均小于0，默认以行为分隔]，获取第一行第一列使用row=0,col=0） 存在纯文本与有p标签的文本
     def get_cell_text(self, row=-1, col=-1, split_by_row=True):
+        '''
+        获取表格第几列第几行的文本值
+        :param row: 第几行，小于0时为全部行
+        :param col: 第几列，小于0时为全部列
+        :param split_by_row: 是否以行分隔（False时以列分隔） 仅当row与col均小于0，即需要获取整个表格文本时有效
+        :return: 根据row、col的值，返回多维列表、列表、字符串
+        '''
         text = []
         cells = self.get_cell(row, col)
-        if row < 0 and col < 0:     # return [[],[],[]]
-            text = self.split_by(cells, self.heads.__len__(), split_by_row)
-        elif row < 0 or col < 0:    # return []
+        if row < 0 and col < 0:  # return [[],[],[]]
+            text = self.split_by(cells, self.get_table_heads_text(), split_by_row)
+        elif row < 0 or col < 0:  # return []
             for cell in cells:
                 text.append(self.get_inner_text(cell))
-        else:   # return str
+        else:  # return str
             text = self.get_inner_text(cells[0])
         return text
 
     def get_inner_text(self, el):
+        '''
+        获取指定元素的文本值（能获取到该元素与该元素所有后代元素的文本值）
+        :param el: 要获取的元素
+        :return: 元素的文本值（字符串）
+        '''
         try:
             inner_text = el.get_attribute('innerText')
         except Exception:
@@ -105,16 +139,19 @@ class TablePage(BasePage):
         :return: 返回多维列表
         '''
         num = len(cells) // col if split_by_row else col
-        texts = [[] for i in range(num)]
+        text = [[] for i in range(num)]
         for i, cell in enumerate(cells, 0):
-            if split_by_row:
-                texts[i // col].append(self.get_inner_text(cell))
-            else:
-                texts[i % col].append(self.get_inner_text(cell))
-        return texts
+            index_for_text = i // col if split_by_row else i % col
+            text[index_for_text].append(self.get_inner_text(cell))
+        return text
 
-    # 获取表格第几列第几行的元素(row与col小于零时代表全部，获取第一行第一列使用row=0,col=0）
     def get_cell(self, row=-1, col=-1, special=False):
+        '''
+        :param row: 第几行，小于0时为全部行
+        :param col: 第几列，小于0时为全部列
+        :param special: 是否为特殊元素（为True时会返回一系列元素，其中第一个元素【下标0】为td标签，一般情况下第二个元素为该特殊标签）
+        :return: 返回目标元素（均以列表形式）
+        '''
         if col >= 0 and row >= 0:
             xpath = self.table_row_col.format(row, col)
         elif col >= 0:
@@ -177,5 +214,6 @@ class TablePage(BasePage):
     # document.evaluate 函数，返回的是一个枚举集合(IE 使用document.selectNodes）
     def scroll_into_view(self, xpath, is_show=True):
         g.driver.excute_script(
-            "document.evalute({0},document, null, XPathResult.ANY_TYPE, null).iterateNext().scrollIntoView(true);")
+            "document.evalute({0},document, null, XPathResult.ANY_TYPE, null).iterateNext().scrollIntoView({1});",
+            xpath, is_show)
         sleep(1)

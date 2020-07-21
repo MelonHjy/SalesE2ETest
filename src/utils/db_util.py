@@ -50,7 +50,7 @@ class DBUtils:
         cur.close()
         return results
 
-    def excute(self, sql, args):
+    def execute(self, sql, args):
         '''
         增删改
         :param sql:sql语句   "inserst into hd_t_vprpdcompany set(usercode,username) values(?,?)"
