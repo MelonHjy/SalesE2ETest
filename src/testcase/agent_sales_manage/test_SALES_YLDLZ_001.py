@@ -119,7 +119,7 @@ class Test_YLDLZ_001():
         self.click(self.wait_until_el_xpath(self.query))
         sleep(2)
         self.main_management_agent_salesmen.assert_table_msg(Test_YLDLZ_001.msg['usercode'], name, id_cards, sjjg, group)
-        self.main_management_agent_salesmen.click(self.main_management_agent_salesmen.get_cell_radio(0, 0))
+        self.main_management_agent_salesmen.click(self.main_management_agent_salesmen.get_radio_by_head(0, "选择"))
         self.appointment_and_dismissal.click(
             self.appointment_and_dismissal.wait_until_el_xpath(self.appointment_and_dismissal.xstdjlpryjp))
         self.appointment_and_dismissal.switch_to_window()
@@ -131,10 +131,7 @@ class Test_YLDLZ_001():
         self.appointment_and_dismissal.switch_to_window()
 
         # 勾选未提交 任务状态
-        self.main_management_agent_salesmen.click(self.main_management_agent_salesmen.wait_until_el_xpath(
-            self.main_management_agent_salesmen.status_not_submit))
-        self.main_management_agent_salesmen.click(
-            self.main_management_agent_salesmen.wait_until_el_xpath(self.main_management_agent_salesmen.query))
+        self.main_management_agent_salesmen.query(Test_YLDLZ_001.msg['usercode'])
         self.main_management_agent_salesmen.set_table_num(1)
         self.main_management_agent_salesmen.assert_table_msg(Test_YLDLZ_001.msg['usercode'], name, id_cards, sjjg, group)
         self.main_management_agent_salesmen.click(self.main_management_agent_salesmen.get_a_by_head(0,"操作"))

@@ -16,24 +16,12 @@ from src.utils.log import *
 
 class BasePage():
     # ------------------------  菜单 ------------------------#
-
-    snmk = "//li[@class='m1_4']/a[text()='三农模块']"  # 三农模块
-    jyjg = "//li[@class='m1_4']/a[text()='经营机构']"  # 经营机构模块
-    zxqd = "//li[@class='m1_4']/a[text()='直销渠道']"  # 直销渠道模块
-    gdqd = "//li[@class='m1_4']/a[text()='个代渠道']"  # 个代渠道模块
-    ncbxsyb = "//li[@class='m1_7']/a[text()='农村保险事业部']"  # 农村保险事业部模块
-    dlrzcx = "//li[@class='m1_6']/a[text()='登录日志查询']"  # 登录日志查询模块
-    jdqd = "//li[@class='m1_4']/a[text()='经代渠道']"  # 经代渠道模块
-    ybqd = "//li[@class='m1_4']/a[text()='银保渠道']"  # 银保渠道模块
-    csqd = "//li[@class='m1_4']/a[text()='车商渠道']"  # 车商渠道模块
-    zhgl = "//li[@class='m1_4']/a[text()='综合管理']"  # 综合管理模块
-    # --------------展开------------#
-    xstdzk = "//td[@id='ygtvt135']"  # 销售团队展开
-    xsryzk = "//td[@id='ygtvt460']"  # 销售人员展开
-    # --------------子菜单----------#
-    dlzxsrydmgl = "//a[@id='ygtvlabelel461']"  # 代理制销售人员代码管理
-
-    # ------------------------  页面元素 ------------------------#
+    frame_id = 'main'
+    iframe_page = "page"
+    module_menu = "//a[text()='{}']/.."  # 模块
+    zk_menu = "//a[text()='{}']/../../td[1]"  # 展开菜单
+    menu = "//a[text()='{}']"  # 选择菜单名
+    menu_list = "//*[@id='{}']"
 
     # ------------------------  日期控件 ------------------------#
     # 新日期控件
@@ -51,6 +39,24 @@ class BasePage():
     day_select_old = "//font[@id='cellText' and text()='{0}']"
 
     # ------------------------  常用操作封装 ------------------------#
+
+    def to_main_page(self, module_menu, zk_menu, menu, menu_list_id):
+        """
+        选择菜单进入功能页面
+        module_menu：模块名
+        zk_menu：需要展开菜单的菜单名
+        menu：最终菜单名
+        """
+        self.select_frame_id(self.frame_id)
+        self.click(self.wait_until_el_xpath(self.module_menu.format(module_menu)))
+        self.execute_script("arguments[0].style.visibility='visible';",
+                            self.wait_until_el_xpath(self.menu_list.format(menu_list_id)))
+        self.click(self.wait_until_el_xpath(self.zk_menu.format(zk_menu)))
+        self.execute_script("arguments[0].style.visibility='visible';",
+                            self.wait_until_el_xpath(self.menu_list.format(menu_list_id)))
+        self.click(self.wait_until_el_xpath(self.menu.format(menu)))
+        # self.execute_script("arguments[0].style.visibility='hidden';", self.wait_until_el_xpath(self.menu_list))
+        self.select_frame_id(self.iframe_page)
 
     # 页面切换
     def switch_to_first_iFrame(self, first_iFrame_id):
