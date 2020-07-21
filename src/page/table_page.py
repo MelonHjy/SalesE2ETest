@@ -94,7 +94,7 @@ class TablePage(BasePage):
             inner_text = el.get_attribute('innerText')
         except Exception:
             inner_text = ""
-        return inner_text
+        return inner_text.strip()
 
     def split_by(self, cells, col, split_by_row=True):
         '''

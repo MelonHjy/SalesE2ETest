@@ -24,22 +24,24 @@ class Test_YLDLZ_001():
     # finally:
     #     g.db.close_connection()
 
-    data = [("左元业ui测试", "120103198410021399", "13311212121", "32990038--测试0506营销", "经理", "汉族", "中共党员", "研究生")]
+    data = [("武介堂ui测试", "330103199010115314", "13311212125", "32990038--测试0506营销", "经理", "汉族", "中共党员", "研究生")]
 
     data1 = [("资格证", "123456", "2019-01-01", "B", "执业证", "654321", "2019-02-02", "2020-07-08", '2022-07-08',
-              "RULE20120000000000001--保险经纪公司", "111222333446", "折", "中国工商银行股份有限公司",
+              "RULE20120000000000001--保险经纪公司", "111222333449", "折", "中国工商银行股份有限公司",
               "新疆维吾尔自治区_巴音郭楞蒙古自治州", "中国工商银行股份有限公司库尔勒人民东路支行")]
 
-    data2 = [("左元业ui测试", "120103198410021399", "32000000", "测试0506营销")]
+    data2 = [("武介堂ui测试", "330103199010115314", "32000000", "测试0506营销")]
     msg = None
 
+    # @pytest.mark.skip
     @allure.story("填写基本信息")
     @pytest.mark.dependency(name="one")
     @pytest.mark.usefixtures("login_jiangsu_p")
     @pytest.mark.parametrize("userName, idCard, mobile, group, rolecode, nation, visage, culture", data)
     def test_YLDLZ_001_basemag(self, userName, idCard, mobile, group, rolecode, nation, visage, culture):
         info("经营机构->销售人员->代理制销售人员代码管理->营销团队经理聘任与解聘")
-        self.main_management_agent_salesmen.into_page_appointment()
+        self.main_management_agent_salesmen.into_page()
+        self.main_management_agent_salesmen.appointment()
         info("营销团队经理聘任与解聘检查")
         self.appointment_and_dismissal.assertEqual("验证标签文字", self.appointment_and_dismissal.get_head_text(), "营销团队经理聘任")
         self.appointment_and_dismissal.assertEqual("验证上级机构是否默认‘32000000’",
@@ -62,6 +64,7 @@ class Test_YLDLZ_001():
                                                    group.split('--')[0])
         get_screenshot("基本信息")
 
+    # @pytest.mark.skip
     @allure.story("填写资质信息、合同信息")
     @pytest.mark.dependency(name="two", depends=["one"])
     @pytest.mark.parametrize("qualifytype, qualifyno,"
@@ -90,25 +93,48 @@ class Test_YLDLZ_001():
         get_screenshot("合同信息")
         self.appointment_and_dismissal.switch_user_tab()
         info("聘任保存")
-        self.appointment_and_dismissal.prepare_save_commit()
-        self.appointment_and_dismissal.submit_()
-        # self.appointment_and_dismissal.prepare_save()
-        # self.appointment_and_dismissal.choose_ok_on_alert()
+        self.appointment_and_dismissal.prepare_save()
+        self.appointment_and_dismissal.choose_ok_on_alert()
         sleep(3)
         info("获取人员代码，合同号")
         Test_YLDLZ_001.msg = self.appointment_and_dismissal.get_msg()
         info(Test_YLDLZ_001.msg)
         get_screenshot("保存提交")
-        self.appointment_and_dismissal.close_over_btn()
-        # self.appointment_and_dismissal.close_btn()
+        self.appointment_and_dismissal.close_btn()
 
-    @pytest.mark.skip(reason='开发中')
     @allure.story("查询是否存在该数据")
     @pytest.mark.dependency(name="three", depends=["two"])
     @pytest.mark.parametrize("name, id_cards, sjjg, group", data2)
     @pytest.mark.usefixtures("login_jiangsu_p")
     def test_YLDLZ_001_assert(self, name, id_cards, sjjg, group):
-        self.main_management_agent_salesmen.into_page_query(Test_YLDLZ_001.msg['usercode'])
-        self.main_management_agent_salesmen.assert_table_msg(self.msg['usercode'], name, id_cards, sjjg, group)
-        get_screenshot("查询验证")
+        # self.main_management_agent_salesmen.into_page_query(Test_YLDLZ_001.msg['usercode'])
+        # sleep(2)
+        # self.main_management_agent_salesmen.assert_table_msg(self.msg['usercode'], name, id_cards, sjjg, group)
+        # get_screenshot("查询验证")
+        # 验证内部流转码\
+        # self.main_management_agent_salesmen.switch_to_window()
+        self.main_management_agent_salesmen.into_page()
+        self.main_management_agent_salesmen.query('83258549')
+        self.send_keys(self.wait_until_el_xpath(self.user_code), Test_YLDLZ_001.msg['usercode'])
+        self.click(self.wait_until_el_xpath(self.query))
+        sleep(2)
+        self.main_management_agent_salesmen.assert_table_msg(Test_YLDLZ_001.msg['usercode'], name, id_cards, sjjg, group)
+        self.main_management_agent_salesmen.click(self.main_management_agent_salesmen.get_cell_radio(0, 0))
+        self.appointment_and_dismissal.click(
+            self.appointment_and_dismissal.wait_until_el_xpath(self.appointment_and_dismissal.xstdjlpryjp))
+        self.appointment_and_dismissal.switch_to_window()
+        self.appointment_and_dismissal.maximize_window()
+        self.appointment_and_dismissal.prepare_save_commit()
+        self.appointment_and_dismissal.submit_()
+        self.appointment_and_dismissal.close_over_btn()
+        # 切换到‘代理制销售人员代码管理’页面
+        self.appointment_and_dismissal.switch_to_window()
 
+        # 勾选未提交 任务状态
+        self.main_management_agent_salesmen.click(self.main_management_agent_salesmen.wait_until_el_xpath(
+            self.main_management_agent_salesmen.status_not_submit))
+        self.main_management_agent_salesmen.click(
+            self.main_management_agent_salesmen.wait_until_el_xpath(self.main_management_agent_salesmen.query))
+        self.main_management_agent_salesmen.set_table_num(1)
+        self.main_management_agent_salesmen.assert_table_msg(Test_YLDLZ_001.msg['usercode'], name, id_cards, sjjg, group)
+        self.main_management_agent_salesmen.click(self.main_management_agent_salesmen.get_cell_a(0, 13))
