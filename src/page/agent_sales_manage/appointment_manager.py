@@ -1,14 +1,14 @@
 # -*- coding:utf-8 -*-
 # @Time : 2020/6/30 15:01
 # @Author: fyl
-# @File : appointment_and_dismissal.py 营销团队经理聘任与解聘
+# @File : appointment_manager.py 营销团队经理聘任与解聘
 import allure
 
 from config.global_var import sleep
 from src.page.base_page import BasePage
 
 
-class AppointmentAndDismissal(BasePage):
+class AppointmentManager(BasePage):
     # frame
     frame_id = 'main'
     # 销售团队经理聘任与解聘

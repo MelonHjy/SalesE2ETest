@@ -52,6 +52,15 @@ class BasePage():
 
     # ------------------------  常用操作封装 ------------------------#
 
+    # 页面切换
+    def switch_to_first_iFrame(self, first_iFrame_id):
+        """
+        切换第一层iFrame
+        first_iFrame_id：第一层iframe的id
+        """
+        self.switch_to_default_content()
+        self.select_frame_id(first_iFrame_id)
+
     handles = []
 
     def switch_to_window(self, num=-1):
@@ -165,11 +174,20 @@ class BasePage():
 
     @catch_except
     def click(self, el):
+        """
+        单击
+        param el:元素
+        """
         sleep(0.5)
         el.click()
 
     @catch_except
     def wait_until_el_xpath(self, xpath):
+        """
+        显示等待定位单个元素
+        xpath：
+        return:el
+        """
         el = g.wait.until(
             expected_conditions.element_to_be_clickable((By.XPATH, xpath)))
         high_light(element=el)
@@ -178,16 +196,28 @@ class BasePage():
 
     @catch_except
     def wait_until_els_xpath(self, xpath):
+        """
+        显示等待定位多个元素
+        xpath：
+        return:el列表
+        """
         return g.wait.until(
             expected_conditions.presence_of_all_elements_located((By.XPATH, xpath)))
 
     @catch_except
     def close_browser(self):
+        """
+        关闭浏览器
+        """
         sleep(0.5)
         g.driver.quit()
 
     @catch_except
     def choose_ok_on_alert(self):
+        """
+        获取alert弹框并点击确定
+        xpath：
+        """
         sleep(3)
         alter = g.driver.switch_to.alert
         sleep(3)
@@ -196,17 +226,29 @@ class BasePage():
 
     @catch_except
     def get_alert_text(self):
+        """
+        获取alert弹框并的文本信息
+        """
         sleep(2)
         text = g.driver.switch_to.alert.text
         return text
 
     @catch_except
     def send_keys(self, el, value):
+        """
+        向el元素填写文本
+        el:元素
+        value：文本值
+        """
         el.clear()
         el.send_keys(value)
 
     @set_wait(1)
     def is_element_exist(self, xpath):
+        """
+        判断元素是否存在
+        xpath:
+        """
         try:
             el = g.wait.until(
                 expected_conditions.element_to_be_clickable((By.XPATH, xpath)))
@@ -217,85 +259,129 @@ class BasePage():
 
     @catch_except
     def get_text(self, el):
+        """
+        获取元素文本信息
+        el:元素
+        """
         return el.text
 
     @catch_except
     def get_element_xpath(self, xpath):
+        """
+        定位单个元素（无显示等待）
+        xpath:
+        """
         el = g.driver.find_element_by_xpath(xpath)
         high_light(element=el)
         return el
 
     @catch_except
     def right_click(self, xpath):
+        """
+        右击
+        xpath:
+        """
         right_click = g.driver.find_element_by_xpath(xpath)
         high_light(element=right_click)
         ActionChains(g.driver).context_click(right_click).perform()
 
     @catch_except
-    def is_selected(self, xpath):
-        el = g.wait.until(
-            expected_conditions.element_to_be_clickable((By.XPATH, xpath))).is_selected()
-        high_light(element=el)
-        return el
-
-    @catch_except
     def open_url(self, url):
+        """
+        打开url
+        url:
+        """
         g.driver.get(url)
         handles = g.driver.window_handles
         g.driver.switch_to.window(handles[-1])
 
     @catch_except
     def double_click(self, double_click_el):
+        """
+        双击元素
+        double_click_el:元素
+        """
         ActionChains(g.driver).double_click(double_click_el).perform()
 
     @catch_except
     def move_to_el(self, el):
+        """
+        移动到指定元素位置
+        el:元素
+        """
         webdriver.ActionChains(g.driver).move_to_element(el).perform()
         # webdriver.ActionChains(g.driver).click_and_hold(el).perform()
         sleep(1)
 
     @catch_except
-    def active_el(self):
-        return g.driver.switch_to.active_element
-
-    @catch_except
     def switch_to_default_content(self):
+        """
+        切换到主页面
+        """
         g.driver.switch_to.default_content()
 
     @catch_except
     def select_frame_id(self, id):
+        """
+        切换到指定id的frame上
+        id：
+        """
         g.driver.switch_to.frame(id)
 
     @catch_except
     def maximize_window(self):
+        """
+        窗口最大化
+        """
         g.driver.maximize_window()
 
     @catch_except
-    def current_window(self):
-        g.driver.current_window_handle()
-
-    @catch_except
     def execute_script(self, js, el):
+        """
+        通过js操作元素
+        el：
+        """
         g.driver.execute_script(js, el)
 
     @catch_except
     def execute_script_s(self, js, el, value):
+        """
+        通过js改变元素属性，多用于style里面的值
+        el：元素
+        value：需要修改的值
+        """
         g.driver.execute_script(js, el, value)
 
     @catch_except
     def get_select(self, el):
+        """
+        获取下拉框对象
+        el：元素
+        """
         return Select(el)
 
     @catch_except
     def get_attribute(self, el, att_name):
+        """
+        获取元素的属性值
+        el：元素
+        att_name：属性名
+        """
         return el.get_attribute(att_name)
 
     @catch_except
     def get_handles(self):
+        """
+        获取所有窗口的句柄
+        return：句柄列表
+        """
         return g.driver.window_handles
 
     @catch_except
     def switch_to_win(self, handle):
+        """
+        切换指定句柄的窗口
+        """
         g.driver.switch_to.window(handle)
 
     # ------------------------  assert api ------------------------#

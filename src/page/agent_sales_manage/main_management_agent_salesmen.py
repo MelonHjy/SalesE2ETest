@@ -35,7 +35,7 @@ class ManagementOfAgentSalesmen(TablePage):
     # 销售团队经理聘任与解聘
     xstdjlpryjp = "//input[@value='营销团队经理聘任与解聘']"
     query_btn = "//input[@value='查询']"
-    status_not_submit = "//inout[@id='taskstatus1']"   # 任务状态已提交
+    status = "//inout[@id='taskstatus{}']"  # 任务状态
     # iframe->营销团队经理聘任与解聘
     iframe = "page"
     menu_list = "//*[@id='menumain8000223038']"
@@ -43,6 +43,8 @@ class ManagementOfAgentSalesmen(TablePage):
     # ---------------------查询信息------------------------------ #
 
     user_code = "//input[@id='userCode']"  # 内部流转码
+    submit_frame = "//iframe[@name='submitFrame']"  # 提示解雇的提示框iframe
+    dismissal_btn = "//form[@id='fm1']/table/tbody/tr[4]/td/input[2]"  # 解聘按钮
 
     @allure.step("经营机构->销售人员->代理制销售人员代码管理")
     def into_page(self):
@@ -56,10 +58,12 @@ class ManagementOfAgentSalesmen(TablePage):
         self.select_frame_id(self.iframe)
 
     @allure.step("查询")
-    def query(self, user_code1):
+    def query(self, user_code1, status='0'):
         self.click(self.wait_until_el_xpath(self.user_code))
         self.send_keys(self.wait_until_el_xpath(self.user_code), user_code1)
+        self.click(self.wait_until_el_xpath(self.status.format(status)))
         self.click(self.wait_until_el_xpath(self.query_btn))
+        sleep(3)
 
     def assert_table_msg(self, usercode, name, id_cards, sjjg, group):
         # 需要加一个等待数据加载完成
@@ -77,8 +81,25 @@ class ManagementOfAgentSalesmen(TablePage):
     @allure.step("营销团队经理聘任与解聘")
     def appointment(self):
         self.click(self.wait_until_el_xpath(self.xstdjlpryjp))
-        #self.open_url("http://10.133.247.40:8004/sales/deputy/engageOrFire.do?efOrmau=e")
+        # self.open_url("http://10.133.247.40:8004/sales/deputy/engageOrFire.do?efOrmau=e")
         sleep(2)
         # 切换到【营销团队经理聘任与解聘】页面
         self.switch_to_window()
         self.maximize_window()
+
+    def select_by_user_code(self, user_code):
+        """
+        选择需要解聘的员工并返回归属团队代码
+        """
+        list = self.get_cell_text_by_head('内部流转码')
+        index = list.index(user_code)
+        self.click(self.get_radio_by_head(index, '选择'))
+        return index
+
+    def select_dismissal(self):
+        """
+        切换提示框frame，并点击解聘按钮
+        """
+        self.select_frame_id(self.wait_until_el_xpath(self.submit_frame))
+        self.click(self.wait_until_el_xpath(self.dismissal_btn))
+
