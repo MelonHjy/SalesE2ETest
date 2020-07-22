@@ -5,7 +5,7 @@
 import allure
 import pytest
 
-from src.page.agent_sales_manage.appointment_and_dismissal import AppointmentAndDismissal
+from src.page.agent_sales_manage.appointment_manager import AppointmentAndDismissal
 from src.page.agent_sales_manage.main_management_agent_salesmen import ManagementOfAgentSalesmen
 from src.utils.except_util import get_screenshot
 from src.utils.log import info

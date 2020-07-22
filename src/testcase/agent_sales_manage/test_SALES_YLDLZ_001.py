@@ -5,7 +5,7 @@
 import allure
 import pytest
 
-from src.page.agent_sales_manage.appointment_and_dismissal import AppointmentAndDismissal
+from src.page.agent_sales_manage.appointment_manager import AppointmentManager
 from src.page.agent_sales_manage.main_management_agent_salesmen import ManagementOfAgentSalesmen
 from src.utils.driver_util import *
 from src.utils.except_util import get_screenshot
@@ -13,7 +13,7 @@ from src.utils.except_util import get_screenshot
 
 @allure.feature("经理聘任主流程")
 class Test_YLDLZ_001():
-    appointment_and_dismissal = AppointmentAndDismissal()
+    appointment_and_dismissal = AppointmentManager()
     main_management_agent_salesmen = ManagementOfAgentSalesmen()
     # try:
     #     sql = "select * from SaUUser"
@@ -112,7 +112,7 @@ class Test_YLDLZ_001():
         # self.main_management_agent_salesmen.assert_table_msg(self.msg['usercode'], name, id_cards, sjjg, group)
         # get_screenshot("查询验证")
         # 验证内部流转码\
-        # self.main_management_agent_salesmen.switch_to_window()
+        self.main_management_agent_salesmen.switch_to_window()
         self.main_management_agent_salesmen.into_page()
         self.main_management_agent_salesmen.query('83258549')
         self.send_keys(self.wait_until_el_xpath(self.user_code), Test_YLDLZ_001.msg['usercode'])
@@ -137,4 +137,4 @@ class Test_YLDLZ_001():
             self.main_management_agent_salesmen.wait_until_el_xpath(self.main_management_agent_salesmen.query))
         self.main_management_agent_salesmen.set_table_num(1)
         self.main_management_agent_salesmen.assert_table_msg(Test_YLDLZ_001.msg['usercode'], name, id_cards, sjjg, group)
-        self.main_management_agent_salesmen.click(self.main_management_agent_salesmen.get_cell_a(0, 13))
+        self.main_management_agent_salesmen.click(self.main_management_agent_salesmen.get_a_by_head(0,"操作"))
