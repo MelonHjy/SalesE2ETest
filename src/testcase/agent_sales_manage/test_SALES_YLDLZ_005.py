@@ -47,7 +47,7 @@ class Test_YLDLZ_005():
         #  切换到查询页面
         self.main_management_agent_salesmen.switch_to_window()
         self.main_management_agent_salesmen.select_frame_id(self.main_management_agent_salesmen.frame_id)
-        self.main_management_agent_salesmen.select_frame_id(self.main_management_agent_salesmen.iframe)
+        self.main_management_agent_salesmen.select_frame_id(self.main_management_agent_salesmen.iframe_page)
         self.main_management_agent_salesmen.set_table_num(3)
         self.main_management_agent_salesmen.query(user_code)
         info("选择数据")

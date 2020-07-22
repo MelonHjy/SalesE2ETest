@@ -12,33 +12,19 @@ from src.utils.log import info
 
 
 class ManagementOfAgentSalesmen(TablePage):
-    # frame
-    frame_id = 'main'
-    # 上级机构选项
-    sjjg = "//input[@id='comCode']"
-    # 归属机构选项
-    gsjg = "//input[@id='groupcode']"
-    # 人员代码
-    rydm = "//input[@id='userCode']"
-    # 姓名
-    xm = "//input[@id='userName']"
-    # 身份证号
-    sfzh = "//input[@id='identifyNumber']"
-    # 性别
-    xb = "//select[@id='sex']"
-    # 资格证号
-    zgzh = "//input[@id='agentno']"
-    # 职业证号
-    zyzh = "//input[@id='credentialno']"
-    # 人员属性
-    rysx = "//select[@id='usertype22']"
-    # 销售团队经理聘任与解聘
-    xstdjlpryjp = "//input[@value='营销团队经理聘任与解聘']"
+    sjjg = "//input[@id='comCode']"  # 上级机构选项
+    gsjg = "//input[@id='groupcode']"  # 归属机构选项
+    rydm = "//input[@id='userCode']"  # 人员代码
+    xm = "//input[@id='userName']"  # 姓名
+    sfzh = "//input[@id='identifyNumber']"  # 身份证号
+    xb = "//select[@id='sex']"  # 性别
+    zgzh = "//input[@id='agentno']"  # 资格证号
+    zyzh = "//input[@id='credentialno']"  # 职业证号
+    rysx = "//select[@id='usertype22']"  # 人员属性
+    xstdjlpryjp = "//input[@value='营销团队经理聘任与解聘']"  # 销售团队经理聘任与解聘
     query_btn = "//input[@value='查询']"
     status = "//inout[@id='taskstatus{}']"  # 任务状态
-    # iframe->营销团队经理聘任与解聘
-    iframe = "page"
-    menu_list = "//*[@id='menumain8000223038']"
+    menu_list_id = 'menumain8000223038'
 
     # ---------------------查询信息------------------------------ #
 
@@ -48,14 +34,7 @@ class ManagementOfAgentSalesmen(TablePage):
 
     @allure.step("经营机构->销售人员->代理制销售人员代码管理")
     def into_page(self):
-        self.select_frame_id(self.frame_id)
-        self.click(self.wait_until_el_xpath(self.jyjg))
-        self.execute_script("arguments[0].style.visibility='visible';", self.wait_until_el_xpath(self.menu_list))
-        self.click(self.wait_until_el_xpath(self.xsryzk))
-        self.execute_script("arguments[0].style.visibility='visible';", self.wait_until_el_xpath(self.menu_list))
-        self.click(self.wait_until_el_xpath(self.dlzxsrydmgl))
-        # self.execute_script("arguments[0].style.visibility='hidden';", self.wait_until_el_xpath(self.menu_list))
-        self.select_frame_id(self.iframe)
+        self.to_main_page("经营机构", "销售人员", "代理制销售人员代码管理", self.menu_list_id)
 
     @allure.step("查询")
     def query(self, user_code1, status='0'):
@@ -102,4 +81,3 @@ class ManagementOfAgentSalesmen(TablePage):
         """
         self.select_frame_id(self.wait_until_el_xpath(self.submit_frame))
         self.click(self.wait_until_el_xpath(self.dismissal_btn))
-
