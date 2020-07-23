@@ -126,7 +126,6 @@ class Test_YLDLZ_001():
         self.appointment_and_dismissal.maximize_window()
         self.appointment_and_dismissal.prepare_save_commit()
         self.appointment_and_dismissal.submit_()
-        self.appointment_and_dismissal.close_over_btn()
         # 切换到‘代理制销售人员代码管理’页面
         self.appointment_and_dismissal.switch_to_window()
 

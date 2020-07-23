@@ -23,7 +23,7 @@ class ManagementOfAgentSalesmen(TablePage):
     rysx = "//select[@id='usertype22']"  # 人员属性
     xstdjlpryjp = "//input[@value='营销团队经理聘任与解聘']"  # 销售团队经理聘任与解聘
     query_btn = "//input[@value='查询']"
-    status = "//inout[@id='taskstatus{}']"  # 任务状态
+    status = "//input[@id='taskstatus{}']"  # 任务状态
     menu_list_id = 'menumain8000223038'
 
     # ---------------------查询信息------------------------------ #
@@ -37,10 +37,11 @@ class ManagementOfAgentSalesmen(TablePage):
         self.to_main_page("经营机构", "销售人员", "代理制销售人员代码管理", self.menu_list_id)
 
     @allure.step("查询")
-    def query(self, user_code1, status='0'):
+    def query(self, user_code1, status=""):
         self.click(self.wait_until_el_xpath(self.user_code))
         self.send_keys(self.wait_until_el_xpath(self.user_code), user_code1)
-        self.click(self.wait_until_el_xpath(self.status.format(status)))
+        if status != "":
+            self.click(self.wait_until_el_xpath(self.status.format(status)))
         self.click(self.wait_until_el_xpath(self.query_btn))
         sleep(3)
 
