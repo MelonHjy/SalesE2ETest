@@ -10,8 +10,6 @@ class DismissalManager(TablePage):
     prepare_save_close_btn = "//input[@class='button_ty']"  # 解聘保存后关闭按钮
     save_submit_btn = "//input[@id='savedeputy2']"
     submit_iframe = "//iframe[@name='submitFrame']"  # 提交任务的iframe
-    reviewer_input = "//input[@id='code']"  # 审核人填写框
-    submit_btn = "//input[@id='save1']"  # 提交任务
     submit_close_btn = "//table/tbody/tr[2]/td/input"  # 提交任务后的关闭按钮
 
     def select_by_user_code(self, user_code):
@@ -43,16 +41,10 @@ class DismissalManager(TablePage):
         self.click(self.wait_until_el_xpath(self.save_submit_btn))
         self.choose_ok_on_alert()
 
-    def switch_iframe_Reviewer(self, reviewer=""):
+    def switch_iframe_reason(self, textarea=""):
         """
-        切换iframe并填写审核人
+        切换iframe并填写审核人，提交任务并关闭窗口
         """
         self.select_frame_id(self.wait_until_el_xpath(self.submit_iframe))
-        self.send_keys(self.wait_until_el_xpath(self.reviewer_input), reviewer)
-
-    def submit_close(self):
-        """
-        提交任务并关闭窗口
-        """
-        self.click(self.wait_until_el_xpath(self.submit_btn))
+        self.submit_interaction(textarea=textarea)
         self.click(self.wait_until_el_xpath(self.submit_close_btn))

@@ -5,9 +5,9 @@
 import allure
 import pytest
 
-from config.global_var import sleep
 from src.page.agent_sales_manage.dismissal_manager import DismissalManager
 from src.page.agent_sales_manage.main_management_agent_salesmen import ManagementOfAgentSalesmen
+from src.page.integrated_management.agent_sales_recheck import AgentSalesRecheck
 from src.utils.except_util import get_screenshot
 from src.utils.log import *
 
@@ -16,11 +16,12 @@ from src.utils.log import *
 class Test_YLDLZ_005():
     main_management_agent_salesmen = ManagementOfAgentSalesmen()
     dismissal_manager = DismissalManager()
+    agent_sales_recheck = AgentSalesRecheck()
 
     data = [("83258554")]
-
+    @pytest.mark.skip
     @pytest.mark.parametrize("user_code", data)
-    @pytest.mark.usefixtures("login_jiangsu_p")
+    @pytest.mark.usefixtures("login_jiangsu_p_fun")
     def test_YLDLZ_005(self, user_code):
         info("进入代理制销售人员代码管理页面")
         self.main_management_agent_salesmen.into_page()
@@ -65,19 +66,22 @@ class Test_YLDLZ_005():
         self.dismissal_manager.select_by_user_code(user_code)
         info("解聘保存并提交")
         self.dismissal_manager.save_submit()
-        self.dismissal_manager.switch_iframe_Reviewer()
-        self.dismissal_manager.submit_close()
-        #  切换到查询页面
-        self.main_management_agent_salesmen.switch_to_window()
-        self.main_management_agent_salesmen.select_frame_id(self.main_management_agent_salesmen.frame_id)
-        self.click(self.wait_until_el_xpath(self.jyjg))
-        self.execute_script("arguments[0].style.visibility='visible';", self.wait_until_el_xpath(self.menu_list))
-        self.click(self.wait_until_el_xpath(self.dlzxsrydmgl))
-        self.main_management_agent_salesmen.select_frame_id(self.main_management_agent_salesmen.iframe)
+        self.dismissal_manager.switch_iframe_reason()
+    @pytest.mark.skip
+    @pytest.mark.parametrize("user_code", data)
+    @pytest.mark.usefixtures("login_jiangsu_p_fun")
+    def test_YLDLZ_005_check(self, user_code):   # 复核
+        info("进入代理制销售人员代码管理页面")
+        self.main_management_agent_salesmen.into_page()
+        info("查询该人员代码是否存在数据")
         self.main_management_agent_salesmen.query(user_code, status='1')
         self.main_management_agent_salesmen.set_table_num(1)
-        text = self.main_management_agent_salesmen.get_cell_text_by_head("状态", row)
+        text = self.main_management_agent_salesmen.get_cell_text_by_head("状态", 0)
         self.main_management_agent_salesmen.assertEqual("判断状态列的值为”经理解聘复核“", text, "经理解聘复核")
 
-    # @pytest.mark.usefixtures("login_jiangsu_p")
-    # def test_YLDLZ_005_(self, user_code):   # 复核
+    @pytest.mark.parametrize("user_code", data)
+    @pytest.mark.usefixtures("login_jiangsu_p_fun")
+    def test_YLDLZ_005_recheck(self, user_code):
+        info("综合管理->销售人员->代理制销售人员代码复核")
+        self.agent_sales_recheck.into_page()
+        self.agent_sales_recheck.query()

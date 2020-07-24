@@ -6,9 +6,10 @@ import allure
 
 from config.global_var import sleep
 from src.page.base_page import BasePage
+from src.page.process_page import ProcessPage
 
 
-class AppointmentManager(BasePage):
+class AppointmentManager(ProcessPage):
     # frame
     frame_id = 'main'
     # 销售团队经理聘任与解聘
@@ -68,7 +69,6 @@ class AppointmentManager(BasePage):
     close = "//input[@class='button_ty']"
     submit_dlg = "//div[@id='submitDlg_c']"
     submit_iframe = "submitFrame"
-    submit_btn = "//*[@id='save1']"
     close_over = "//input[@class='button_ty_over']"
 
     @allure.step("增加资质信息两条（资格证、执业证）")
@@ -195,14 +195,11 @@ class AppointmentManager(BasePage):
         self.click(self.wait_until_el_xpath(self.close))
         sleep(3)
 
-    def submit_(self):
+    def submit_process(self, textarea=""):
         self.switch_to_first_iFrame(self.submit_iframe)
-        self.click(self.wait_until_el_xpath(self.submit_btn))
+        self.submit_interaction(textarea=textarea)
         sleep(2)
-
-    def close_over_btn(self):
         self.click(self.wait_until_el_xpath(self.close_over))
-        sleep(2)
 
     # ---------------------以下输入信息验证相关------------------------------ #
 

@@ -19,7 +19,22 @@ def login_jiangsu_p():
     url = g.config['DEFAULT']['url']
     browser = g.config['DEFAULT']['browser']
     g.driver = get_browser(browser)
-    g.wait = WebDriverWait(g.driver, 120)
+    g.wait = WebDriverWait(g.driver, 60)
+    BasePage().maximize_window()
+    info("进入%s", url)
+    BasePage().open_url(url)
+    CommonSteps().login_p()
+    yield
+    BasePage().close_browser()
+
+@pytest.fixture(scope="function", autouse=False)
+@allure.severity('blocker')
+def login_jiangsu_p_fun():
+    g.config = get_config()
+    url = g.config['DEFAULT']['url']
+    browser = g.config['DEFAULT']['browser']
+    g.driver = get_browser(browser)
+    g.wait = WebDriverWait(g.driver, 60)
     BasePage().maximize_window()
     info("进入%s", url)
     BasePage().open_url(url)
