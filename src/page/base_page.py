@@ -18,7 +18,7 @@ class BasePage():
     # ------------------------  菜单 ------------------------#
     frame_id = 'main'
     iframe_page = "page"
-    module_menu = "//a[text()='{}']/.."  # 模块
+    module_menu = "//a[contains(text(), '{}')]/.."  # 模块
     zk_menu = "//a[text()='{}']/../../td[1]"  # 展开菜单
     menu = "//a[text()='{}']"  # 选择菜单名
     menu_list = "//*[@id='{}']"

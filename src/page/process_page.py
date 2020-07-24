@@ -19,9 +19,10 @@ class ProcessPage(BasePage):
     def submit_interaction(self, check_state="", next_node="", textarea=""):
         """
         前提通过iframe进入到内部html
-        获取当前环节并打印出来
-        下拉菜单、打回岗位（关键字通过）、审核意见、失败原因、
-        提交任务
+        下拉菜单、打回岗位（关键字通过）、审核意见、失败原因
+        check_state:是否通过
+        next_node：打回
+        textarea：文本框
         """
         text = self.get_text(self.wait_until_el_xpath(self.now_node))
         info("当前环节：{}".format(text))
