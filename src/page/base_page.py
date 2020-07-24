@@ -38,13 +38,6 @@ class BasePage():
     month_select_old = "//select[@id='tbSelMonth']"
     day_select_old = "//font[@id='cellText' and text()='{0}']"
 
-    # ------------------------  共同交互元素 ------------------------#
-    now_node = "//*[contains(text(), '当前环节')]/../td[2]"
-    textarea = "//textarea"
-    submit = "//*[@value='提交任务']"
-    state = "//option[contains(text(), '通过')]/.."
-    next = "//option[contains(text(), '打回')]/.."
-
     # ------------------------  常用操作封装 ------------------------#
 
     def to_main_page(self, module_menu, zk_menu, menu, menu_list_id):
@@ -182,28 +175,6 @@ class BasePage():
         days = self.wait_until_els_xpath(self.day_select_old.format(int(day)))
         day_select = days[1] if len(days) > 1 and int(day) in range(23, 32) else days[0]
         self.click(day_select)
-
-    def submit_interaction(self, check_state="", next_node="", textarea=""):
-        """
-        前提通过iframe进入到内部html
-        获取当前环节并打印出来
-        下拉菜单、打回岗位（关键字通过）、审核意见、失败原因、
-        提交任务
-        """
-        text = self.get_text(self.wait_until_el_xpath(self.now_node))
-        info("当前环节：{}".format(text))
-        if self.is_element_exist(self.state) and check_state != "":
-            self.select(self.state, check_state)
-            info("选择：{}".format(check_state))
-        if self.is_element_exist(self.next) and next_node != "":
-            self.select(self.next, next_node)
-            info("选择：{}".format(next_node))
-        # textarea输入框
-        if self.is_element_exist(self.textarea):
-            self.send_keys(self.wait_until_el_xpath(self.textarea), textarea)
-            info("textarea：{}".format(textarea))
-        self.click(self.wait_until_el_xpath(self.submit))
-        info("提交任务")
 
     # ------------------------  同名api ------------------------#
 

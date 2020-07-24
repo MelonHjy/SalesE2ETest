@@ -5,9 +5,9 @@
 import allure
 import pytest
 
-from config.global_var import sleep
 from src.page.agent_sales_manage.dismissal_manager import DismissalManager
 from src.page.agent_sales_manage.main_management_agent_salesmen import ManagementOfAgentSalesmen
+from src.page.integrated_management.agent_sales_recheck import AgentSalesRecheck
 from src.utils.except_util import get_screenshot
 from src.utils.log import *
 
@@ -16,6 +16,7 @@ from src.utils.log import *
 class Test_YLDLZ_005():
     main_management_agent_salesmen = ManagementOfAgentSalesmen()
     dismissal_manager = DismissalManager()
+    agent_sales_recheck = AgentSalesRecheck()
 
     data = [("83258554")]
     @pytest.mark.skip
@@ -66,7 +67,7 @@ class Test_YLDLZ_005():
         info("解聘保存并提交")
         self.dismissal_manager.save_submit()
         self.dismissal_manager.switch_iframe_reason()
-
+    @pytest.mark.skip
     @pytest.mark.parametrize("user_code", data)
     @pytest.mark.usefixtures("login_jiangsu_p_fun")
     def test_YLDLZ_005_check(self, user_code):   # 复核
@@ -81,4 +82,6 @@ class Test_YLDLZ_005():
     @pytest.mark.parametrize("user_code", data)
     @pytest.mark.usefixtures("login_jiangsu_p_fun")
     def test_YLDLZ_005_recheck(self, user_code):
-        pass
+        info("综合管理->销售人员->代理制销售人员代码复核")
+        self.agent_sales_recheck.into_page()
+        self.agent_sales_recheck.query()
