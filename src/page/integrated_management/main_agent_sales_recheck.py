@@ -10,7 +10,6 @@ from src.page.table_page import TablePage
 
 
 class AgentSalesRecheck(TablePage, ProcessPage):
-    menu_list_id = "menumain8000223044"
     user_code = "//input[@id='userCode']"  # 人员代码
     status = "//label[contains(text(),'{}')]"
     query_btn = "//input[@value='查询']"
@@ -19,7 +18,7 @@ class AgentSalesRecheck(TablePage, ProcessPage):
 
     @allure.step("综合管理->销售人员->代理制销售人员代码复核")
     def into_page(self):
-        self.to_main_page("个代渠道", "销售人员", "代理制销售人员代码审批", "menumain8000223040")
+        self.to_main_page("综合管理", "销售人员", "代理制销售人员代码复核")
 
     @allure.step("查询")
     def query(self, user_code1, status="未提交", manage_flag='', identify_number=''):

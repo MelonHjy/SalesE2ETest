@@ -19,7 +19,7 @@ class BasePage():
     frame_id = 'main'
     iframe_page = "page"
     module_menu = "//a[contains(text(), '{}')]/.."  # 模块
-    zk_menu = "//a[text()='{}']/../../td[1]"  # 展开菜单
+    zk_menu = "//div[@id='{0}']/div/div/div/div/table/tbody/tr/td[2]/a[text()='{1}']/../../td[1]"  # 展开菜单
     menu = "//a[text()='{}']"  # 选择菜单名
     menu_list = "//*[@id='{}']"
 
@@ -40,7 +40,7 @@ class BasePage():
 
     # ------------------------  常用操作封装 ------------------------#
 
-    def to_main_page(self, module_menu, zk_menu, menu, menu_list_id):
+    def to_main_page(self, module_menu, zk_menu, menu):
         """
         选择菜单进入功能页面
         module_menu：模块名
@@ -48,14 +48,21 @@ class BasePage():
         menu：最终菜单名
         """
         self.select_frame_id(self.frame_id)
-        self.click(self.wait_until_el_xpath(self.module_menu.format(module_menu)))
+        _module_menu = self.wait_until_el_xpath(self.module_menu.format(module_menu))
+        self.click(_module_menu)
+        menu_list_id = self.get_attribute(_module_menu, 'onmouseover').split("'")[1]
+        _menu_list = self.menu_list.format(menu_list_id)
         self.execute_script("arguments[0].style.visibility='visible';",
-                            self.wait_until_el_xpath(self.menu_list.format(menu_list_id)))
-        self.click(self.wait_until_el_xpath(self.zk_menu.format(zk_menu)))
+                            self.wait_until_el_xpath(_menu_list))
+        self.click(self.wait_until_el_xpath(self.zk_menu.format(menu_list_id, zk_menu)))
         self.execute_script("arguments[0].style.visibility='visible';",
-                            self.wait_until_el_xpath(self.menu_list.format(menu_list_id)))
+                            self.wait_until_el_xpath(_menu_list))
         self.click(self.wait_until_el_xpath(self.menu.format(menu)))
-        # self.execute_script("arguments[0].style.visibility='hidden';", self.wait_until_el_xpath(self.menu_list))
+        self.execute_script("arguments[0].style.visibility='hidden';", self.wait_until_el_xpath(_menu_list))
+        self.select_frame_id(self.iframe_page)
+
+    def back_to_page(self):
+        self.switch_to_window()
         self.select_frame_id(self.iframe_page)
 
     # 页面切换
