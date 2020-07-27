@@ -2,10 +2,11 @@
 # @Time : 2020/7/21 17:16
 # @Author: fyl
 # @File : dismissal_manager.py
+from src.page.process_page import ProcessPage
 from src.page.table_page import TablePage
 
 
-class DismissalManager(TablePage):
+class DismissalManager(TablePage, ProcessPage):
     prepare_save_btn = "//input[@id='preparesavedeputy2']"  # 解聘保存
     prepare_save_close_btn = "//input[@class='button_ty']"  # 解聘保存后关闭按钮
     save_submit_btn = "//input[@id='savedeputy2']"

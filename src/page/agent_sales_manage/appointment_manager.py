@@ -162,12 +162,6 @@ class AppointmentManager(ProcessPage):
     def select_culture(self, text):
         self.select(self.culture, text)
 
-    @allure.step("填入姓名:{username},身份证号：{id_cards},手机号码：{mobile}")
-    def contract_tab_input(self, username, id_cards, mobile):
-        self.send_keys(self.wait_until_el_xpath(self.username), username)
-        self.send_keys(self.wait_until_el_xpath(self.id_cards), id_cards)
-        self.send_keys(self.wait_until_el_xpath(self.mobile), mobile)
-
     @allure.step("切换到合同信息")
     def switch_contract_tab(self):
         self.click(self.wait_until_el_xpath(self.contract_tab))
@@ -184,7 +178,7 @@ class AppointmentManager(ProcessPage):
     def prepare_save_commit(self):
         self.click(self.wait_until_el_xpath(self.save_commit))
 
-    @allure.step("获取人员代码，合同号")
+    @allure.step("生成人员代码，合同号")
     def get_msg(self):
         text = self.get_text(self.wait_until_el_xpath(self.usercodeAndContract))
         a = text.split(' ')
