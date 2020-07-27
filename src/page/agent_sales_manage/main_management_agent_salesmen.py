@@ -21,7 +21,7 @@ class ManagementOfAgentSalesmen(TablePage):
     zgzh = "//input[@id='agentno']"  # 资格证号
     zyzh = "//input[@id='credentialno']"  # 职业证号
     rysx = "//select[@id='usertype22']"  # 人员属性
-    xstdjlpryjp = "//input[@value='营销团队经理聘任与解聘']"  # 销售团队经理聘任与解聘
+    input_btn = "//input[@value='{}']"  # 销售团队经理聘任与解聘
     query_btn = "//input[@value='查询']"
     status = "//input[@id='taskstatus{}']"  # 任务状态
     menu_list_id = 'menumain8000223038'
@@ -59,8 +59,8 @@ class ManagementOfAgentSalesmen(TablePage):
         self.assertEqual("验证归属机构", group1, group)
 
     @allure.step("营销团队经理聘任与解聘")
-    def appointment(self):
-        self.click(self.wait_until_el_xpath(self.xstdjlpryjp))
+    def click_btn(self, btn_text):
+        self.click(self.wait_until_el_xpath(self.input_btn.format(btn_text)))
         # self.open_url("http://10.133.247.40:8004/sales/deputy/engageOrFire.do?efOrmau=e")
         sleep(2)
         # 切换到【营销团队经理聘任与解聘】页面
