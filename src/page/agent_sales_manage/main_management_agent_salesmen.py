@@ -58,11 +58,11 @@ class ManagementOfAgentSalesmen(TablePage):
     @allure.step("营销团队经理聘任与解聘")
     def click_btn(self, btn_text):
         self.click(self.wait_until_el_xpath(self.input_btn.format(btn_text)))
-        self.open_url("http://10.133.247.40:8004/sales/deputy/engageOrFire.do?efOrmau=e")
+        # self.open_url("http://10.133.247.40:8004/sales/deputy/engageOrFire.do?efOrmau=e")
         sleep(2)
         # 切换到【营销团队经理聘任与解聘】页面
-        # self.switch_to_window()
-        # self.maximize_window()
+        self.switch_to_window()
+        self.maximize_window()
 
     def select_by_user_code(self, user_code):
         """
