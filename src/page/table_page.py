@@ -43,7 +43,7 @@ class TablePage(BasePage):
         # col 非空、row 空
         self.table_col = "//td[contains(@id,'yui-dt" + str(
             table_num) + "') and substring(@id, string-length(@id)-string-length('cell{0}') +1) = 'cell{0}']"
-        # col 非空、row 非空    /descendant-or-self::*
+        # col 非空、row 非空
         self.table_row_col = "//td[@id='yui-dt" + str(table_num) + "-bdrow{0}-cell{1}']"
 
         # 表格头
@@ -168,7 +168,7 @@ class TablePage(BasePage):
     def get_table_heads_text(self):
         if not self.heads:
             heads_div = self.wait_until_els_xpath(self.table_head)
-            self.heads.extend([head_div.get_attribute('innerText') for head_div in heads_div])
+            self.heads=[head_div.get_attribute('innerText') for head_div in heads_div]
         return self.heads
 
     # 当前页面显示的行数

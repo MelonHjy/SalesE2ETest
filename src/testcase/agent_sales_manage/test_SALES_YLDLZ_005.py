@@ -88,7 +88,7 @@ class Test_YLDLZ_005():
         info("综合管理->销售人员->代理制销售人员代码复核")
         self.agent_sales_recheck.into_page()
         info("查询人员代码{}".format(user_code))
-        self.agent_sales_recheck.query()
+        self.agent_sales_recheck.query(user_code)
         info("进入操作界面")
         status_list = self.agent_sales_recheck.get_cell_text_by_head('审核状态')
         index = status_list.index("经理解聘复核")

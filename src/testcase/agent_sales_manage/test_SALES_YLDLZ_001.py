@@ -7,6 +7,7 @@ import pytest
 
 from src.page.agent_sales_manage.appointment_manager import AppointmentManager
 from src.page.agent_sales_manage.main_management_agent_salesmen import ManagementOfAgentSalesmen
+from src.page.integrated_management.main_agent_sales_recheck import AgentSalesRecheck
 from src.utils.driver_util import *
 from src.utils.except_util import get_screenshot
 
@@ -15,6 +16,7 @@ from src.utils.except_util import get_screenshot
 class Test_YLDLZ_001():
     appointment_and_dismissal = AppointmentManager()
     main_management_agent_salesmen = ManagementOfAgentSalesmen()
+    agent_sales_recheck = AgentSalesRecheck()
     # try:
     #     sql = "select * from SaUUser"
     #     data = g.db.select(sql)
@@ -24,7 +26,7 @@ class Test_YLDLZ_001():
     # finally:
     #     g.db.close_connection()
 
-    data = [("武介堂ui测试", "330103199010115314", "13311212125", "32990038--测试0506营销", "经理", "汉族", "中共党员", "研究生")]
+    data = [("杜替菁ui测试", "220106199305099394", "13311212125", "32990038--测试0506营销", "经理", "汉族", "中共党员", "研究生")]
 
     data1 = [("资格证", "123456", "2019-01-01", "B", "执业证", "654321", "2019-02-02", "2020-07-08", '2022-07-08',
               "RULE20120000000000001--保险经纪公司", "111222333449", "折", "中国工商银行股份有限公司",
@@ -99,38 +101,65 @@ class Test_YLDLZ_001():
         info("获取人员代码，合同号")
         Test_YLDLZ_001.msg = self.appointment_and_dismissal.get_msg()
         info(Test_YLDLZ_001.msg)
-        get_screenshot("保存提交")
+        get_screenshot("聘任保存")
         self.appointment_and_dismissal.close_btn()
 
-    @allure.story("查询是否存在该数据")
+    # @pytest.mark.skip
+    @allure.story("查询未提交中是否存在该数据，聘任保存并提交")
     @pytest.mark.dependency(name="three", depends=["two"])
     @pytest.mark.parametrize("name, id_cards, sjjg, group", data2)
     @pytest.mark.usefixtures("login_jiangsu_p")
-    def test_YLDLZ_001_assert(self, name, id_cards, sjjg, group):
-        # self.main_management_agent_salesmen.into_page_query(Test_YLDLZ_001.msg['usercode'])
-        # sleep(2)
-        # self.main_management_agent_salesmen.assert_table_msg(self.msg['usercode'], name, id_cards, sjjg, group)
-        # get_screenshot("查询验证")
-        # 验证内部流转码\
-        self.main_management_agent_salesmen.switch_to_window()
-        self.main_management_agent_salesmen.into_page()
-        self.main_management_agent_salesmen.query('83258549')
-        self.send_keys(self.wait_until_el_xpath(self.user_code), Test_YLDLZ_001.msg['usercode'])
-        self.click(self.wait_until_el_xpath(self.query))
-        sleep(2)
-        self.main_management_agent_salesmen.assert_table_msg(Test_YLDLZ_001.msg['usercode'], name, id_cards, sjjg, group)
-        self.main_management_agent_salesmen.click(self.main_management_agent_salesmen.get_radio_by_head(0, "选择"))
-        self.appointment_and_dismissal.click(
-            self.appointment_and_dismissal.wait_until_el_xpath(self.appointment_and_dismissal.xstdjlpryjp))
-        self.appointment_and_dismissal.switch_to_window()
-        self.appointment_and_dismissal.maximize_window()
-        self.appointment_and_dismissal.prepare_save_commit()
-        self.appointment_and_dismissal.submit_process()
-        # 切换到‘代理制销售人员代码管理’页面
-        self.appointment_and_dismissal.switch_to_window()
-
-        # 勾选未提交 任务状态
+    def test_YLDLZ_001_commit(self, name, id_cards, sjjg, group):
+        self.main_management_agent_salesmen.back_to_page()
         self.main_management_agent_salesmen.query(Test_YLDLZ_001.msg['usercode'])
+        sleep(2)  # 等待数据返回
+        self.main_management_agent_salesmen.assert_table_msg(Test_YLDLZ_001.msg['usercode'], name, id_cards, sjjg,
+                                                             group)
+        self.main_management_agent_salesmen.click(self.get_radio_by_head(0, '选择'))
+        self.main_management_agent_salesmen.appointment()
+        self.appointment_and_dismissal.prepare_save_commit()
+        self.agent_sales_recheck.switch_to_first_iFrame("submitFrame")
+        self.agent_sales_recheck.submit_interaction(check_state="", textarea="ui测试")
+        sleep(3)
+        self.agent_sales_recheck.click(self.agent_sales_recheck.wait_until_el_xpath("//*[@value='关 闭(G)']"))
+        # self.appointment_and_dismissal.submit_()
+        # self.appointment_and_dismissal.close_over_btn()
+
+    @pytest.mark.skip
+    @allure.story("查询已提交中是否存在该数据，流程查看岗位信息")
+    @pytest.mark.dependency(name="four", depends=["three"])
+    @pytest.mark.usefixtures("login_jiangsu_p")
+    def test_YLDLZ_001_assert(self):
+        # 切换到‘代理制销售人员代码管理’页面
+        self.main_management_agent_salesmen.back_to_page()
+        self.main_management_agent_salesmen.query(Test_YLDLZ_001.msg['usercode'], 1)
         self.main_management_agent_salesmen.set_table_num(1)
-        self.main_management_agent_salesmen.assert_table_msg(Test_YLDLZ_001.msg['usercode'], name, id_cards, sjjg, group)
-        self.main_management_agent_salesmen.click(self.main_management_agent_salesmen.get_a_by_head(0,"操作"))
+        self.main_management_agent_salesmen.click(self.get_radio_by_head(0, '流程查询'))
+        # 切换到‘工作流列表’页面
+        self.main_management_agent_salesmen.switch_to_window()
+        self.main_management_agent_salesmen.set_table_num(0)
+        self.main_management_agent_salesmen.assert_workflow_msg()
+        g.driver.close()
+        self.main_management_agent_salesmen.back_to_page()
+
+    @allure.story("地市级销售管理综合岗复核")
+    @pytest.mark.dependency(name="five", depends=["four"])
+    @pytest.mark.usefixtures("login_jiangsu_p")
+    def test_YLDLZ_005_recheck(self):
+        info("综合管理->销售人员->代理制销售人员代码复核")
+        self.agent_sales_recheck.into_page()
+        info("查询人员代码{}".format(Test_YLDLZ_001.msg['usercode']))
+        self.agent_sales_recheck.query(Test_YLDLZ_001.msg['usercode'])
+        info("进入操作界面")
+        status_list = self.agent_sales_recheck.get_cell_text_by_head('审核状态')
+        index = status_list.index("经理聘任复核")
+        self.agent_sales_recheck.click(self.agent_sales_recheck.get_a_by_head(index, '操作'))
+        self.agent_sales_recheck.switch_to_window()
+        self.agent_sales_recheck.maximize_window()
+        info("检查信息点")
+        info("复核")
+        self.agent_sales_recheck.click(self.agent_sales_recheck.wait_until_el_xpath("//input[@id='success']"))
+        self.agent_sales_recheck.switch_to_first_iFrame("submitFrame")
+        self.agent_sales_recheck.submit_interaction(check_state="", textarea="ui测试")
+        sleep(3)
+        self.agent_sales_recheck.click(self.agent_sales_recheck.wait_until_el_xpath("//*[@value='关 闭(G)']"))
