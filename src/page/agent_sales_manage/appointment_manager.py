@@ -5,7 +5,6 @@
 import allure
 
 from config.global_var import sleep
-from src.page.base_page import BasePage
 from src.page.process_page import ProcessPage
 
 
@@ -19,6 +18,7 @@ class AppointmentManager(ProcessPage):
     # 营销团队经理聘任
     case = "//*[@class='case']"
     close_icon = "//div[@class='container-close']"  # 提交后提示选择审核人对话框的关闭图标
+    save_commit2 = "//input[@id='savedeputy2']"    # 有效人员聘任经理 保存并提交
 
     # ---------------------人员基础信息填写项------------------------------ #
     user_tab = "//*[@id='folder-label-userTab']"
@@ -68,7 +68,7 @@ class AppointmentManager(ProcessPage):
     usercodeAndContract = "//td[@colSpan='2']"  # 人员代码，合同号
     close = "//input[@class='button_ty']"
     submit_dlg = "//div[@id='submitDlg_c']"
-    submit_iframe = "submitFrame"
+    submit_iframe = "//iframe[@name='submitFrame']"  # 提交任务的iframe
     close_over = "//input[@class='button_ty_over']"
 
     @allure.step("增加资质信息两条（资格证、执业证）")
@@ -191,7 +191,7 @@ class AppointmentManager(ProcessPage):
 
     def submit_process(self, textarea=""):
         self.switch_to_first_iFrame(self.submit_iframe)
-        self.submit_interaction(textarea=textarea)
+        self.submit_interaction(iframe_xpath=self.submit_iframe, textarea=textarea)
         sleep(2)
         self.click(self.wait_until_el_xpath(self.close_over))
 

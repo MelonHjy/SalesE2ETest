@@ -63,6 +63,7 @@ class BasePage():
 
     def back_to_page(self):
         self.switch_to_window()
+        self.select_frame_id(self.frame_id)
         self.select_frame_id(self.iframe_page)
 
     # 页面切换

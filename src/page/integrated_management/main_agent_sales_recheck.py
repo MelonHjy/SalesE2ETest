@@ -15,6 +15,9 @@ class AgentSalesRecheck(TablePage, ProcessPage):
     query_btn = "//input[@value='查询']"
     manage_flag_select = "//select[@id='manageFlag']"
     identify_number_input = "//input[@id='identifyNumber']"
+    rechect_btn = "//input[@id='success']"  # 复核按钮
+    submit_iframe = "//iframe[@name='submitFrame']"  # 提交任务的iframe
+    submit_close = "//*[class='button_ty_over']"
 
     @allure.step("综合管理->销售人员->代理制销售人员代码复核")
     def into_page(self):
@@ -37,3 +40,19 @@ class AgentSalesRecheck(TablePage, ProcessPage):
             self.select(self.manage_flag_select, manage_flag)
         self.click(self.wait_until_el_xpath(self.query_btn))
         sleep(3)
+
+    def select_data(self, status_text):
+        """
+        根据查询的数据状态选择该条数据（前提：查询是通过人员代码查询数据）
+        status_text：需要选择的审核状态
+        """
+        status_list = self.get_cell_text_by_head('审核状态')
+        index = status_list.index(status_text)
+        self.click(self.get_a_by_head(index, '操作'))
+
+    def recheck_ope(self, check_state="", textarea=""):
+        """
+        点击复核的后续操作
+        """
+        self.click(self.wait_until_el_xpath(self.rechect_btn))
+        self.submit_interaction(iframe_xpath=self.submit_iframe, check_state=check_state, textarea=textarea)
