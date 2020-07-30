@@ -42,10 +42,9 @@ class DismissalManager(TablePage, ProcessPage):
         self.click(self.wait_until_el_xpath(self.save_submit_btn))
         self.choose_ok_on_alert()
 
-    def switch_iframe_reason(self, textarea=""):
+    def switch_iframe_reason(self, textarea="", ):
         """
         切换iframe并填写审核人，提交任务并关闭窗口
         """
-        self.select_frame_id(self.wait_until_el_xpath(self.submit_iframe))
-        self.submit_interaction(textarea=textarea)
+        self.submit_interaction(textarea=textarea, iframe_xpath=self.submit_iframe)
         self.click(self.wait_until_el_xpath(self.submit_close_btn))

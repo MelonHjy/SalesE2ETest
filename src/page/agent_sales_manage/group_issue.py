@@ -6,16 +6,18 @@ import allure
 
 from config.global_var import sleep
 from src.page.base_page import BasePage
+from src.page.process_page import ProcessPage
 
 
-class GroupIssue(BasePage):
-
+class GroupIssue(ProcessPage):
     case = "//*[@class='case']"
     save_button = "//input[@id='prepareadddeputy']"  # 保存
-    save_commit = "//input[@id='adddeputy']"  # 保存并提交
+    save_commit = "//input[@id='savedeputy']"  # 保存并提交
     close = "//input[@class='button_ty']"
     submit_dlg = "//div[@id='submitDlg_c']"
-    submit_iframe = "submitFrame"
+    submit_iframe = "//iframe[@name='submitFrame']"  # 提交任务的iframe
+    save_close = "//td[@colSpan='2']/../../tr[3]/td/input"  # 保存后的关闭
+    submit_close = "//*[class='button_ty_over']"
 
     # ---------------------人员基础信息填写项------------------------------ #
     user_tab = "//*[@id='folder-label-userTab']"
@@ -77,9 +79,20 @@ class GroupIssue(BasePage):
         com_code:上级机构
         group_code：归属机构
         """
-        self.code_select(self.com_code, com_code)
-        self.code_select(self.group_code, group_code)
-        sleep(2)
+        text = ""
+        text1 = ""
+        i = 0
+        while text == "" and i < 3:
+            self.code_select(self.com_code, com_code)
+            text = self.get_attribute(self.get_element_xpath(self.com_code), "value")
+            i = i + 1
+        sleep(1)
+        i = 0
+        while text1 == "" and i < 3:
+            self.code_select(self.group_code, group_code)
+            text1 = self.get_attribute(self.get_element_xpath(self.group_code), "value")
+            i = i + 1
+        sleep(1)
 
     @allure.step("民族:{nation}->政治面貌:{visage}->学历:{culture}")
     def select_base(self, nation, visage, culture):
