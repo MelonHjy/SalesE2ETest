@@ -226,3 +226,6 @@ class AppointmentManager(ProcessPage):
         else:
             self.choose_ok_on_alert()
         self.switch_contract_tab()
+
+    def commit_ope(self):
+        self.submit_interaction(iframe_xpath=self.submit_iframe)

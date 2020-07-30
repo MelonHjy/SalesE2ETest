@@ -39,3 +39,6 @@ class ProcessPage(BasePage):
             info("textarea：{}".format(textarea))
         self.click(self.wait_until_el_xpath(self.submit))
         info("提交任务")
+
+    def close_button_ty(self):
+        self.click(self.wait_until_el_xpath("//input[@class='button_ty']"))

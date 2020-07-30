@@ -5,7 +5,7 @@
 # @File : main_management_agent_salesmen.py  经营机构->销售人员->代理制销售人员代码管理
 import allure
 
-from config.global_var import sleep
+from config.global_var import sleep, g
 from src.page.table_page import TablePage
 
 
@@ -53,20 +53,20 @@ class ManagementOfAgentSalesmen(TablePage):
         # 需要加一个等待数据加载完成
         usercode1 = self.get_cell_text_by_head('内部流转码', 0)
         name1 = self.get_cell_text_by_head('姓名', 0)
-        id_cards1 = self.get_cell_text_by_head('身份证', 0)
+        id_cards1 = self.get_cell_text_by_head('身份证号', 0)
         sjjg1 = self.get_cell_text_by_head('上级机构', 0)
-        group1 = self.get_cell_text_by_head('归属机构', 0)
+        group1 = self.get_cell_text_by_head('归属团队', 0)
         self.assertEqual("验证内部流转码", usercode1, usercode)
         self.assertEqual("验证姓名", name1, name)
-        self.assertEqual("验证身份证", id_cards1, id_cards)
+        self.assertEqual("验证身份证号", id_cards1, id_cards)
         self.assertEqual("验证上级机构", sjjg1, sjjg)
-        self.assertEqual("验证归属机构", group1, group)
+        self.assertEqual("验证归属团队", group1, group)
 
     @allure.step("{btn_text}")
     def click_btn(self, btn_text):
         self.click(self.wait_until_el_xpath(self.input_btn.format(btn_text)))
         # self.open_url("http://10.133.247.40:8004/sales/deputy/engageOrFire.do?efOrmau=e")
-        sleep(2)
+        sleep(4)
         # 切换到【营销团队经理聘任与解聘】页面
         self.switch_to_window()
         self.maximize_window()
