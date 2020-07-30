@@ -10,22 +10,20 @@ from src.page.table_page import TablePage
 
 
 class ManagementOfAgentSalesmen(TablePage):
-    sjjg = "//input[@id='comCode']"  # 上级机构选项
-    gsjg = "//input[@id='groupcode']"  # 归属机构选项
-    rydm = "//input[@id='userCode']"  # 人员代码
-    xm = "//input[@id='userName']"  # 姓名
-    sfzh = "//input[@id='identifyNumber']"  # 身份证号
-    xb = "//select[@id='sex']"  # 性别
-    zgzh = "//input[@id='agentno']"  # 资格证号
-    zyzh = "//input[@id='credentialno']"  # 职业证号
-    rysx = "//select[@id='usertype22']"  # 人员属性
-    xstdjlpryjp = "//input[@value='营销团队经理聘任与解聘']"  # 销售团队经理聘任与解聘
-    query_btn = "//input[@value='查询']"
+    com_code = "//input[@id='comCode']"  # 上级机构选项
+    group_code = "//input[@id='groupcode']"  # 归属机构选项
+    user_code = "//input[@id='userCode']"  # 人员代码
+    user_name = "//input[@id='userName']"  # 姓名
+    identify_number = "//input[@id='identifyNumber']"  # 身份证号
+    sex = "//select[@id='sex']"  # 性别
+    agentno = "//input[@id='agentno']"  # 资格证号
+    credentialno = "//input[@id='credentialno']"  # 职业证号
+    usertype = "//select[@id='usertype22']"  # 人员属性
+    input_btn = "//input[@value='{}']"  # 销售团队经理聘任与解聘
     status = "//input[@id='taskstatus{}']"  # 任务状态
 
     # ---------------------查询信息------------------------------ #
 
-    user_code = "//input[@id='userCode']"  # 内部流转码
     submit_frame = "//iframe[@name='submitFrame']"  # 提示解雇的提示框iframe
     dismissal_btn = "//form[@id='fm1']/table/tbody/tr[4]/td/input[2]"  # 解聘按钮
 
@@ -34,12 +32,20 @@ class ManagementOfAgentSalesmen(TablePage):
         self.to_main_page("经营机构", "销售人员", "代理制销售人员代码管理")
 
     @allure.step("查询")
-    def query(self, user_code1, status=""):
+    def query(self, user_code1, status="100"):
+        """
+        user_code1:人员代码
+        status：任务提交：0->未选定）,1->被选定，未提交，已提交，被打回
+        """
         self.click(self.wait_until_el_xpath(self.user_code))
         self.send_keys(self.wait_until_el_xpath(self.user_code), user_code1)
-        if status:
-            self.click(self.wait_until_el_xpath(self.status.format(status)))
-        self.click(self.wait_until_el_xpath(self.query_btn))
+        j = 0
+        for i in status:
+            el = self.wait_until_el_xpath(self.status.format(j))
+            if (el.is_selected() == False and i == "1") or (el.is_selected() and i == "0"):
+                self.click(el)
+            j = j + 1
+        self.click(self.wait_until_el_xpath(self.input_btn.format("查询")))
         sleep(3)
 
     def assert_table_msg(self, usercode, name, id_cards, sjjg, group):
@@ -56,8 +62,8 @@ class ManagementOfAgentSalesmen(TablePage):
         self.assertEqual("验证归属团队", group1, group)
 
     @allure.step("营销团队经理聘任与解聘")
-    def appointment(self):
-        self.click(self.wait_until_el_xpath(self.xstdjlpryjp))
+    def click_btn(self, btn_text):
+        self.click(self.wait_until_el_xpath(self.input_btn.format(btn_text)))
         # self.open_url("http://10.133.247.40:8004/sales/deputy/engageOrFire.do?efOrmau=e")
         sleep(4)
         # 切换到【营销团队经理聘任与解聘】页面
@@ -68,8 +74,8 @@ class ManagementOfAgentSalesmen(TablePage):
         """
         选择需要解聘的员工并返回归属团队代码
         """
-        list = self.get_cell_text_by_head('内部流转码')
-        index = list.index(user_code)
+        text_list = self.get_cell_text_by_head('内部流转码')
+        index = text_list.index(user_code)
         self.click(self.get_radio_by_head(index, '选择'))
         return index
 
@@ -83,3 +89,14 @@ class ManagementOfAgentSalesmen(TablePage):
     def assert_workflow_msg(self):
         status = self.get_cell_text_by_head('业务状态', 1)
         self.assertEqual("验证业务状态", status, "同意并提交")
+
+    def select_data(self, column_name, column_value, row_ope):
+        """
+        根据指定列中指定的值获取该行数据，并对该行数据进行操作
+        column_name：列名
+        column_value：该列所指定的值
+        row_ope：对该行进行点击的列名
+        """
+        status_list = self.get_cell_text_by_head(column_name)
+        index = status_list.index(column_value)
+        self.click(self.get_a_by_head(index, row_ope))

@@ -5,7 +5,6 @@
 import allure
 
 from config.global_var import sleep
-from src.page.base_page import BasePage
 from src.page.process_page import ProcessPage
 
 
@@ -19,6 +18,7 @@ class AppointmentManager(ProcessPage):
     # 营销团队经理聘任
     case = "//*[@class='case']"
     close_icon = "//div[@class='container-close']"  # 提交后提示选择审核人对话框的关闭图标
+    save_commit2 = "//input[@id='savedeputy2']"    # 有效人员聘任经理 保存并提交
 
     # ---------------------人员基础信息填写项------------------------------ #
     user_tab = "//*[@id='folder-label-userTab']"
@@ -68,7 +68,7 @@ class AppointmentManager(ProcessPage):
     usercodeAndContract = "//td[@colSpan='2']"  # 人员代码，合同号
     close = "//input[@class='button_ty']"
     submit_dlg = "//div[@id='submitDlg_c']"
-    submit_iframe = "submitFrame"
+    submit_iframe = "//iframe[@name='submitFrame']"  # 提交任务的iframe
     close_over = "//input[@class='button_ty_over']"
 
     @allure.step("增加资质信息两条（资格证、执业证）")
@@ -162,12 +162,6 @@ class AppointmentManager(ProcessPage):
     def select_culture(self, text):
         self.select(self.culture, text)
 
-    @allure.step("填入姓名:{username},身份证号：{id_cards},手机号码：{mobile}")
-    def contract_tab_input(self, username, id_cards, mobile):
-        self.send_keys(self.wait_until_el_xpath(self.username), username)
-        self.send_keys(self.wait_until_el_xpath(self.id_cards), id_cards)
-        self.send_keys(self.wait_until_el_xpath(self.mobile), mobile)
-
     @allure.step("切换到合同信息")
     def switch_contract_tab(self):
         self.click(self.wait_until_el_xpath(self.contract_tab))
@@ -184,7 +178,7 @@ class AppointmentManager(ProcessPage):
     def prepare_save_commit(self):
         self.click(self.wait_until_el_xpath(self.save_commit))
 
-    @allure.step("获取人员代码，合同号")
+    @allure.step("生成人员代码，合同号")
     def get_msg(self):
         text = self.get_text(self.wait_until_el_xpath(self.usercodeAndContract))
         a = text.split(' ')
@@ -197,7 +191,7 @@ class AppointmentManager(ProcessPage):
 
     def submit_process(self, textarea=""):
         self.switch_to_first_iFrame(self.submit_iframe)
-        self.submit_interaction(textarea=textarea)
+        self.submit_interaction(iframe_xpath=self.submit_iframe, textarea=textarea)
         sleep(2)
         self.click(self.wait_until_el_xpath(self.close_over))
 
@@ -232,3 +226,6 @@ class AppointmentManager(ProcessPage):
         else:
             self.choose_ok_on_alert()
         self.switch_contract_tab()
+
+    def commit_ope(self):
+        self.submit_interaction(iframe_xpath=self.submit_iframe)

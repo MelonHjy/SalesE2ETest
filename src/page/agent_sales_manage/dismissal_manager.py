@@ -2,10 +2,11 @@
 # @Time : 2020/7/21 17:16
 # @Author: fyl
 # @File : dismissal_manager.py
+from src.page.process_page import ProcessPage
 from src.page.table_page import TablePage
 
 
-class DismissalManager(TablePage):
+class DismissalManager(TablePage, ProcessPage):
     prepare_save_btn = "//input[@id='preparesavedeputy2']"  # 解聘保存
     prepare_save_close_btn = "//input[@class='button_ty']"  # 解聘保存后关闭按钮
     save_submit_btn = "//input[@id='savedeputy2']"
@@ -41,10 +42,9 @@ class DismissalManager(TablePage):
         self.click(self.wait_until_el_xpath(self.save_submit_btn))
         self.choose_ok_on_alert()
 
-    def switch_iframe_reason(self, textarea=""):
+    def switch_iframe_reason(self, textarea="", ):
         """
         切换iframe并填写审核人，提交任务并关闭窗口
         """
-        self.select_frame_id(self.wait_until_el_xpath(self.submit_iframe))
-        self.submit_interaction(textarea=textarea)
+        self.submit_interaction(textarea=textarea, iframe_xpath=self.submit_iframe)
         self.click(self.wait_until_el_xpath(self.submit_close_btn))
