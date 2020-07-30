@@ -24,7 +24,7 @@ class Test_YLDLZ_007():
               "RULE20120000000000001--保险经纪公司", "121222333529", "折", "中国工商银行股份有限公司",
               "新疆维吾尔自治区_巴音郭楞蒙古自治州", "中国工商银行股份有限公司库尔勒人民东路支行")]
 
-    @pytest.mark.skip
+
     @allure.story("基本信息填写")
     @pytest.mark.usefixtures("login_jiangsu_p")
     @pytest.mark.parametrize("username, id_cards, mobile, group_com, nation, visage, culture", data)
@@ -44,7 +44,7 @@ class Test_YLDLZ_007():
         self.group_issue.select_org("32000000--中国人民财产保险股份有限公司江苏省分公司", group_com)
         info("民族:{0}->政治面貌:{1}->学历:{2}".format(nation, visage, culture))
         self.group_issue.select_base(nation, visage, culture)
-    @pytest.mark.skip
+
     @allure.story("合同信息填写")
     @pytest.mark.usefixtures("login_jiangsu_p")
     @pytest.mark.parametrize("qualifytype, qualifyno,"
@@ -79,7 +79,7 @@ class Test_YLDLZ_007():
         info("人员代码{0}，合同号{1}".format(Test_YLDLZ_007.msg['usercode'], Test_YLDLZ_007.msg['contract']))
         # 关闭
         self.group_issue.click(self.group_issue.wait_until_el_xpath(self.group_issue.save_close))
-    @pytest.mark.skip
+
     @allure.story("团队成员出单权信息修改")
     @pytest.mark.usefixtures("login_jiangsu_p")
     def test_03_edit_msg(self):

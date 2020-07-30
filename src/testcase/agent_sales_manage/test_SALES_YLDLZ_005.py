@@ -35,9 +35,7 @@ class Test_YLDLZ_005():
         text = self.main_management_agent_salesmen.get_cell_text_by_head("状态", row)
         self.main_management_agent_salesmen.assertEqual("判断状态列的值为”有效“", text, "有效")
         info("进入“营销团队经理解聘”页面")
-        self.main_management_agent_salesmen.click(
-            self.main_management_agent_salesmen.wait_until_el_xpath(
-                self.main_management_agent_salesmen.input_btn.format("营销团队经理聘任与解聘")))
+        self.main_management_agent_salesmen.click_btn("营销团队经理聘任与解聘")
         self.main_management_agent_salesmen.select_dismissal()
         info("切换“营销团队经理解聘”页面")
         self.main_management_agent_salesmen.switch_to_window()
