@@ -16,14 +16,15 @@ class ProcessPage(BasePage):
     state = "//option[contains(text(), '通过')]/.."
     next = "//option[contains(text(), '打回')]/.."
 
-    def submit_interaction(self, check_state="", next_node="", textarea=""):
+    def submit_interaction(self, iframe_xpath, check_state="", next_node="", textarea=""):
         """
-        前提通过iframe进入到内部html
         下拉菜单、打回岗位（关键字通过）、审核意见、失败原因
+        iframe:frame的name属性值
         check_state:是否通过
         next_node：打回
         textarea：文本框
         """
+        self.select_frame_id(self.wait_until_el_xpath(iframe_xpath))
         text = self.get_text(self.wait_until_el_xpath(self.now_node))
         info("当前环节：{}".format(text))
         if self.is_element_exist(self.state) and check_state != "":
@@ -38,3 +39,6 @@ class ProcessPage(BasePage):
             info("textarea：{}".format(textarea))
         self.click(self.wait_until_el_xpath(self.submit))
         info("提交任务")
+
+    def close_button_ty(self):
+        self.click(self.wait_until_el_xpath("//input[@class='button_ty']"))

@@ -15,6 +15,7 @@ class AgentSalesRecheck(TablePage, ProcessPage):
     query_btn = "//input[@value='查询']"
     manage_flag_select = "//select[@id='manageFlag']"
     identify_number_input = "//input[@id='identifyNumber']"
+    submitFrame = "//iframe[@name='submitFrame']"
 
     @allure.step("综合管理->销售人员->代理制销售人员代码复核")
     def into_page(self):
@@ -37,3 +38,9 @@ class AgentSalesRecheck(TablePage, ProcessPage):
             self.select(self.manage_flag_select, manage_flag)
         self.click(self.wait_until_el_xpath(self.query_btn))
         sleep(3)
+
+    def submit(self, textarea=""):
+        self.submit_interaction(self.submitFrame, textarea=textarea)
+
+    def click_success(self):
+        self.click(self.wait_until_el_xpath("//input[@id='success']"))

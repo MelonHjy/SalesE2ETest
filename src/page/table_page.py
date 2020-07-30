@@ -22,38 +22,47 @@ from time import sleep
 class TablePage(BasePage):
     def __init__(self):
         self.excel = None
-        self.set_table_num()
+        self.set_table_num(0, True)
 
-    def set_table_num(self, table_num=0):
+    def set_table_num(self, table_num=0, is_init=False):
         '''
         设定当前表格
         :param table_num:表格下标，从默认从0开始（0为第一个表格）
+        :param is_init:是否初始化（为是时不获取页面实际表格下标）
         :return:
         '''
         self.heads = []
 
-        # 第几个表格,默认是0为第一个
-        self.table_num = table_num
-        # ------------------------  表格元素 ------------------------#
+        # 第几个表格,默认是0为第一个(为初始化时不获取页面实际表格下标）
+        num = str(table_num) if is_init else self.get_table_real_num(table_num)
+        # ------------------------ 表格元素 ------------------------ #
         # 表格第几行第几列
         # col 空、row 空
-        self.table_all = "//td[contains(@id,'yui-dt" + str(table_num) + "')]"
+        self.table_all = "//td[contains(@id,'yui-dt" + num + "')]"
         # col 空、row 非空
-        self.table_row = "//td[contains(@id,'yui-dt" + str(table_num) + "-bdrow{0}')]"
+        self.table_row = "//td[contains(@id,'yui-dt" + num + "-bdrow{0}')]"
         # col 非空、row 空
-        self.table_col = "//td[contains(@id,'yui-dt" + str(
-            table_num) + "') and substring(@id, string-length(@id)-string-length('cell{0}') +1) = 'cell{0}']"
+        self.table_col = "//td[contains(@id,'yui-dt" + num + "') and substring(@id, string-length(@id)-string-length('cell{0}') +1) = 'cell{0}']"
         # col 非空、row 非空
-        self.table_row_col = "//td[@id='yui-dt" + str(table_num) + "-bdrow{0}-cell{1}']"
+        self.table_row_col = "//td[@id='yui-dt" + num + "-bdrow{0}-cell{1}']"
 
         # 表格头
-        self.table_head = "//thead/tr[@id='yui-dt" + str(table_num) + "-hdrow0']/th/div/span"
+        self.table_head = "//thead/tr[@id='yui-dt" + num + "-hdrow0']/th/div/span"
         # 表格显示的行
-        self.table_show_rows = "//table[@id='yui-dt-table" + str(table_num) + "']/tbody[2]/tr"
+        self.table_show_rows = "//table[@id='yui-dt-table" + num + "']/tbody[2]/tr"
         # 表格 ‘无记录...’ 或 ‘数据加载中...’
-        self.table_no_row = "//table[@id='yui-dt-table" + str(table_num) + "']/tbody[1]/tr/td"
+        self.table_no_row = "//table[@id='yui-dt-table" + num + "']/tbody[1]/tr/td"
         # 查询总记录数
-        self.table_total = "//div[@id='content" + str(table_num) + "_navigation']"
+        self.table_total = "//div[@id='content" + num + "_navigation']"
+
+    def get_table_real_num(self, table_num):
+        '''
+        获取页面实际表格下标
+        :param table_num:表格下标，0为第一个表格(在xpath中1为第一个）
+        '''
+        els = self.wait_until_els_xpath("//table[contains(@id,'yui-dt-table')]")
+        # el = self.wait_until_el_xpath("//table[contains(@id,'yui-dt-table')][{0}]".format(table_num+1))
+        return self.get_attribute(els[table_num], 'id')[12:]
 
     def get_cell_text_by_head(self, head, row=-1):
         """
@@ -168,7 +177,7 @@ class TablePage(BasePage):
     def get_table_heads_text(self):
         if not self.heads:
             heads_div = self.wait_until_els_xpath(self.table_head)
-            self.heads=[head_div.get_attribute('innerText') for head_div in heads_div]
+            self.heads = [head_div.get_attribute('innerText') for head_div in heads_div]
         return self.heads
 
     # 当前页面显示的行数
