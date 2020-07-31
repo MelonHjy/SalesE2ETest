@@ -1,7 +1,7 @@
 #  -*- coding:utf-8 -*-
 # @Time : 2020/7/23 17:43
 # @Author: fyl
-# @File : main_agent_sales_recheck.py #代理制销售人员代码复核
+# @File : main_agent_sales_recheck.py # 综合管理->销售人员->代理制销售人员代码复核
 import allure
 
 from config.global_var import sleep

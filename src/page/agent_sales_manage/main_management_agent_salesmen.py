@@ -2,7 +2,7 @@
 
 # @Time : 2020/6/30 11:00
 # @Author: fyl
-# @File : main_management_agent_salesmen.py  代理制销售人员代码管理
+# @File : main_management_agent_salesmen.py  经营机构->销售人员->代理制销售人员代码管理
 import allure
 
 from config.global_var import sleep, g
@@ -24,8 +24,9 @@ class ManagementOfAgentSalesmen(TablePage):
 
     # ---------------------查询信息------------------------------ #
 
-    submit_frame = "//iframe[@name='submitFrame']"  # 提示解雇的提示框iframe
+    submit_frame = "//iframe[@name='submitFrame']"  # 提示聘任的提示框iframe
     dismissal_btn = "//form[@id='fm1']/table/tbody/tr[4]/td/input[2]"  # 解聘按钮
+    appointment_btn = "//form[@id='fm1']/table/tbody/tr[4]/td/input[1]" # 聘任按钮
 
     @allure.step("经营机构->销售人员->代理制销售人员代码管理")
     def into_page(self):
@@ -61,10 +62,9 @@ class ManagementOfAgentSalesmen(TablePage):
         self.assertEqual("验证上级机构", sjjg1, sjjg)
         self.assertEqual("验证归属团队", group1, group)
 
-    @allure.step("营销团队经理聘任与解聘")
+    @allure.step("{btn_text}")
     def click_btn(self, btn_text):
         self.click(self.wait_until_el_xpath(self.input_btn.format(btn_text)))
-        # self.open_url("http://10.133.247.40:8004/sales/deputy/engageOrFire.do?efOrmau=e")
         sleep(4)
         # 切换到【营销团队经理聘任与解聘】页面
         self.switch_to_window()
@@ -85,6 +85,13 @@ class ManagementOfAgentSalesmen(TablePage):
         """
         self.select_frame_id(self.wait_until_el_xpath(self.submit_frame))
         self.click(self.wait_until_el_xpath(self.dismissal_btn))
+
+    def select_appointment(self):
+        """
+        切换提示框frame，并点击聘任按钮
+        """
+        self.select_frame_id(self.wait_until_el_xpath(self.submit_frame))
+        self.click(self.wait_until_el_xpath(self.appointment_btn))
 
     def assert_workflow_msg(self):
         status = self.get_cell_text_by_head('业务状态', 1)
