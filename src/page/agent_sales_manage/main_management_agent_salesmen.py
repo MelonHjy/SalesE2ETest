@@ -24,7 +24,7 @@ class ManagementOfAgentSalesmen(TablePage):
 
     # ---------------------查询信息------------------------------ #
 
-    submit_frame = "//iframe[@name='submitFrame']"  # 提示解雇的提示框iframe
+    submit_frame = "//iframe[@name='submitFrame']"  # 提示聘任的提示框iframe
     dismissal_btn = "//form[@id='fm1']/table/tbody/tr[4]/td/input[2]"  # 解聘按钮
     appointment_btn = "//form[@id='fm1']/table/tbody/tr[4]/td/input[1]" # 聘任按钮
 
@@ -65,7 +65,6 @@ class ManagementOfAgentSalesmen(TablePage):
     @allure.step("{btn_text}")
     def click_btn(self, btn_text):
         self.click(self.wait_until_el_xpath(self.input_btn.format(btn_text)))
-        # self.open_url("http://10.133.247.40:8004/sales/deputy/engageOrFire.do?efOrmau=e")
         sleep(4)
         # 切换到【营销团队经理聘任与解聘】页面
         self.switch_to_window()

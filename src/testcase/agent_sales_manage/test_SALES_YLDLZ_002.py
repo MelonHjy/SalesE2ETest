@@ -13,7 +13,7 @@ from src.page.integrated_management.main_agent_sales_recheck import AgentSalesRe
 from src.utils.driver_util import *
 
 
-@allure.feature("营销团队经理聘任与解聘（有效团队成员任命为经理）")
+@allure.feature("代理制人员代码管理>>营销团队经理聘任与解聘（有效团队成员任命为经理）")
 class Test_YLDLZ_002():
     appointment = AppointmentManager()
     main_page = ManagementOfAgentSalesmen()
@@ -24,7 +24,6 @@ class Test_YLDLZ_002():
     data = [("83258563")]
     msg = None
 
-    # @pytest.mark.skip
     @allure.story("提交有效团队成员任命为经理")
     @pytest.mark.usefixtures("login_jiangsu_p_fun")
     @pytest.mark.parametrize("user_code", data)
@@ -36,7 +35,7 @@ class Test_YLDLZ_002():
                               "user_name": self.main_page.get_cell_text_by_head("姓名")}
         info("选择人员->代码：{}，状态：有效".format(user_code))
         self.main_page.select_data("状态", "有效", "选择")
-        self.main_page.click(self.main_page.wait_until_el_xpath(self.main_page.input_btn.format("营销团队经理聘任与解聘")))
+        self.main_page.click_btn("营销团队经理聘任与解聘")
         info("选择聘任")
         self.main_page.select_appointment()
         # self.main_page.switch_to_window()
@@ -56,7 +55,6 @@ class Test_YLDLZ_002():
         # 根据状态选择查看信息    状态:经理聘任复核
         # self.main_page.select_data("状态", "经理聘任复核", "操作")
 
-    # @pytest.mark.skip
     @allure.story("省级个代渠道审核岗审核流程")
     @pytest.mark.parametrize("user_code", data)
     @pytest.mark.usefixtures("login_jiangsu_p_fun")
@@ -70,7 +68,6 @@ class Test_YLDLZ_002():
         self.MASA.submit_interaction(self.MASA.submit_iframe, textarea="ui测试")
         # 关闭
 
-    # @pytest.mark.skip
     @allure.story("省级销售管理综合岗复核流程")
     @pytest.mark.parametrize("user_code", data)
     @pytest.mark.usefixtures("login_jiangsu_p_fun")
@@ -83,8 +80,7 @@ class Test_YLDLZ_002():
         self.ASR.recheck_ope(textarea="ui测试")
         # 关闭
 
-    # @pytest.mark.skip
-    @allure.story("验证审核通过后核对改人员信息")
+    @allure.story("验证审核通过后核对人员信息")
     @pytest.mark.parametrize("user_code", data)
     @pytest.mark.usefixtures("login_jiangsu_p_fun")
     def test_sales_query(self, user_code):

@@ -13,7 +13,7 @@ from src.utils.except_util import get_screenshot
 from src.utils.log import *
 
 
-@allure.feature("有效的经理解聘该人员经理职务")
+@allure.feature("代理制人员代码管理>>营销团队经理聘任与解聘（有效的经理解聘该人员经理职务）")
 class Test_YLDLZ_005():
     main_management_agent_salesmen = ManagementOfAgentSalesmen()
     dismissal_manager = DismissalManager()
@@ -21,7 +21,7 @@ class Test_YLDLZ_005():
 
     data = [("83258554")]
 
-    # @pytest.mark.skip
+    @allure.story("有效的经理解聘该人员经理职务")
     @pytest.mark.parametrize("user_code", data)
     @pytest.mark.usefixtures("login_jiangsu_p_fun")
     def test_YLDLZ_005(self, user_code):
@@ -70,7 +70,7 @@ class Test_YLDLZ_005():
         self.dismissal_manager.save_submit()
         self.dismissal_manager.switch_iframe_reason()
 
-    # @pytest.mark.skip
+    @allure.story("验证代理制销售人员状态")
     @pytest.mark.parametrize("user_code", data)
     @pytest.mark.usefixtures("login_jiangsu_p_fun")
     def test_YLDLZ_005_check(self, user_code):  # 复核
@@ -82,6 +82,7 @@ class Test_YLDLZ_005():
         text = self.main_management_agent_salesmen.get_cell_text_by_head("状态", 0)
         self.main_management_agent_salesmen.assertEqual("判断状态列的值为”经理解聘复核“", text, "经理解聘复核")
 
+    @allure.story("省级销售管理综合岗复核流程")
     @pytest.mark.parametrize("user_code", data)
     @pytest.mark.usefixtures("login_jiangsu_p_fun")
     def test_YLDLZ_005_recheck(self, user_code):
