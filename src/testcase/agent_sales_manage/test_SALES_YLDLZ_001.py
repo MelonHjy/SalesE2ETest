@@ -46,7 +46,7 @@ class Test_YLDLZ_001():
         info("营销团队经理聘任与解聘检查")
         self.appointment.assertEqual("验证标签文字", self.appointment.get_head_text(), "营销团队经理聘任")
         self.appointment.assertEqual("验证上级机构是否默认‘32000000’",
-                                                   self.appointment.get_com_code_text(), "32000000")
+                                     self.appointment.get_com_code_text(), "32000000")
         info("填入基本信息")
 
         self.appointment.user_tab_input(userName, idCard, mobile)
@@ -60,12 +60,12 @@ class Test_YLDLZ_001():
 
         self.appointment.get_sex(self.appointment.get_sex_by_idCard(idCard))
         self.appointment.assertEqual("验证出生日期是否与身份证匹配", self.appointment.get_birthday(),
-                                                   self.appointment.get_birthday_by_idCard(idCard))
+                                     self.appointment.get_birthday_by_idCard(idCard))
         info("检查选择归属团队后，出单归属机构是否自动填入")
 
         self.appointment.assertEqual("验证出单归属机构是否与所选归属团队匹配",
-                                                   self.appointment.get_make_com_text(),
-                                                   group.split('--')[0])
+                                     self.appointment.get_make_com_text(),
+                                     group.split('--')[0])
         get_screenshot("基本信息")
 
     @allure.story("填写资质信息、合同信息")
@@ -75,12 +75,11 @@ class Test_YLDLZ_001():
                              "contractenddate0, ruleNo, accountno, cardtype, saDAccount_bankName, saDAccount_bankareaname,"
                              "bankName", data1)
     def test_002_contract(self, qualifytype, qualifyno,
-                                qualifystartdate, agentType, qualifytype1, qualifyno1, qualifystartdate1,
-                                contractstartdate0,
-                                contractenddate0, ruleNo, accountno, cardtype, saDAccount_bankName,
-                                saDAccount_bankareaname,
-                                bankName):
-
+                          qualifystartdate, agentType, qualifytype1, qualifyno1, qualifystartdate1,
+                          contractstartdate0,
+                          contractenddate0, ruleNo, accountno, cardtype, saDAccount_bankName,
+                          saDAccount_bankareaname,
+                          bankName):
         self.appointment.switch_contract_tab()
         self.appointment.add_user_button()
         self.appointment.add_user_button()
@@ -93,11 +92,11 @@ class Test_YLDLZ_001():
         info("填写合同基本信息（资格证号码,执业证号码,合同起始日期,合同终止日期,佣金配置）")
 
         self.appointment.input_contract(qualifyno, qualifyno1, contractstartdate0, contractenddate0,
-                                                      ruleNo)
+                                        ruleNo)
         info("填写账户信息（收款人账号,卡折标志,银行名称,银行区域名称,联行号）")
 
         self.appointment.input_account(accountno, cardtype, saDAccount_bankName, saDAccount_bankareaname,
-                                                     bankName)
+                                       bankName)
         get_screenshot("合同信息")
 
         self.appointment.switch_user_tab()
