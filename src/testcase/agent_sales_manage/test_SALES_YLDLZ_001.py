@@ -12,7 +12,7 @@ from src.utils.driver_util import *
 from src.utils.except_util import get_screenshot
 
 
-@allure.feature("经理聘任主流程")
+@allure.feature("代理制人员代码管理>>营销团队经理聘任与解聘(新增人员聘任为经理)")
 class Test_YLDLZ_001():
     appointment = AppointmentManager()
     main_management_agent_salesmen = ManagementOfAgentSalesmen()
@@ -35,7 +35,6 @@ class Test_YLDLZ_001():
     data2 = [("杜替菁ui测试", "220106199305099394", "32000000", "测试0506营销")]
     msg = None
 
-    # @pytest.mark.skip
     @allure.story("填写基本信息")
     @pytest.mark.usefixtures("login_jiangsu_p")
     @pytest.mark.parametrize("userName, idCard, mobile, group, rolecode, nation, visage, culture", data)
@@ -48,21 +47,17 @@ class Test_YLDLZ_001():
         self.appointment.assertEqual("验证上级机构是否默认‘32000000’",
                                      self.appointment.get_com_code_text(), "32000000")
         info("填入基本信息")
-
         self.appointment.user_tab_input(userName, idCard, mobile)
         self.appointment.select_group(group)
         self.appointment.select_rolecode(rolecode)
         self.appointment.select_nation(nation)
         self.appointment.select_visage(visage)
         self.appointment.select_culture(culture)
-
         info("检查填写身份证号码后，性别和出生日期是否自动填入")
-
         self.appointment.get_sex(self.appointment.get_sex_by_idCard(idCard))
         self.appointment.assertEqual("验证出生日期是否与身份证匹配", self.appointment.get_birthday(),
                                      self.appointment.get_birthday_by_idCard(idCard))
         info("检查选择归属团队后，出单归属机构是否自动填入")
-
         self.appointment.assertEqual("验证出单归属机构是否与所选归属团队匹配",
                                      self.appointment.get_make_com_text(),
                                      group.split('--')[0])
@@ -84,29 +79,22 @@ class Test_YLDLZ_001():
         self.appointment.add_user_button()
         self.appointment.add_user_button()
         info("填写'资格证'资质信息-->证件类型,证件号码,发证日期,证件类型")
-
         self.appointment.input_qualify(0, qualifytype, qualifyno, qualifystartdate, agentType)
         info("填写'执业证'资质信息-->证件类型,证件号码,发证日期")
-
         self.appointment.input_qualify(1, qualifytype1, qualifyno1, qualifystartdate1)
         info("填写合同基本信息（资格证号码,执业证号码,合同起始日期,合同终止日期,佣金配置）")
-
         self.appointment.input_contract(qualifyno, qualifyno1, contractstartdate0, contractenddate0,
                                         ruleNo)
         info("填写账户信息（收款人账号,卡折标志,银行名称,银行区域名称,联行号）")
-
         self.appointment.input_account(accountno, cardtype, saDAccount_bankName, saDAccount_bankareaname,
                                        bankName)
         get_screenshot("合同信息")
-
         self.appointment.switch_user_tab()
         info("聘任保存")
-
         self.appointment.prepare_save()
         self.appointment.choose_ok_on_alert()
         sleep(3)
         info("获取人员代码，合同号")
-
         Test_YLDLZ_001.msg = self.appointment.get_msg()
         info(Test_YLDLZ_001.msg)
 

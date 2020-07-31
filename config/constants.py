@@ -1,13 +1,15 @@
 # -*- coding:utf-8 -*-
-#@Time : 2020/6/28 16:40
-#@Author: fyl
-#@File : constants.py
+# @Time : 2020/6/28 16:40
+# @Author: fyl
+# @File : constants.py
+
 
 class Constants(object):
+    # 总公司账号
+    HEAD_OFFICE_USERNAME = "A000008254"
+    HEAD_OFFICE_PASSWORD = "sales202008"
 
-
-
-    #江苏省省级账号
+    # 江苏省省级账号
     JIANGSU_PROVINCE_USERNAME = 'A320000135'
     JIANGSU_PROVINCE_PASSWORD = 'sales202008'
 
