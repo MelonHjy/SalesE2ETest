@@ -10,6 +10,7 @@ from src.page.Personal_agency_channel.sales_query import SalesQuery
 from src.page.agent_sales_manage.appointment_manager import AppointmentManager
 from src.page.agent_sales_manage.main_management_agent_salesmen import ManagementOfAgentSalesmen
 from src.page.integrated_management.main_agent_sales_recheck import AgentSalesRecheck
+from src.utils import csv_util
 from src.utils.driver_util import *
 
 
@@ -21,7 +22,8 @@ class Test_YLDLZ_002():
     MASA = ManagementAgentSalesApprove()
     SQ = SalesQuery()
 
-    data = [("83258563")]
+    # data = [("83258563")]
+    data = csv_util.data_reader("agent_sales_manage/002_data.csv")
     msg = None
 
     @allure.story("提交有效团队成员任命为经理")

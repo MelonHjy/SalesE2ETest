@@ -8,6 +8,7 @@ import pytest
 from src.page.agent_sales_manage.appointment_manager import AppointmentManager
 from src.page.agent_sales_manage.main_management_agent_salesmen import ManagementOfAgentSalesmen
 from src.page.integrated_management.main_agent_sales_recheck import AgentSalesRecheck
+from src.utils import csv_util
 from src.utils.driver_util import *
 from src.utils.except_util import get_screenshot
 
@@ -26,13 +27,14 @@ class Test_YLDLZ_001():
     # finally:
     #     g.db.close_connection()
 
-    data = [("袁维卫ui测试", "110102199608211442", "13311212125", "32990038--测试0506营销", "经理", "汉族", "中共党员", "研究生")]
-
-    data1 = [("资格证", "123456", "2019-01-01", "B", "执业证", "654321", "2019-02-02", "2020-07-08", '2022-07-08',
-              "RULE20120000000000001--保险经纪公司", "1199211192249", "折", "中国工商银行股份有限公司",
-              "新疆维吾尔自治区_巴音郭楞蒙古自治州", "中国工商银行股份有限公司库尔勒人民东路支行")]
-
-    data2 = [("杜替菁ui测试", "220106199305099394", "32000000", "测试0506营销")]
+    # data = [("杨闰圣ui测试", "61011519990217147x", "13311212125", "32990038--测试0506营销", "经理", "汉族", "中共党员", "研究生")]
+    # data1 = [("资格证", "123456", "2019-01-01", "B", "执业证", "654321", "2019-02-02", "2020-07-08", '2022-07-08',
+    #           "RULE20120000000000001--保险经纪公司", "1234567891011", "折", "中国工商银行股份有限公司",
+    #           "新疆维吾尔自治区_巴音郭楞蒙古自治州", "中国工商银行股份有限公司库尔勒人民东路支行")]
+    # data2 = [("杨闰圣ui测试", "61011519990217147x", "32000000", "测试0506营销")]
+    data = csv_util.data_reader("agent_sales_manage/001_data.csv")
+    data1 = csv_util.data_reader("agent_sales_manage/001_data1.csv")
+    data2 = csv_util.data_reader("agent_sales_manage/001_data2.csv")
     msg = None
 
     @allure.story("填写基本信息")

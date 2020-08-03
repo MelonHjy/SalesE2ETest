@@ -15,8 +15,9 @@ class Constants(object):
 
     # 南京市地市级账号
     NANJING_CITY_USERNAME = 'A320101030'
-    NANJING_CITY_PASSWORD = 'sales202078'
+    NANJING_CITY_PASSWORD = 'sales202008'
 
     # 南京市城南支公司账号
     NANJING_USERNAME = 'A320101044'
     NANJING_PASSWORD = 'sales202008'
+

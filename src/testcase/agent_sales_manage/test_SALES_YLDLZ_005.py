@@ -9,6 +9,7 @@ from config.global_var import sleep
 from src.page.agent_sales_manage.dismissal_manager import DismissalManager
 from src.page.agent_sales_manage.main_management_agent_salesmen import ManagementOfAgentSalesmen
 from src.page.integrated_management.main_agent_sales_recheck import AgentSalesRecheck
+from src.utils import csv_util
 from src.utils.except_util import get_screenshot
 from src.utils.log import *
 
@@ -19,7 +20,8 @@ class Test_YLDLZ_005():
     dismissal_manager = DismissalManager()
     agent_sales_recheck = AgentSalesRecheck()
 
-    data = [("83258554")]
+    # data = [("83258554")]
+    data = csv_util.data_reader("agent_sales_manage/005_data.csv")
 
     @allure.story("有效的经理解聘该人员经理职务")
     @pytest.mark.parametrize("user_code", data)
