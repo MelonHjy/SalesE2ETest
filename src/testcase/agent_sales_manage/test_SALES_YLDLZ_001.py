@@ -1,7 +1,7 @@
 # -*- coding:utf-8 -*-
 # @Time : 2020/6/28 17:22
 # @Author: fyl
-# @File : test_SALES_YLDLZ_001.py
+# @File : test_SALES_YLDLZ_001.py   代理制人员代码管理>>营销团队经理聘任与解聘(新增人员聘任为经理)
 import allure
 import pytest
 
