@@ -9,6 +9,7 @@ from config.global_var import sleep
 from src.page.agent_sales_manage.group_issue import GroupIssue
 from src.page.agent_sales_manage.main_management_agent_salesmen import ManagementOfAgentSalesmen
 from src.page.integrated_management.main_agent_sales_recheck import AgentSalesRecheck
+from src.utils import csv_util
 from src.utils.log import info
 
 
@@ -19,11 +20,12 @@ class Test_YLDLZ_007():
     agent_sales_recheck = AgentSalesRecheck()
     msg = None
 
-    data = [("甘冬龙ui测试", "370126198007046159", "13999999999", "32990000--测试0519营销", "汉族", "中共党员", "研究生")]
-    data1 = [("资格证", "123456", "2019-01-01", "B", "执业证", "654321", "2019-02-02", "2020-07-08", '2022-07-08',
-              "RULE20120000000000001--保险经纪公司", "121222333529", "折", "中国工商银行股份有限公司",
-              "新疆维吾尔自治区_巴音郭楞蒙古自治州", "中国工商银行股份有限公司库尔勒人民东路支行")]
-
+    # data = [("甘冬龙ui测试", "370126198007046159", "13999999999", "32990000--测试0519营销", "汉族", "中共党员", "研究生")]
+    # data1 = [("资格证", "123456", "2019-01-01", "B", "执业证", "654321", "2019-02-02", "2020-07-08", '2022-07-08',
+    #           "RULE20120000000000001--保险经纪公司", "121222333529", "折", "中国工商银行股份有限公司",
+    #           "新疆维吾尔自治区_巴音郭楞蒙古自治州", "中国工商银行股份有限公司库尔勒人民东路支行")]
+    data = csv_util.data_reader("agent_sales_manage/007_data.csv")
+    data1 = csv_util.data_reader("agent_sales_manage/007_data1.csv")
 
     @allure.story("填写基本信息")
     @pytest.mark.usefixtures("login_jiangsu_p")

@@ -10,7 +10,9 @@ from src.page.agent_sales_manage.appointment_manager import AppointmentManager
 from src.page.agent_sales_manage.main_management_agent_salesmen import ManagementOfAgentSalesmen
 from src.page.base_page import BasePage
 from src.page.integrated_management.main_agent_sales_recheck import AgentSalesRecheck
+from src.utils import csv_util
 from src.utils.log import info
+
 
 @allure.feature("代理制人员代码管理>>营销团队经理聘任与解聘（无效人员复效并任命为经理）")
 class Test_YLDLZ_002():
@@ -19,9 +21,10 @@ class Test_YLDLZ_002():
     BP = BasePage()
     ASR = AgentSalesRecheck()
     SQ = SalesQuery()
-    data = [("83258575", "123456", "321321", "2020-07-08", '2022-07-08', "RULE20120000000000001--保险经纪公司")]
-    data1 = [("83258575")]
-
+    # data = [("83258575", "123456", "321321", "2020-07-08", '2022-07-08', "RULE20120000000000001--保险经纪公司")]
+    # data1 = [("83258575")]
+    data = csv_util.data_reader("agent_sales_manage/004_data.csv")
+    data1 = csv_util.data_reader("agent_sales_manage/004_data1.csv")
 
     @allure.story("提交无效人员任命为经理")
     @pytest.mark.usefixtures("login_jiangsu_p_fun")
