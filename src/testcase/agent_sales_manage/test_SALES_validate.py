@@ -5,7 +5,7 @@
 import allure
 import pytest
 
-from src.page.agent_sales_manage.appointment_manager import AppointmentAndDismissal
+from src.page.agent_sales_manage.appointment_manager import AppointmentManager
 from src.page.agent_sales_manage.main_management_agent_salesmen import ManagementOfAgentSalesmen
 from src.utils.except_util import get_screenshot
 from src.utils.log import info
@@ -13,7 +13,7 @@ from src.utils.log import info
 
 @allure.feature("经理聘任流程的信息验证")
 class Test_not_empty():
-    appointment_and_dismissal = AppointmentAndDismissal()
+    appointment_and_dismissal = AppointmentManager()
     main_management_agent_salesmen = ManagementOfAgentSalesmen()
 
     data = [("苏嘉秀iu测试", "410101199602194981", "13313313313", "32990038--测试0506营销", "经理", "汉族", "中共党员", "研究生", "资格证",
@@ -45,7 +45,7 @@ class Test_not_empty():
                                saDAccount_bankareaname,
                                bankName):
         info("经营机构->销售人员->代理制销售人员代码管理->营销团队经理聘任与解聘")
-        self.main_management_agent_salesmen.into_page_appointment()
+        self.main_management_agent_salesmen.into_page()
         info("填入基本信息")
         self.appointment_and_dismissal.user_tab_input(userName, idCard, mobile)
         self.appointment_and_dismissal.select_group(group)

@@ -30,6 +30,8 @@ class GroupIssue(ProcessPage):
     # 双击选择框
     com_code = "//*[@id='comCode']"
     group_code = "//input[@id='groupcode']"
+    group_name = "//*[@id='groupname']"
+    group_code_hold = "//*[@id='groupcodeHold']"
     # 下拉选项
     sex = "//*[@id='sex']"
     # rolecode = "//*[@id='rolecode']"  # 团队职务选择
@@ -49,11 +51,16 @@ class GroupIssue(ProcessPage):
     # 合同基本信息中的各项
     agentno0 = "//*[@id='agentno0']"  # 资格证号码
     credentialno0 = "//*[@id='credentialno0']"  # 执业证号码
+    agentno1 = "//*[@id='agentno1']"  # 资格证号码
+    credentialno1 = "//*[@id='credentialno1']"  # 执业证号码
     contractstartdate0 = "//*[@id='contractstartdate0']"  # 合同起始日期
     imgBtncon1 = "//*[@id='imgBtncon1[0]']"  # 合同起始日期按钮
+    imgBtncon1_1 = "//*[@id='imgBtncon1[1]']"
     contractenddate0 = "//*[@id='contractenddate0']"  # 合同终止日期
     imgBtncon2 = "//*[@id='imgBtncon2[0]']"  # 合同终止日期按钮
+    imgBtncon2_1 = "//*[@id='imgBtncon2[1]']"
     ruleNo = "//*[@id='ruleNo']/following-sibling::input[1]"  # 佣金配置
+    saUContracts1 = "//*[@id='saUContracts1[0]']"   #佣金配置名
     # 账户信息中的各项
     accountno = "//*[@id='accountno']"  # 收款人账号
     cardtype = "//*[@id='cardtype']"  # 卡折标志
@@ -73,24 +80,16 @@ class GroupIssue(ProcessPage):
         self.send_keys(self.wait_until_el_xpath(self.id_cards), id_cards)
         self.send_keys(self.wait_until_el_xpath(self.mobile), mobile)
 
-    @allure.step("选择上级机构:{com_code}，归属机构:{group_code}")
-    def select_org(self, com_code, group_code):
+    @allure.step("选择机构:{com_code}")
+    def select_org(self, xpath, com_code):
         """
-        com_code:上级机构
-        group_code：归属机构
+        com_code:机构值
         """
         text = ""
-        text1 = ""
         i = 0
         while text == "" and i < 3:
-            self.code_select(self.com_code, com_code)
-            text = self.get_attribute(self.get_element_xpath(self.com_code), "value")
-            i = i + 1
-        sleep(1)
-        i = 0
-        while text1 == "" and i < 3:
-            self.code_select(self.group_code, group_code)
-            text1 = self.get_attribute(self.get_element_xpath(self.group_code), "value")
+            self.code_select(xpath, com_code)
+            text = self.get_attribute(self.get_element_xpath(xpath), "value")
             i = i + 1
         sleep(1)
 
@@ -105,11 +104,11 @@ class GroupIssue(ProcessPage):
         self.select(self.visage, visage)
         self.select(self.culture, culture)
 
-    @allure.step("切换到合同信息")
+    @allure.step("切换到合同信息页")
     def switch_contract_tab(self):
         self.click(self.wait_until_el_xpath(self.contract_tab))
 
-    @allure.step("切换到人员基础信息")
+    @allure.step("切换到人员基础信息页")
     def switch_user_tab(self):
         self.click(self.wait_until_el_xpath(self.user_tab))
 
@@ -138,6 +137,16 @@ class GroupIssue(ProcessPage):
         # 日期组件
         self.pick_date_old(self.imgBtncon1, contractstartdate0)
         self.pick_date_old(self.imgBtncon2, contractenddate0)
+        # self.code_select(self.ruleNo, ruleNo)
+
+    @allure.step(
+        "填写合同基本信息（资格证号码:{agentno1},执业证号码：{credentialno1},合同起始日期：{contractstartdate0},合同终止日期：{contractenddate0},佣金配置：{ruleNo}）")
+    def input_contract1(self, agentno1, credentialno1, contractstartdate1, contractenddate1, ruleNo):
+        self.select(self.agentno1, agentno1)
+        self.select(self.credentialno1, credentialno1)
+        # 日期组件
+        self.pick_date_old(self.imgBtncon1_1, contractstartdate1)
+        self.pick_date_old(self.imgBtncon2_1, contractenddate1)
         self.code_select(self.ruleNo, ruleNo)
 
     @allure.step(
@@ -152,8 +161,13 @@ class GroupIssue(ProcessPage):
         self.send_keys(self.wait_until_el_xpath(self.bankName), bankName)
         sleep(1)
 
+    @allure.step("保存")
     def prepare_add_deputy(self):
         self.click(self.wait_until_el_xpath(self.save_button))
+
+    @allure.step("保存并提交")
+    def save_deputy(self):
+        self.click(self.wait_until_el_xpath(self.save_commit))
 
     @allure.step("生成人员代码，合同号")
     def get_msg(self):
@@ -161,3 +175,39 @@ class GroupIssue(ProcessPage):
         a = text.split(' ')
         msg = {'usercode': a[0].split('：')[1], "contract": a[1].split('：')[1]}
         return msg
+
+    def code_edit(self, xpath, text):
+        '''
+        修改归属团队
+        xpath:要双击组件的xpath
+        text:要选择的文本值
+        '''
+        self.claer(self.wait_until_el_xpath(xpath))
+        self.switch_to_window()
+        option = self.wait_until_el_xpath("//select/option[contains(@value,'{0}')]".format(text.split('--')[0]))
+        self.click(option)
+        confirm = self.wait_until_el_xpath("//input[@value='确定']")
+        self.click(confirm)
+        self.switch_to_window()
+
+    def js_set_value(self, xpath, value):
+        """
+        通过js设置标签内value的值
+        """
+        self.execute_script_s("arguments[0].setAttribute('value',arguments[1]);",
+                                 self.get_element_xpath(xpath), value)
+
+
+    def js_group(self,group_code_xpath, group_name_xpath, org, group_code_hold_xpath=None ,group_code_hold=None):
+        """
+        一组双击组件选择的步骤
+        group_code_xpath:机构代码xpath
+        group_name_xpath：机构名称的xpath
+        org：机构值
+        group_code_hold_xpath：机构隐藏域xpath
+        group_code_hold：机构隐藏域的值
+        """
+        self.js_set_value(group_code_xpath,org.split('--')[0])
+        self.js_set_value(group_name_xpath,org.split('--')[1])
+        if group_code_hold:
+            self.js_set_value(group_code_hold_xpath, group_code_hold)

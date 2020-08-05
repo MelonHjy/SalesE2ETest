@@ -1,0 +1,70 @@
+#  -*- coding:utf-8 -*-
+# @Time : 2020/8/3 10:39
+# @Author: fyl
+# @File : test_SALES_YLDLZ_009.py   代理制销售人员代码管理>>团队成员出单权赋予与变更（无效人员复效为团队成员）  待测
+import allure
+import pytest
+
+from config.global_var import sleep
+from src.page.agent_sales_manage.group_issue import GroupIssue
+from src.page.agent_sales_manage.main_management_agent_salesmen import ManagementOfAgentSalesmen
+from src.page.integrated_management.main_agent_sales_recheck import AgentSalesRecheck
+from src.utils import csv_util
+from src.utils.log import info
+
+
+@allure.feature("代理制销售人员代码管理>>团队成员出单权赋予与变更（无效人员复效为团队成员）")
+class Test_YLDLZ_009():
+    MOAS = ManagementOfAgentSalesmen()
+    GI = GroupIssue()
+    ASR = AgentSalesRecheck()
+    msg = None
+
+    data = csv_util.data_reader("agent_sales_manage/009_data.csv")
+
+    @allure.story("无效人员复效为团队成员")
+    @pytest.mark.usefixtures("login_jiangsu_p_fun")
+    @pytest.mark.parametrize("user_code, agentno1, credentialno1, contractstartdate1, contractenddate1, ruleNo", data)
+    def test_001(self, user_code, agentno1, credentialno1, contractstartdate1, contractenddate1, ruleNo):
+        Test_YLDLZ_009.msg = user_code
+        info("经营机构->销售人员->代理制销售人员代码管理")
+        self.MOAS.into_page()
+        info("查询无效人员代码{}->选择".format(user_code))
+        self.MOAS.query(user_code)
+        self.MOAS.select_data("内部流转码", user_code, "选择")
+        info("团队成员出单权赋予与变更")
+        self.MOAS.click_btn('团队成员出单权赋予与变更')
+        self.MOAS.assertEqual("判断页面标题", self.group_issue.get_head_text(), "团队成员出单权赋予")
+        info("切换合同信息页")
+        self.GI.switch_contract_tab()
+        info("资格证号码-->执业证号码-->合同起始日期-->合同终止日期-->佣金配置")
+        self.GI.input_contract1(agentno1, credentialno1, contractstartdate1, contractenddate1, ruleNo)
+        info("切换基本信息页->保存并提交")
+        self.GI.save_deputy()
+        self.GI.submit_interaction(iframe_xpath=self.GI.submit_iframe)
+    @pytest.mark.skip
+    @allure.story("省级销售管理综合岗复核流程")
+    @pytest.mark.usefixtures("login_jiangsu_p_fun")
+    def test_002(self):
+        info("综合管理->销售人员->代理制销售人员代码复核")
+        self.ASR.into_page()
+        info("查询无效人员代码{}->选择".format(Test_YLDLZ_009.msg))
+        self.ASR.query(user_code1=Test_YLDLZ_009.msg)
+        self.ASR.select_data("出单权赋予复核")
+        self.ASR.switch_to_window()
+        self.ASR.maximize_window()
+        info("复核")
+        self.ASR.recheck_ope(textarea="无效人员复效为团队成员--ui测试")
+        self.ASR.click(self.ASR.wait_until_el_xpath(self.ASR.submit_close))
+    @pytest.mark.skip
+    @allure.story("代理制销售人员代码查询验证")
+    @pytest.mark.usefixtures("login_jiangsu_p")
+    def test_003(self):
+        info("经营机构->销售人员->代理制销售人员代码管理")
+        self.MOAS.into_page()
+        info("查询无效人员代码{}->选择".format(Test_YLDLZ_009.msg))
+        self.MOAS.query(user_code1=Test_YLDLZ_009.msg)
+        status = self.MOAS.get_cell_text_by_head("状态", 0)
+        self.MOAS.assertEqual("验证团队成员状态为‘有效’", status, "有效")
+        process = self.MOAS.get_cell_text_by_head("终止流程", 0)
+        self.MOAS.assertEqual("判断最后一栏没有终止流程按钮", process, "")
