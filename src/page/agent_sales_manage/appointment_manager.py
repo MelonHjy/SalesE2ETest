@@ -190,7 +190,6 @@ class AppointmentManager(ProcessPage):
         sleep(3)
 
     def submit_process(self, textarea=""):
-        self.switch_to_first_iFrame(self.submit_iframe)
         self.submit_interaction(iframe_xpath=self.submit_iframe, textarea=textarea)
         sleep(2)
         self.click(self.wait_until_el_xpath(self.close_over))

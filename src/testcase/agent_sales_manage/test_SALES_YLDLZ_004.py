@@ -39,7 +39,7 @@ class Test_YLDLZ_002():
         self.MOAS.select_appointment()
         self.AM.switch_to_window()
         self.AM.maximize_window()
-        self.AM.assertEqual("验证页面", self.AM.get_head_text(), "营销团队经理聘任")
+        self.AM.assertEqual("判断页面标题", self.AM.get_head_text(), "营销团队经理聘任")
         self.AM.select_rolecode("经理")
         self.AM.switch_contract_tab()
         info("填写合同基本信息（资格证号码,执业证号码,合同起始日期,合同终止日期,佣金配置）")

@@ -248,6 +248,10 @@ class BasePage():
         return text
 
     @catch_except
+    def claer(self, el):
+        el.clear()
+
+    @catch_except
     def send_keys(self, el, value):
         """
         向el元素填写文本
