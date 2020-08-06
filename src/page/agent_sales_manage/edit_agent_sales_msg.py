@@ -10,11 +10,11 @@ from src.page.process_page import ProcessPage
 
 
 class EditAgentSaleMsg(ProcessPage):
-
     case = "//*[@class='case']"
     submit_iframe = "//iframe[@name='submitFrame']"  # 提交任务的iframe
     close_over = "//input[@class='button_ty_over']"
-    manage_account_btn = "//input[@id='manageAccount']" # 修改账号
+    close_btn = "//input[@class='button_ty']"
+    manage_account_btn = "//input[@id='manageAccount']"  # 修改账号
     # ---------------------人员基础信息填写项------------------------------ #
     user_tab = "//*[@id='folder-label-userTab']"
     username = "//input[@id='userName']"
@@ -121,15 +121,14 @@ class EditAgentSaleMsg(ProcessPage):
     @allure.step(
         "填写账户信息（收款人账号:{accountno},卡折标志:{cardtype},银行名称：{saDAccount_bankName},银行区域名称：{saDAccount_bankareaname},联行号：{bankName}）")
     def input_account(self, accountno, cardtype, saDAccount_bankName, saDAccount_bankareaname, bankName):
-        self.send_keys(self.wait_until_el_xpath(self.accountno), accountno)
-        self.select(self.cardtype, cardtype)
         self.send_keys(self.wait_until_el_xpath(self.saDAccount_bankName), saDAccount_bankName)
         sleep(1)
         self.send_keys(self.wait_until_el_xpath(self.saDAccount_bankareaname), saDAccount_bankareaname)
         sleep(1)
         self.send_keys(self.wait_until_el_xpath(self.bankName), bankName)
         sleep(1)
-        self.send_keys(self.wait_until_el_xpath(self.bankName), Keys.ENTER)
+        self.send_keys(self.wait_until_el_xpath(self.accountno), accountno)
+        self.select(self.cardtype, cardtype)
 
     @allure.step("修改账号")
     def manage_account(self):

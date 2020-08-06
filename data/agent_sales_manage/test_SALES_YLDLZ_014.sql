@@ -1,0 +1,19 @@
+delete from saucontract where usercode = '83258551';
+/*插入合同信息*/
+insert into saucontract (agentarea, agentenddate, agentid, agentno, agentstartdate, batchno, checkstatus, comfeedate, contractno, contractaddress, contractcount, contractenddate, contractstartdate, creator, credentialenddate, credentialid, credentialno, credentstartdate, effecttime, effectivedate, failuretime, flag, guarantoraddress, guarantorcardnum, guarantorname, guarantorphone, inputtime, lastcontractid, remark, ruleno, updatetime, updator, usercode, userid, validstatus, ucontractid) values ('', '', 1000000002071305, '123456', '2019-01-01', '', 'a', 0, '320000110200146', '', 1, '2022-08-03', '2020-08-06', 'A320000135', '', 1000000002071436, '654321', '2019-01-01', '', '', '', '', '', '', '', '', '2020-08-06 09:44:30', '', '', 'RULE20120000000000001', '', '', '83258551', 1000000002297783, '1', 1000000001904324);
+delete from sauuser where usercode = '83258551';
+/*插入基本信息*/
+insert into sauuser (userid, usercode, username, usertype, userclass, identifynumber, identifytype, disability, sex, mobile, groupid, pk_deptdoc, groupcode, comflag, comcode, makecom, tradetype, firomjob, secomjob, omjobeffctdate, fulltime, failtime, dismissreason, deleteflag, checkstatus, refereecode, onlineincreaseflag, validstatus, flag, message, remark, inserttimeforhis, operatetimeforhis) values(1000000002297783, '83258551  ', '武介堂ui测试', 'C0        ', null, '330103199010115314', '11', '0', ' ', '13311212125       ', null, '32990038', '1130B9100000000HSK7C', null, '32000000  ', '32990038', 'Y', 'P   ', '    ', null, null, null, '', '0', '          ', '', '0', '1         ', '          ', '', '好', TO_DATE('2020-07-21 10:19:10', '%Y-%m-%d %H:%M:%S'), TO_DATE('2020-08-05 14:34:22', '%Y-%m-%d %H:%M:%S'));
+delete from	sadqualify where usercode = '83258551';
+/*插入资格证*/
+insert into sadqualify (qualifyid, isprivate, userid, usercode, agentid, agentcode, qualifytype, agenttype, qualifyno, qualifystartdate, qualifyenddate, creator, updator, validstatus, flag, remark, inserttimeforhis, operatetimeforhis) values(1000000002071305, '2', 1000000002297783, '83258551  ', null, null, 'Agent     ', 'B', '123456                        ', TO_DATE('2019-01-01', '%Y-%m-%d'), null, 'A320000135', '83258551  ', '1         ', null, null, TO_DATE('2020-07-21 10:19:13', '%Y-%m-%d %H:%M:%S'), TO_DATE('2020-08-05 14:34:26', '%Y-%m-%d %H:%M:%S'));
+/*插入执业证*/
+insert into sadqualify (agentcode, agenttype, agentid, creator, flag, isprivate, qualifyenddate, qualifyno, qualifystartdate, qualifytype, remark, updator, usercode, userid, validstatus, qualifyid) values ('', '', '', 'A320000135', '', '2', '', '654321', '2019-01-01', 'Marketing', '', '', '83258551', 1000000002297783, '0         ', 1000000002071436);
+delete from	prpdsellerno  where sellercode='83258551';
+/*插入职业证号（账户信息？）*/
+insert into prpdsellerno (id, sellerno, sellercode, sellername, identifynumber, sellernotime, sellertype, businessnature, agentcode, agentname, bankname, bankcode, companyflag, localflag, unionpayno, accountname, certitype, certino, phoneno, payaccount, salary, lastpremium, pretarget, comcode, validstatus, remark, flag) values(1000000000769353, '654321', '83258551  ', '武介堂ui测试', '330103199010115314  ', null, 'C22 ', '1', '000011000001', '保险营销员', '中国工商银行股份有限公司', 'ICBC        ', '1', '6528', '102888000030', '武介堂ui测试', 'A', '330103199010115314', '13311212125       ', '111222333449', null, null, null, '32000000', '1', null, null);
+delete from sabpmmain where businessno='83258551';
+delete from sauuserhistory where usercode = '83258551';
+delete from saucontracthis  where usercode = '83258551';
+delete from sadqualifyhis where usercode = '83258551';
+delete from prpdsellernohis where sellercode='83258551';

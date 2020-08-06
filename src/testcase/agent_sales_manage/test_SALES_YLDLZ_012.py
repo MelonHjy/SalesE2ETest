@@ -42,7 +42,7 @@ class Test_YLDLZ_012():
         info("修改->收款人账号->账号类型->银行名称->银行区域名称->联行号")
         self.EASM.input_account(accountno, cardtype, saDAccount_bankName, saDAccount_bankareaname, bankName)
         self.EASM.manage_account()
-        # self.EASM.click(self.EASM.wait_until_el_xpath(self.EASM.close_over))
+        # self.EASM.click(self.EASM.wait_until_el_xpath(self.EASM.close_btn))
 
     @allure.story("查询验证修改信息")
     @pytest.mark.usefixtures("login_jiangsu_p_fun")
@@ -60,13 +60,19 @@ class Test_YLDLZ_012():
         self.MOAS.switch_to_window()
         self.MOAS.maximize_window()
         self.EASM.assertEqual("验证标签文字", self.EASM.get_head_text(), "无效/有效人员修改账户")
-        self.EASM.assertEqual("验证账号", self.EASM.get_attribute(self.EASM.get_element_xpath(self.EASM.accountno), 'value'), accountno)
-
-
+        self.EASM.assertEqual("验证账号",
+                              self.EASM.get_attribute(self.EASM.get_element_xpath(self.EASM.accountno), 'value'),
+                              accountno)
 
         self.EASM.assertEqual("验证账号类型", self.EASM.get_cardtype(), cardtype)
-        self.EASM.assertEqual("验证银行名称", self.EASM.get_attribute(self.EASM.get_element_xpath(self.EASM.saDAccount_bankName), 'value'),
+        self.EASM.assertEqual("验证银行名称",
+                              self.EASM.get_attribute(self.EASM.get_element_xpath(self.EASM.saDAccount_bankName),
+                                                      'value'),
                               saDAccount_bankName)
-        self.EASM.assertEqual("验证银行区域名称", self.EASM.get_attribute(self.EASM.get_element_xpath(self.EASM.saDAccount_bankareaname), 'value'),
+        self.EASM.assertEqual("验证银行区域名称",
+                              self.EASM.get_attribute(self.EASM.get_element_xpath(self.EASM.saDAccount_bankareaname),
+                                                      'value'),
                               saDAccount_bankareaname)
-        # self.EASM.assertEqual("验证联行号", self.EASM.get_attribute(self.EASM.get_element_xpath(self.EASM.bankName), 'value'), bankName)
+        self.EASM.assertEqual("验证联行号",
+                              self.EASM.get_attribute(self.EASM.get_element_xpath(self.EASM.bankName), 'value'),
+                              bankName)

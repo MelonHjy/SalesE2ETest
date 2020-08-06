@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-#
+import os
 import time
 
 
@@ -17,3 +18,5 @@ class g:
     config = None
     UserType = None
     db = None
+    # 项目根目录
+    root_path = os.path.abspath('.').replace('\\', '/')

@@ -13,13 +13,15 @@ import os
 import random
 import jaydebeapi
 
+from config.global_var import g
+
 
 class DBUtils:
     __limit = 100
 
     def __init__(self, url, user, password):
-        print(os.path.abspath('./config/ifxjdbc.jar'))
-        self.conn = jaydebeapi.connect('com.informix.jdbc.IfxDriver', url, [user, password], os.path.abspath('./config/ifxjdbc.jar'))
+        jar_path = g.root_path + '/config/ifxjdbc.jar'
+        self.conn = jaydebeapi.connect('com.informix.jdbc.IfxDriver', url, [user, password], jar_path)
 
     def close_connection(self):
         try:
@@ -50,18 +52,21 @@ class DBUtils:
         cur.close()
         return results
 
-    def execute(self, sql, args):
+    def execute(self, sql, args=None):
         '''
         增删改
-        :param sql:sql语句   "inserst into hd_t_vprpdcompany set(usercode,username) values(?,?)"
+        :param sql:sql语句   "insert into hd_t_vprpdcompany set(usercode,username) values(?,?)" args为空时直接执行语句
         :param args:参数（数据类型为元组）  ('37010000','haha')
         :return: 影响的行数
         '''
         try:
             cur = self.conn.cursor()
-            cur.execute(sql, args)
+            if args:
+                cur.execute(sql, args)
+            else:
+                cur.execute(sql)
             rowcount = cur.rowcount
-            self.conn.commit()
+            # self.conn.commit()
             cur.close()
         except BaseException as e:
             raise
@@ -74,10 +79,20 @@ if __name__ == '__main__':
     password = 'u^6m.8LA0'
     db = DBUtils(url, user, password)
     try:
-        sql = "select * from SaUUser"
-        data = db.select(sql)
-        data = db.random_choice(data, 3)
-        for d in data:
+        # 增删改示例
+        sql = '''
+delete from saucontract where usercode = '83258551';
+/*插入合同信息*/
+insert into saucontract (agentarea, agentenddate, agentid, agentno, agentstartdate, batchno, checkstatus, comfeedate, contractno, contractaddress, contractcount, contractenddate, contractstartdate, creator, credentialenddate, credentialid, credentialno, credentstartdate, effecttime, effectivedate, failuretime, flag, guarantoraddress, guarantorcardnum, guarantorname, guarantorphone, inputtime, lastcontractid, remark, ruleno, updatetime, updator, usercode, userid, validstatus, ucontractid) values ('', '', 1000000002071305, '123456', '2019-01-01', '', 'a', 0, '320000110200146', '', 1, '2022-08-03', '2020-08-06', 'A320000135', '', 1000000002071436, '654321', '2019-01-01', '', '', '', '', '', '', '', '', '2020-08-06 09:44:30', '', '', 'RULE20120000000000001', '', '', '83258551', 1000000002297783, '1', 1000000001904324);
+'''
+        data = db.execute(sql)
+        print(data)
+
+        # 查示例
+        sql2 = "select * from SaUUser"
+        data2 = db.select(sql2)
+        data2 = db.random_choice(data2, 3)
+        for d in data2:
             print(d)
     finally:
         db.close_connection()

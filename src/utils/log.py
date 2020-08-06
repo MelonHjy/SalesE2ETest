@@ -1,15 +1,17 @@
 # -*- coding: utf-8 -*-#
-import logging.config,logging
+import logging.config, logging
+import os
 import traceback
-from os import path
+
+from config.global_var import g
 from src.utils.create_dir import create_log_dir
 
-PATH = path.abspath(".")
-local = path.abspath(path.join(PATH, "./config/Logger.conf"))
+local = g.root_path + '/config/Logger.conf'
 log_dir = create_log_dir()
-logging.config.fileConfig(local, defaults={'logdir':log_dir})
+logging.config.fileConfig(local, defaults={'logdir': log_dir})
 _log = logging.getLogger()
 logging.getLogger("requests").setLevel(logging.WARNING)
+
 
 def debug(message, *args, **kwargs):
     # 打印debug级别的日志方法
