@@ -105,5 +105,7 @@ class ManagementOfAgentSalesmen(TablePage):
         row_ope：对该行进行点击的列名
         """
         status_list = self.get_cell_text_by_head(column_name)
+        print(status_list)
+        print(str(column_value))
         index = status_list.index(column_value)
         self.click(self.get_a_by_head(index, row_ope))

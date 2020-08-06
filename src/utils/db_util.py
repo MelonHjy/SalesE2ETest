@@ -13,13 +13,15 @@ import os
 import random
 import jaydebeapi
 
+from config.global_var import g
+
 
 class DBUtils:
     __limit = 100
 
     def __init__(self, url, user, password):
-        print(os.path.abspath('../../config/ifxjdbc.jar'))
-        self.conn = jaydebeapi.connect('com.informix.jdbc.IfxDriver', url, [user, password], os.path.abspath('../../config/ifxjdbc.jar'))
+        jar_path = g.root_path + '/config/ifxjdbc.jar'
+        self.conn = jaydebeapi.connect('com.informix.jdbc.IfxDriver', url, [user, password], jar_path)
 
     def close_connection(self):
         try:
@@ -84,7 +86,6 @@ delete from saucontract where usercode = '83258551';
 insert into saucontract (agentarea, agentenddate, agentid, agentno, agentstartdate, batchno, checkstatus, comfeedate, contractno, contractaddress, contractcount, contractenddate, contractstartdate, creator, credentialenddate, credentialid, credentialno, credentstartdate, effecttime, effectivedate, failuretime, flag, guarantoraddress, guarantorcardnum, guarantorname, guarantorphone, inputtime, lastcontractid, remark, ruleno, updatetime, updator, usercode, userid, validstatus, ucontractid) values ('', '', 1000000002071305, '123456', '2019-01-01', '', 'a', 0, '320000110200146', '', 1, '2022-08-03', '2020-08-06', 'A320000135', '', 1000000002071436, '654321', '2019-01-01', '', '', '', '', '', '', '', '', '2020-08-06 09:44:30', '', '', 'RULE20120000000000001', '', '', '83258551', 1000000002297783, '1', 1000000001904324);
 '''
         data = db.execute(sql)
-        # data = db.random_choice(data, 3)
         print(data)
 
         # 查示例

@@ -22,7 +22,8 @@ class Test_YLDLZ_014():
     msg = None
 
     data = csv_util.data_reader("agent_sales_manage/014_data.csv")
-    # data = [("83258572")]   # 83258551  83258572  83258562
+
+    # data = ["83258551"]   # 83258551  83258572  83258562
 
     @allure.story("合同续签（有效人员进行合同续签）")
     @pytest.mark.usefixtures("login_jiangsu_p_fun")
@@ -43,6 +44,7 @@ class Test_YLDLZ_014():
         self.CR.click(self.CR.get_element_xpath(self.CR.renew))
         self.CR.submit_interaction(self.CR.submit_iframe)
 
+
     @allure.story("省级销售管理综合岗复核流程")
     @pytest.mark.usefixtures("login_jiangsu_p_fun")
     @pytest.mark.parametrize("user_code", data)
@@ -57,8 +59,8 @@ class Test_YLDLZ_014():
         self.CRR.assertEqual("判断页面标题", self.CR.get_head_text(), "人员合同续签复核")
         contract_start_date = self.CRR.get_text(self.CRR.get_element_xpath(self.CRR.contract_start_date))
         contract_end_date = self.CRR.get_text(self.CRR.get_element_xpath(self.CRR.contract_end_date))
-        self.CRR.assertEqual("验证合同起始日期",contract_start_date, Test_YLDLZ_014.msg["contract_start_date"])
-        self.CRR.assertEqual("验证合同终止日期",contract_end_date, Test_YLDLZ_014.msg["contract_end_date"])
+        self.CRR.assertEqual("验证合同起始日期", contract_start_date, Test_YLDLZ_014.msg["contract_start_date"])
+        self.CRR.assertEqual("验证合同终止日期", contract_end_date, Test_YLDLZ_014.msg["contract_end_date"])
         info("复核")
         self.CRR.click(self.CRR.get_element_xpath(self.CRR.success))
-        self.CRR.submit_interaction(self.CRR.submit_iframe,textarea="合同续签（有效人员进行合同续签）--ui测试")
+        self.CRR.submit_interaction(self.CRR.submit_iframe, textarea="合同续签（有效人员进行合同续签）--ui测试")
