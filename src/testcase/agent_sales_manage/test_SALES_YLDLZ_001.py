@@ -1,7 +1,7 @@
 # -*- coding:utf-8 -*-
 # @Time : 2020/6/28 17:22
 # @Author: fyl
-# @File : test_SALES_YLDLZ_001.py
+# @File : test_SALES_YLDLZ_001.py   代理制人员代码管理>>营销团队经理聘任与解聘(新增人员聘任为经理)
 import allure
 import pytest
 
@@ -45,7 +45,7 @@ class Test_YLDLZ_001():
         self.main_management_agent_salesmen.into_page()
         self.main_management_agent_salesmen.click_btn('营销团队经理聘任与解聘')
         info("营销团队经理聘任与解聘检查")
-        self.appointment.assertEqual("验证标签文字", self.appointment.get_head_text(), "营销团队经理聘任")
+        self.appointment.assertEqual("判断页面标题", self.appointment.get_head_text(), "营销团队经理聘任")
         self.appointment.assertEqual("验证上级机构是否默认‘32000000’",
                                      self.appointment.get_com_code_text(), "32000000")
         info("填入基本信息")

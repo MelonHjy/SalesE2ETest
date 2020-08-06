@@ -1,7 +1,7 @@
 # -*- coding:utf-8 -*-
 # @Time : 2020/6/28 17:22
 # @Author: fyl
-# @File : test_SALES_YLDLZ_001.py   营销团队经理聘任与解聘（有效团队成员任命为经理）
+# @File : test_SALES_YLDLZ_001.py   代理制人员代码管理>>营销团队经理聘任与解聘（有效团队成员任命为经理）
 import allure
 import pytest
 
@@ -37,12 +37,12 @@ class Test_YLDLZ_002():
                               "user_name": self.main_page.get_cell_text_by_head("姓名")}
         info("选择人员->代码：{}，状态：有效".format(user_code))
         self.main_page.select_data("状态", "有效", "选择")
-        self.main_page.click_btn("营销团队经理聘任与解聘")
+        self.main_page.click(self.main_page.wait_until_el_xpath(self.main_page.input_btn.format("营销团队经理聘任与解聘")))
         info("选择聘任")
         self.main_page.select_appointment()
-        # self.main_page.switch_to_window()
-        # self.main_page.maximize_window()
-        self.appointment.assertEqual("验证页面", self.appointment.get_head_text(), "营销团队经理聘任")
+        self.main_page.switch_to_window()
+        self.main_page.maximize_window()
+        self.appointment.assertEqual("判断页面标题", self.appointment.get_head_text(), "营销团队经理聘任")
         info("团队职务选择")
         self.appointment.select_rolecode("经理")
         info("保存并提交")
