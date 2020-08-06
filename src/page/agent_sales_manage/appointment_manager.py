@@ -24,13 +24,17 @@ class AppointmentManager(ProcessPage):
     user_tab = "//*[@id='folder-label-userTab']"
     username = "//input[@id='userName']"
     id_cards = "//input[@id='idCards']"
+    user_code = "//*[@id='userCode']"
     make_com = "//*[@id='makeCom']"
+
     mobile = "//*[@id='mobile']"
     usertype = "//*[@id='usertype']"
     birthday = "//*[@id='birthday']"
     # 双击选择框
     com_code = "//*[@id='comCode']"
     group_code = "//input[@id='groupcode']"
+    group_name = "//*[@id='groupname']"
+    group_code_hold = "//*[@id='groupcodeHold']"
     # 下拉选项
     sex = "//*[@id='sex']"
     rolecode = "//*[@id='rolecode']"  # 团队职务选择
@@ -59,6 +63,7 @@ class AppointmentManager(ProcessPage):
     contractenddate0 = "//*[@id='contractenddate0']"  # 合同终止日期
     imgBtncon2 = "//*[@id='imgBtncon2[0]']"  # 合同终止日期按钮
     ruleNo = "//*[@id='ruleNo']/following-sibling::input[1]"  # 佣金配置
+    saUContracts1 = "//*[@id='saUContracts1[{0}]']"   #佣金配置名
     # 账户信息中的各项
     accountno = "//*[@id='accountno']"  # 收款人账号
     cardtype = "//*[@id='cardtype']"  # 卡折标志
@@ -87,14 +92,14 @@ class AppointmentManager(ProcessPage):
             self.select(self.agentType.format(num), agentType)
 
     @allure.step(
-        "填写合同基本信息（资格证号码:{agentno0},执业证号码：{credentialno0},合同起始日期：{contractstartdate0},合同终止日期：{contractenddate0},佣金配置：{ruleNo}）")
+        "填写合同基本信息（资格证号码:{agentno0},执业证号码：{credentialno0},合同起始日期：{contractstartdate0},合同终止日期：{contractenddate0}")
     def input_contract(self, agentno0, credentialno0, contractstartdate0, contractenddate0, ruleNo):
         self.select(self.agentno0, agentno0)
         self.select(self.credentialno0, credentialno0)
         # 日期组件
         self.pick_date_old(self.imgBtncon1, contractstartdate0)
         self.pick_date_old(self.imgBtncon2, contractenddate0)
-        self.code_select(self.ruleNo, ruleNo)
+        # self.code_select(self.ruleNo, ruleNo)
 
     @allure.step(
         "填写账户信息（收款人账号:{accountno},卡折标志:{cardtype},银行名称：{saDAccount_bankName},银行区域名称：{saDAccount_bankareaname},联行号：{bankName}）")
@@ -194,6 +199,28 @@ class AppointmentManager(ProcessPage):
         sleep(2)
         self.click(self.wait_until_el_xpath(self.close_over))
 
+    def js_set_value(self, xpath, value):
+        """
+        通过js设置标签内value的值
+        """
+        self.execute_script_s("arguments[0].setAttribute('value',arguments[1]);",
+                                 self.get_element_xpath(xpath), value)
+
+
+    def js_group(self,group_code_xpath, group_name_xpath, org, group_code_hold_xpath=None ,group_code_hold=None):
+        """
+        一组双击组件选择的步骤
+        group_code_xpath:机构代码xpath
+        group_name_xpath：机构名称的xpath
+        org：机构值
+        group_code_hold_xpath：机构隐藏域xpath
+        group_code_hold：机构隐藏域的值
+        """
+        self.js_set_value(group_code_xpath,org.split('--')[0])
+        self.js_set_value(group_name_xpath,org.split('--')[1])
+        if group_code_hold:
+            self.js_set_value(group_code_hold_xpath, group_code_hold)
+
     # ---------------------以下输入信息验证相关------------------------------ #
 
     @allure.step("输入合同起始日期、终止日期")
@@ -228,3 +255,4 @@ class AppointmentManager(ProcessPage):
 
     def commit_ope(self):
         self.submit_interaction(iframe_xpath=self.submit_iframe)
+

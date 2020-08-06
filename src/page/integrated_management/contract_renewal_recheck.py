@@ -1,7 +1,7 @@
 #  -*- coding:utf-8 -*-
 # @Time : 2020/8/5 10:49
 # @Author: fyl
-# @File : contract_renewal_recheck.py
+# @File : contract_renewal_recheck.py   合同续签复核页
 from src.page.process_page import ProcessPage
 
 

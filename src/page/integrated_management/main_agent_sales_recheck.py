@@ -24,7 +24,7 @@ class AgentSalesRecheck(TablePage, ProcessPage):
         self.to_main_page("综合管理", "销售人员", "代理制销售人员代码复核")
 
     @allure.step("查询")
-    def query(self, user_code1, status="未提交", manage_flag='', identify_number=''):
+    def query(self, user_code1, status="未提交", manage_flag=None, identify_number=None):
         """
         user_code1:人员代码
         status：任务状态
@@ -34,9 +34,9 @@ class AgentSalesRecheck(TablePage, ProcessPage):
         self.click(self.wait_until_el_xpath(self.user_code))
         self.send_keys(self.wait_until_el_xpath(self.user_code), user_code1)
         self.click(self.wait_until_el_xpath(self.status.format(status)))
-        if identify_number != '':
+        if identify_number:
             self.send_keys(self.identify_number_input, identify_number)
-        if manage_flag != '':
+        if manage_flag:
             self.select(self.manage_flag_select, manage_flag)
         self.click(self.wait_until_el_xpath(self.query_btn))
         sleep(3)
@@ -50,9 +50,4 @@ class AgentSalesRecheck(TablePage, ProcessPage):
         index = status_list.index(status_text)
         self.click(self.get_a_by_head(index, '操作'))
 
-    def recheck_ope(self, check_state="", textarea=""):
-        """
-        点击复核的后续操作
-        """
-        self.click(self.wait_until_el_xpath(self.rechect_btn))
-        self.submit_interaction(iframe_xpath=self.submit_iframe, check_state=check_state, textarea=textarea)
+

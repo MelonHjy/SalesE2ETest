@@ -58,7 +58,7 @@ class BasePage():
         self.execute_script("arguments[0].style.visibility='visible';",
                             self.wait_until_el_xpath(_menu_list))
         self.click(self.wait_until_el_xpath(self.menu.format(menu)))
-        self.execute_script("arguments[0].style.visibility='hidden';", self.wait_until_el_xpath(_menu_list))
+        #self.execute_script("arguments[0].style.visibility='hidden';", self.wait_until_el_xpath(_menu_list))
         self.select_frame_id(self.iframe_page)
 
     def back_to_page(self):
@@ -111,6 +111,27 @@ class BasePage():
         confirm = self.wait_until_el_xpath("//input[@value='确定']")
         self.click(confirm)
         self.switch_to_window()
+
+    def js_set_value(self, xpath, value):
+        """
+        通过js设置标签内value的值
+        """
+        self.execute_script_s("arguments[0].setAttribute('value',arguments[1]);",
+                              self.get_element_xpath(xpath), value)
+
+    def js_group(self, group_code_xpath, group_name_xpath, org, group_code_hold_xpath=None, group_code_hold=None):
+        """
+        一组双击组件选择的步骤
+        group_code_xpath:机构代码xpath
+        group_name_xpath：机构名称的xpath
+        org：机构值
+        group_code_hold_xpath：机构隐藏域xpath
+        group_code_hold：机构隐藏域的值
+        """
+        self.js_set_value(group_code_xpath, org.split('--')[0])
+        self.js_set_value(group_name_xpath, org.split('--')[1])
+        if group_code_hold:
+            self.js_set_value(group_code_hold_xpath, group_code_hold)
 
     @catch_except
     def select(self, xpath, text):
