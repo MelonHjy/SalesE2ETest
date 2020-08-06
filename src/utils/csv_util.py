@@ -7,7 +7,6 @@ from src.utils.common_util import DecoratorType
 
 def data_reader(filename, decorator_type=DecoratorType.parametrize):
     path = g.root_path + '/data/' + filename
-    path = 'C:/Users/Sino-PC201911/Desktop/SalesE2ETest/data/agent_sales_manage/014_data.csv'
     with open(path, encoding='utf-8') as file:
         # csv.reader返回一个迭代器，因其惰性计算没法获取长度，使用next()获取下一个值
         table = csv.reader(file)
