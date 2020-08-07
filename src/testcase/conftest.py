@@ -7,17 +7,11 @@ import os
 import allure
 import pytest
 import win32api
-import win32con
-from selenium.webdriver.support.wait import WebDriverWait
 
 from config.global_var import g
-from src.page.base_page import BasePage, info
-from src.testcase.base_step.commonsteps import CommonSteps
+from src.page.base_page import info
 from src.utils.db_util import DBUtils
-from src.utils.driver_util import get_config, get_browser
-
-
-
+from src.utils.driver_util import get_config
 
 
 @pytest.fixture(scope='session', autouse=True)
@@ -51,9 +45,23 @@ def set_windows_resolution(height, width):
 @pytest.fixture(scope='class', autouse=True)
 def restore_data():
     current = os.environ.get('PYTEST_CURRENT_TEST').split('/')
-    sql_path = g.root_path+'/data/'+current[2]+'/'+current[3].split('.')[0]+'.sql'
+    test_dir = current[2]
+    test_name = current[3].split('.')[0]
+    sql_path = g.root_path + '/data/' + test_dir + '/' + test_name + '.sql'
     if os.path.exists(sql_path):
         with open(sql_path, 'r', encoding='utf-8') as f:
             sql = f.read()
-            data = g.db.execute(sql)
+            restore_log('CURRENT_TEST:%s/%s 正在恢复数据' % (test_dir, test_name))
+            try:
+                data = g.db.execute(sql)
+                restore_log('CURRENT_TEST:%s/%s 恢复数据成功' % (test_dir, test_name))
+            except Exception:
+                restore_log('CURRENT_TEST:%s/%s 恢复数据失败' % (test_dir, test_name))
+    else:
+        restore_log('CURRENT_TEST:%s/%s 没有恢复数据sql脚本文件' % (test_dir, test_name))
     yield
+
+
+@allure.step("{log}")
+def restore_log(log):
+    info(log)

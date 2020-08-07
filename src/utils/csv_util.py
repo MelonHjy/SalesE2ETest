@@ -13,10 +13,10 @@ def data_reader(filename, decorator_type=DecoratorType.parametrize):
         # 获取第一行的值，csv表头
         heads = next(table)
         if DecoratorType.parametrize == decorator_type:
-            return [rows[0] if rows.__len__() == 1 else tuple(rows) for rows in table]
+            return [rows[0].strip() if rows.__len__() == 1 else tuple([row.strip() for row in rows]) for rows in table]
             # return [tuple(rows) for rows in table]
         if DecoratorType.fixture == decorator_type:
-            return [{heads[i]: rows[i] for i in range(heads.__len__())} for rows in table]
+            return [{heads[i].strip(): rows[i].strip() for i in range(heads.__len__())} for rows in table]
         else:
             raise TypeError('Wrong DecoratorType:"%s"' % decorator_type)
 
