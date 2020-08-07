@@ -7,6 +7,7 @@ import pytest
 
 from src.page.agent_sales_manage.appointment_manager import AppointmentManager
 from src.page.agent_sales_manage.main_management_agent_salesmen import ManagementOfAgentSalesmen
+from src.page.integrated_management.appointment_manager_recheck import AppointmentManagerRecheck
 from src.page.integrated_management.main_agent_sales_recheck import AgentSalesRecheck
 from src.utils import csv_util
 from src.utils.driver_util import *
@@ -15,9 +16,10 @@ from src.utils.except_util import get_screenshot
 
 @allure.feature("代理制人员代码管理>>营销团队经理聘任与解聘(新增人员聘任为经理)")
 class Test_YLDLZ_001():
-    appointment = AppointmentManager()
-    main_management_agent_salesmen = ManagementOfAgentSalesmen()
-    agent_sales_recheck = AgentSalesRecheck()
+    AM = AppointmentManager()
+    MOAS = ManagementOfAgentSalesmen()
+    ASR = AgentSalesRecheck()
+    AMR = AppointmentManagerRecheck()
     # try:
     #     sql = "select * from SaUUser"
     #     data = g.db.select(sql)
@@ -37,36 +39,34 @@ class Test_YLDLZ_001():
     data2 = csv_util.data_reader("agent_sales_manage/001_data2.csv")
     msg = None
 
-    @allure.story("填写基本信息")
+    @allure.story("新增人员聘任为经理--基本信息")
     @pytest.mark.usefixtures("login_jiangsu_p")
-    @pytest.mark.parametrize("userName, idCard, mobile, group, rolecode, nation, visage, culture", data)
-    def test_001_basemag(self, userName, idCard, mobile, group, rolecode, nation, visage, culture):
+    @pytest.mark.dependency(name='test_001')
+    @pytest.mark.parametrize("userName, idCard, mobile, group, groupcodehold, rolecode, nation, visage, culture", data)
+    def test_001_basemag(self, userName, idCard, mobile, group, groupcodehold, rolecode, nation, visage, culture):
         info("经营机构->销售人员->代理制销售人员代码管理->营销团队经理聘任与解聘")
-        self.main_management_agent_salesmen.into_page()
-        self.main_management_agent_salesmen.click_btn('营销团队经理聘任与解聘')
+        self.MOAS.into_page()
+        self.MOAS.click_btn('营销团队经理聘任与解聘')
+        # self.MOAS.open_url("http://10.10.1.104:8001/sales/deputy/engageOrFire.do?efOrmau=e")
         info("营销团队经理聘任与解聘检查")
-        self.appointment.assertEqual("判断页面标题", self.appointment.get_head_text(), "营销团队经理聘任")
-        self.appointment.assertEqual("验证上级机构是否默认‘32000000’",
-                                     self.appointment.get_com_code_text(), "32000000")
+        self.AM.assertEqual("判断页面标题", self.AM.get_head_text(), "营销团队经理聘任")
         info("填入基本信息")
-        self.appointment.user_tab_input(userName, idCard, mobile)
-        self.appointment.select_group(group)
-        self.appointment.select_rolecode(rolecode)
-        self.appointment.select_nation(nation)
-        self.appointment.select_visage(visage)
-        self.appointment.select_culture(culture)
+        self.AM.user_tab_input(userName, idCard, mobile)
+        # self.AM.select_group(group)
+        self.AM.js_group(self.AM.group_code, self.AM.group_name, group, self.AM.group_code_hold, groupcodehold)
+        self.AM.select_rolecode(rolecode)
+        self.AM.select_nation(nation)
+        self.AM.select_visage(visage)
+        self.AM.select_culture(culture)
         info("检查填写身份证号码后，性别和出生日期是否自动填入")
-        self.appointment.get_sex(self.appointment.get_sex_by_idCard(idCard))
-        self.appointment.assertEqual("验证出生日期是否与身份证匹配", self.appointment.get_birthday(),
-                                     self.appointment.get_birthday_by_idCard(idCard))
-        info("检查选择归属团队后，出单归属机构是否自动填入")
-        self.appointment.assertEqual("验证出单归属机构是否与所选归属团队匹配",
-                                     self.appointment.get_make_com_text(),
-                                     group.split('--')[0])
+        self.AM.get_sex(self.AM.get_sex_by_idCard(idCard))
+        self.AM.assertEqual("验证出生日期是否与身份证匹配", self.AM.get_birthday(),
+                            self.AM.get_birthday_by_idCard(idCard))
         get_screenshot("基本信息")
 
-    @allure.story("填写资质信息、合同信息")
+    @allure.story("新增人员聘任为经理--资质信息、合同信息")
     @pytest.mark.usefixtures("login_jiangsu_p")
+    @pytest.mark.dependency(name='test_002', depends=['test_001'])
     @pytest.mark.parametrize("qualifytype, qualifyno,"
                              "qualifystartdate, agentType, qualifytype1, qualifyno1, qualifystartdate1, contractstartdate0,"
                              "contractenddate0, ruleNo, accountno, cardtype, saDAccount_bankName, saDAccount_bankareaname,"
@@ -77,76 +77,70 @@ class Test_YLDLZ_001():
                           contractenddate0, ruleNo, accountno, cardtype, saDAccount_bankName,
                           saDAccount_bankareaname,
                           bankName):
-        self.appointment.switch_contract_tab()
-        self.appointment.add_user_button()
-        self.appointment.add_user_button()
+        self.AM.switch_contract_tab()
+        self.AM.add_user_button()
+        self.AM.add_user_button()
         info("填写'资格证'资质信息-->证件类型,证件号码,发证日期,证件类型")
-        self.appointment.input_qualify(0, qualifytype, qualifyno, qualifystartdate, agentType)
+        self.AM.input_qualify(0, qualifytype, qualifyno, qualifystartdate, agentType)
         info("填写'执业证'资质信息-->证件类型,证件号码,发证日期")
-        self.appointment.input_qualify(1, qualifytype1, qualifyno1, qualifystartdate1)
+        self.AM.input_qualify(1, qualifytype1, qualifyno1, qualifystartdate1)
         info("填写合同基本信息（资格证号码,执业证号码,合同起始日期,合同终止日期,佣金配置）")
-        self.appointment.input_contract(qualifyno, qualifyno1, contractstartdate0, contractenddate0,
-                                        ruleNo)
+        self.AM.input_contract(qualifyno, qualifyno1, contractstartdate0, contractenddate0,
+                               ruleNo)
+        self.AM.js_group(self.AM.ruleNo, self.AM.saUContracts1.format('0'), ruleNo)
         info("填写账户信息（收款人账号,卡折标志,银行名称,银行区域名称,联行号）")
-        self.appointment.input_account(accountno, cardtype, saDAccount_bankName, saDAccount_bankareaname,
-                                       bankName)
+        self.AM.input_account(accountno, cardtype, saDAccount_bankName, saDAccount_bankareaname,
+                              bankName)
         get_screenshot("合同信息")
-        self.appointment.switch_user_tab()
+        self.AM.switch_user_tab()
         info("聘任保存")
-        self.appointment.prepare_save()
-        self.appointment.choose_ok_on_alert()
+        self.AM.prepare_save()
+        self.AM.choose_ok_on_alert()
         sleep(3)
         info("获取人员代码，合同号")
-        Test_YLDLZ_001.msg = self.appointment.get_msg()
+        Test_YLDLZ_001.msg = self.AM.get_msg()
         info(Test_YLDLZ_001.msg)
 
-    @allure.story("查询未提交中是否存在该数据，聘任保存并提交")
+    @allure.story("新增人员聘任为经理--聘任保存并提交")
+    @pytest.mark.dependency(name='test_003', depends=['test_001', 'test_002'])
     @pytest.mark.parametrize("name, id_cards, sjjg, group", data2)
-    @pytest.mark.usefixtures("login_jiangsu_p")
+    @pytest.mark.usefixtures("login_jiangsu_p_fun")
     def test_003_commit(self, name, id_cards, sjjg, group):
-        self.main_management_agent_salesmen.into_page()
-        self.main_management_agent_salesmen.query(Test_YLDLZ_001.msg['usercode'])
-        self.main_management_agent_salesmen.set_table_num(0)
+        self.MOAS.into_page()
+        self.MOAS.query(Test_YLDLZ_001.msg['usercode'])
+        # self.MOAS.set_table_num(0)
         sleep(2)  # 等待数据返回
-        self.main_management_agent_salesmen.assert_table_msg(Test_YLDLZ_001.msg['usercode'], name, id_cards, sjjg,
-                                                             group)
-        self.main_management_agent_salesmen.click(self.main_management_agent_salesmen.get_radio_by_head(0, '选择'))
-        self.main_management_agent_salesmen.click_btn()
-        self.appointment.prepare_save_commit()
-        self.appointment.commit_ope()
-        sleep(3)
-        self.appointment.close_button_ty()
+        self.MOAS.select_data("内部流转码", Test_YLDLZ_001.msg['usercode'], "选择")
+        self.MOAS.click_btn('营销团队经理聘任与解聘')
+        self.AM.prepare_save_commit()
+        self.AM.commit_ope()
 
-    @allure.story("查询已提交中是否存在该数据，流程查看岗位信息")
-    @pytest.mark.usefixtures("login_jiangsu_p")
-    def test_004_assert(self):
-        info("切换回‘代理制销售人员代码管理’页面")
-        self.main_management_agent_salesmen.into_page()
-        self.main_management_agent_salesmen.query(Test_YLDLZ_001.msg['usercode'], 1)
-        self.main_management_agent_salesmen.set_table_num(1)
-        self.main_management_agent_salesmen.click(self.main_management_agent_salesmen.get_radio_by_head(0, '流程查询'))
-        info("进入‘工作流列表’页面")
-        self.main_management_agent_salesmen.switch_to_window()
-        self.main_management_agent_salesmen.set_table_num(0)
-        self.main_management_agent_salesmen.assert_workflow_msg()
-        g.driver.close()
-
-    @allure.story("地市级销售管理综合岗复核")
-    @pytest.mark.usefixtures("login_jiangsu_p")
-    def test_005_recheck(self):
-        self.main_management_agent_salesmen.switch_to_window()
+    @allure.story("新增人员聘任为经理--复核")
+    @pytest.mark.dependency(name='test_004', depends=['test_001', 'test_002', 'test_003'])
+    @pytest.mark.usefixtures("login_jiangsu_p_fun")
+    def test_004_recheck(self):
         info("综合管理->销售人员->代理制销售人员代码复核")
-        self.agent_sales_recheck.into_page()
+        self.ASR.into_page()
         info("查询人员代码{}".format(Test_YLDLZ_001.msg['usercode']))
-        self.agent_sales_recheck.query(Test_YLDLZ_001.msg['usercode'])
-        info("进入操作界面")
-        status_list = self.agent_sales_recheck.get_cell_text_by_head('审核状态')
+        self.ASR.query(Test_YLDLZ_001.msg['usercode'])
+        info("进入聘任经理复核页")
+        status_list = self.ASR.get_cell_text_by_head('审核状态')
         index = status_list.index("经理聘任复核")
-        self.agent_sales_recheck.click(self.agent_sales_recheck.get_a_by_head(index, '操作'))
-        self.agent_sales_recheck.switch_to_window()
-        self.agent_sales_recheck.maximize_window()
+        self.ASR.click(self.ASR.get_a_by_head(index, '操作'))
+        self.ASR.switch_to_window()
+        self.ASR.maximize_window()
         info("检查信息点")
         info("复核")
-        self.agent_sales_recheck.recheck_ope(textarea="ui自动化测试")
+        self.AMR.recheck_ope(textarea="新增人员聘任为经理--ui自动化测试")
         sleep(3)
-        self.agent_sales_recheck.close_button_ty()
+        # self.ASR.close_button_ty()
+
+    @allure.story("新增人员聘任为经理--验证人员状态")
+    @pytest.mark.dependency(depends=['test_001', 'test_002', 'test_003', "test_004"])
+    @pytest.mark.usefixtures("login_jiangsu_p_fun")
+    def test_004(self):
+        info("经营机构->销售人员->代理制销售人员代码管理")
+        self.MOAS.into_page()
+        info("查询人员代码：{}，未提交状态".format(Test_YLDLZ_001.msg["user_code"]))
+        self.MOAS.query(Test_YLDLZ_001.msg["user_code"])
+        self.MOAS.assertEqual("判断该人员状态为‘有效’", self.MOAS.get_cell_text_by_head("状态", 0), "有效")

@@ -93,10 +93,6 @@ class ManagementOfAgentSalesmen(TablePage):
         self.select_frame_id(self.wait_until_el_xpath(self.submit_frame))
         self.click(self.wait_until_el_xpath(self.appointment_btn))
 
-    def assert_workflow_msg(self):
-        status = self.get_cell_text_by_head('业务状态', 1)
-        self.assertEqual("验证业务状态", status, "同意并提交")
-
     def select_data(self, column_name, column_value, row_ope):
         """
         根据指定列中指定的值获取该行数据，并对该行数据进行操作
