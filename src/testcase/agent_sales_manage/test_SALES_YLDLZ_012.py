@@ -44,7 +44,7 @@ class Test_YLDLZ_012():
         self.EASM.manage_account()
         # self.EASM.click(self.EASM.wait_until_el_xpath(self.EASM.close_btn))
 
-    @allure.story("查询验证修改信息")
+    @allure.story("无效人员进行信息变更-验证修改信息")
     @pytest.mark.usefixtures("login_jiangsu_p_fun")
     @pytest.mark.parametrize("user_code, accountno, cardtype, saDAccount_bankName, saDAccount_bankareaname, bankName",
                              data)

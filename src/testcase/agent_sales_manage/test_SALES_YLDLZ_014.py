@@ -45,7 +45,7 @@ class Test_YLDLZ_014():
         self.CR.submit_interaction(self.CR.submit_iframe)
 
 
-    @allure.story("省级销售管理综合岗复核流程")
+    @allure.story("有效人员进行合同续签-复核")
     @pytest.mark.usefixtures("login_jiangsu_p_fun")
     @pytest.mark.parametrize("user_code", data)
     def test_002(self, user_code):

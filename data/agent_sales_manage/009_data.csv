@@ -1,2 +1,2 @@
-user_code, agentno1, credentialno1, contractstartdate1, contractenddate1, ruleNo
-83258561, 123456, 321321, 2019-08-14, 2021-08-04, RULE20120000000000001--保险经纪公司
+user_code, contractstartdate1, contractenddate1, ruleNo
+83258605, 2019-08-14, 2021-08-04, RULE20120000000000001--保险经纪公司

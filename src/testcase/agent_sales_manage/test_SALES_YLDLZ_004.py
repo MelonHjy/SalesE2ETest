@@ -38,10 +38,9 @@ class Test_YLDLZ_004():
         self.MOAS.query(user_code)
         self.MOAS.select_data("内部流转码", user_code, "选择")
         self.MOAS.click(self.MOAS.wait_until_el_xpath(self.MOAS.input_btn.format("营销团队经理聘任与解聘")))
-        # self.MOAS.select_appointment()
-        # self.AM.switch_to_window()
-        # self.AM.maximize_window()
-        self.AM.open_url("http://10.10.1.104:8001/sales/deputy/engageOrFire.do?saUUser.userid=1000000002297827&efOrmau=e#")
+        self.MOAS.select_appointment()
+        self.AM.switch_to_window()
+        self.AM.maximize_window()
         self.AM.assertEqual("判断页面标题", self.AM.get_head_text(), "营销团队经理聘任")
         self.AM.select_rolecode("经理")
         self.AM.switch_contract_tab()
@@ -58,7 +57,7 @@ class Test_YLDLZ_004():
         self.AM.prepare_save_commit()
         self.AM.submit_interaction(self.AM.submit_iframe)
         # 关闭
-        self.AM.click(self.AM.wait_until_el_xpath(self.AM.close_over))  # 关闭不了
+        # self.AM.click(self.AM.wait_until_el_xpath(self.AM.close_over))  # 关闭不了
 
     @allure.story("无效人员复效并任命为经理--复核")
     @pytest.mark.dependency(name='test_002', depends=["test_001"])
@@ -78,7 +77,7 @@ class Test_YLDLZ_004():
     @allure.story("验证审核通过后核对人员信息")
     @pytest.mark.dependency(name='test_003', depends=["test_001","test_002"])
     @pytest.mark.usefixtures("login_jiangsu_p_fun")
-    def test_sales_query(self):
+    def test_003_sales_query(self):
         self.SQ.into_page()
         self.SQ.query(Test_YLDLZ_004.user_code)
         text = self.SQ.get_cell_text_by_head("职级", row=0)

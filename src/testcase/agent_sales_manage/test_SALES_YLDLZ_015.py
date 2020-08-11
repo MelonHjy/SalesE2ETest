@@ -38,7 +38,6 @@ class Test_YLDLZ_015():
         self.MOAS.into_page()
         info("团队成员出单权赋予与变更")
         self.MOAS.click_btn('团队成员出单权赋予与变更')
-        # self.MOAS.open_url("http://10.10.1.104:8001/sales/deputy/updateDeputy.do?")
         self.GI.assertEqual("判断页面标题", self.GI.get_head_text(), "团队成员出单权赋予")
         info("填入身份证号：{}".format(id_cards))
         self.GI.send_keys(self.GI.get_element_xpath(self.GI.id_cards), id_cards)
@@ -86,6 +85,8 @@ class Test_YLDLZ_015():
         self.GI.save_deputy()
         sleep(3)
         self.GI.submit_interaction(self.GI.submit_iframe)
+        text = self.GI.get_text(self.GI.get_element_xpath(self.GI.save_success))
+        self.GI.assertEqual("验证复核成功", text, "保存成功!")
         # Test_YLDLZ_015.msg = self.GI.get_msg()
         # info("人员代码{0}，合同号{1}".format(Test_YLDLZ_015.msg['usercode'], Test_YLDLZ_015.msg['contract']))
         # # 关闭
@@ -116,6 +117,4 @@ class Test_YLDLZ_015():
         self.MOAS.into_page()
         info("查询人员代码：{}，未提交状态".format(Test_YLDLZ_015.msg["user_code"]))
         self.MOAS.query(Test_YLDLZ_015.msg["user_code"])
-        # info("查询人员代码：{}，未提交状态".format("32366511"))
-        # self.MOAS.query("32366511")
         self.MOAS.assertEqual("判断该人员状态为‘有效’", self.MOAS.get_cell_text_by_head("状态", 0), "有效")
