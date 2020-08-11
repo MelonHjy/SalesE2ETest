@@ -7,6 +7,7 @@ import pytest
 
 from src.page.agent_sales_manage.group_issue import GroupIssue
 from src.page.agent_sales_manage.main_management_agent_salesmen import ManagementOfAgentSalesmen
+from src.page.integrated_management.group_issue_recheck import GroupIssueRecheck
 from src.page.integrated_management.main_agent_sales_recheck import AgentSalesRecheck
 from src.utils import csv_util
 from src.utils.log import info
@@ -17,6 +18,7 @@ class Test_YLDLZ_010():
     MOAS = ManagementOfAgentSalesmen()
     GI = GroupIssue()
     ASR = AgentSalesRecheck()
+    GIR = GroupIssueRecheck()
     msg = None
 
     data = csv_util.data_reader("agent_sales_manage/010_data.csv")
@@ -42,9 +44,11 @@ class Test_YLDLZ_010():
         info("保存并提交")
         self.GI.save_deputy()
         self.GI.submit_interaction(iframe_xpath=self.GI.submit_iframe)
+        text = self.GI.get_text(self.GI.get_element_xpath(self.GI.save_success))
+        self.GI.assertEqual("验证提交成功", text, "保存成功!")
 
     @pytest.mark.skip
-    @allure.story("省级销售管理综合岗复核流程")
+    @allure.story("变更有效团队成员的团队-复核")
     @pytest.mark.usefixtures("login_jiangsu_p_fun")
     def test_002(self):
         info("综合管理->销售人员->代理制销售人员代码复核")
@@ -55,11 +59,11 @@ class Test_YLDLZ_010():
         self.ASR.switch_to_window()
         self.ASR.maximize_window()
         info("复核")
-        self.ASR.recheck_ope(textarea="变更有效团队成员的团队--ui测试")
-        self.ASR.click(self.ASR.wait_until_el_xpath(self.ASR.submit_close))
+        self.GIR.recheck_ope(textarea="变更有效团队成员的团队--ui测试")
+        self.GIR.click(self.GIR.wait_until_el_xpath(self.GIR.submit_close))
 
     @pytest.mark.skip
-    @allure.story("代理制销售人员代码查询验证")
+    @allure.story("变更有效团队成员的团队-验证")
     @pytest.mark.usefixtures("login_jiangsu_p")
     def test_003(self):
         info("经营机构->销售人员->代理制销售人员代码管理")

@@ -19,6 +19,7 @@ class AppointmentManager(ProcessPage):
     case = "//*[@class='case']"
     close_icon = "//div[@class='container-close']"  # 提交后提示选择审核人对话框的关闭图标
     save_commit2 = "//input[@id='savedeputy2']"    # 有效人员聘任经理 保存并提交
+    save_success = "//body/table/tbody/tr/td[2]"    # 保存成功
 
     # ---------------------人员基础信息填写项------------------------------ #
     user_tab = "//*[@id='folder-label-userTab']"

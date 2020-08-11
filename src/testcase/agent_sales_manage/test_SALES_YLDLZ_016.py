@@ -87,10 +87,12 @@ class Test_YLDLZ_016():
         self.AM.prepare_save_commit()
         sleep(3)
         self.AM.submit_interaction(self.AM.submit_iframe)
+        text = self.AM.get_text(self.AM.get_element_xpath(self.AM.save_success))
+        self.AM.assertEqual("验证提交成功", text, "保存成功!")
         # Test_YLDLZ_015.msg = self.GI.get_msg()
         # info("人员代码{0}，合同号{1}".format(Test_YLDLZ_015.msg['usercode'], Test_YLDLZ_015.msg['contract']))
         # # 关闭
-        # self.GI.click(self.GI.wait_until_el_xpath(self.GI.submit_close))
+        # self.AM.click(self.AM.wait_until_el_xpath(self.AM.submit_close))
 
     @allure.story("人员转制-（营销团队经理聘任与解聘）--复核")
     @pytest.mark.usefixtures("login_jiangsu_p")
@@ -99,7 +101,6 @@ class Test_YLDLZ_016():
         self.ASR.into_page()
         info("查询人员代码{}->选择".format(Test_YLDLZ_016.msg["user_code"]))
         self.ASR.query(Test_YLDLZ_016.msg["user_code"])
-        # self.ASR.query(user_code1="32366511")
         self.ASR.select_data("经理聘任复核")
         self.ASR.switch_to_window()
         self.ASR.maximize_window()

@@ -18,6 +18,8 @@ class GroupIssue(ProcessPage):
     submit_iframe = "//iframe[@name='submitFrame']"  # 提交任务的iframe
     save_close = "//td[@colSpan='2']/../../tr[3]/td/input"  # 保存后的关闭
     submit_close = "//*[class='button_ty_over']"
+    save_success = "//body/table/tbody/tr/td[2]"    # 保存成功
+
 
     # ---------------------人员基础信息填写项------------------------------ #
     user_tab = "//*[@id='folder-label-userTab']"
@@ -141,10 +143,8 @@ class GroupIssue(ProcessPage):
         # self.code_select(self.ruleNo, ruleNo)
 
     @allure.step(
-        "填写合同基本信息（资格证号码:{agentno1},执业证号码：{credentialno1},合同起始日期：{contractstartdate0},合同终止日期：{contractenddate0},佣金配置：{ruleNo}）")
-    def input_contract1(self, agentno1, credentialno1, contractstartdate1, contractenddate1, ruleNo):
-        self.select(self.agentno1, agentno1)
-        self.select(self.credentialno1, credentialno1)
+        "填写合同基本信息（合同起始日期：{contractstartdate0},合同终止日期：{contractenddate0},佣金配置：{ruleNo}）")
+    def input_contract1(self, contractstartdate1, contractenddate1, ruleNo):
         # 日期组件
         self.pick_date_old(self.imgBtncon1_1, contractstartdate1)
         self.pick_date_old(self.imgBtncon2_1, contractenddate1)

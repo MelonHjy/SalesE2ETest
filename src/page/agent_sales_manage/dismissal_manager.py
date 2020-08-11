@@ -7,11 +7,18 @@ from src.page.table_page import TablePage
 
 
 class DismissalManager(TablePage, ProcessPage):
+
+    case = "//*[@class='case']"
     prepare_save_btn = "//input[@id='preparesavedeputy2']"  # 解聘保存
     prepare_save_close_btn = "//input[@class='button_ty']"  # 解聘保存后关闭按钮
     save_submit_btn = "//input[@id='savedeputy2']"
     submit_iframe = "//iframe[@name='submitFrame']"  # 提交任务的iframe
     submit_close_btn = "//table/tbody/tr[2]/td/input"  # 提交任务后的关闭按钮
+    save_success = "//body/table/tbody/tr/td[2]"    # 保存成功
+
+    def get_head_text(self):
+        return self.get_text(
+            self.get_element_xpath(self.case))
 
     def select_by_user_code(self, user_code):
         """
@@ -42,9 +49,4 @@ class DismissalManager(TablePage, ProcessPage):
         self.click(self.wait_until_el_xpath(self.save_submit_btn))
         self.choose_ok_on_alert()
 
-    def switch_iframe_reason(self, textarea="", ):
-        """
-        切换iframe并填写审核人，提交任务并关闭窗口
-        """
-        self.submit_interaction(textarea=textarea, iframe_xpath=self.submit_iframe)
-        self.click(self.wait_until_el_xpath(self.submit_close_btn))
+

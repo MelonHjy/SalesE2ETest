@@ -1,13 +1,14 @@
 #  -*- coding:utf-8 -*-
 # @Time : 2020/7/27 10:39
 # @Author: fyl
-# @File : test_SALES_YLDLZ_007.py   代理制人员代码管理>>团队成员出单权赋予与变更（新增普通代理制成员）
+# @File : test_SALES_YLDLZ_007.py   代理制人员代码管理>>团队成员出单权赋予与变更（新增普通代理制成员）  待测
 import allure
 import pytest
 
 from config.global_var import sleep
 from src.page.agent_sales_manage.group_issue import GroupIssue
 from src.page.agent_sales_manage.main_management_agent_salesmen import ManagementOfAgentSalesmen
+from src.page.integrated_management.group_issue_recheck import GroupIssueRecheck
 from src.page.integrated_management.main_agent_sales_recheck import AgentSalesRecheck
 from src.utils import csv_util
 from src.utils.log import info
@@ -15,9 +16,10 @@ from src.utils.log import info
 
 @allure.feature("代理制销售人员代码管理>>团队成员出单权赋予与变更（新增普通代理制成员）")
 class Test_YLDLZ_007():
-    main_page = ManagementOfAgentSalesmen()
-    group_issue = GroupIssue()
-    agent_sales_recheck = AgentSalesRecheck()
+    MOAS = ManagementOfAgentSalesmen()
+    GI = GroupIssue()
+    ASR = AgentSalesRecheck()
+    GIR = GroupIssueRecheck()
     msg = None
 
     # data = [("甘冬龙ui测试", "370126198007046159", "13999999999", "32990000--测试0519营销", "汉族", "中共党员", "研究生")]
@@ -27,25 +29,27 @@ class Test_YLDLZ_007():
     data = csv_util.data_reader("agent_sales_manage/007_data.csv")
     data1 = csv_util.data_reader("agent_sales_manage/007_data1.csv")
 
-    @allure.story("填写基本信息")
+    @allure.story("新增普通代理制成员-基本信息")
     @pytest.mark.usefixtures("login_jiangsu_p")
+    @pytest.mark.dependency(name='test_001')
     @pytest.mark.parametrize("username, id_cards, mobile, group_com, nation, visage, culture", data)
     def test_01_base_msg(self, username, id_cards, mobile, group_com, nation, visage, culture):
         info("经营机构->销售人员->代理制销售人员代码管理")
-        self.main_page.into_page()
+        self.MOAS.into_page()
         info("团队成员出单权赋予与变更")
-        self.main_page.click_btn('团队成员出单权赋予与变更')
-        self.group_issue.assertEqual("判断页面标题", self.group_issue.get_head_text(), "团队成员出单权赋予")
+        self.MOAS.click_btn('团队成员出单权赋予与变更')
+        self.GI.assertEqual("判断页面标题", self.GI.get_head_text(), "团队成员出单权赋予")
         info("填入姓名:{0}->身份证号：{1}->手机号码：{2}".format(username, id_cards, mobile))
-        self.group_issue.user_tab_input(username, id_cards, mobile)
+        self.GI.user_tab_input(username, id_cards, mobile)
         info("选择上级机构:32000000--中国人民财产保险股份有限公司江苏省分公司，归属机构:{0}".format(group_com))
-        self.group_issue.select_org(self.group_issue.com_code, "32000000--中国人民财产保险股份有限公司江苏省分公司")
-        self.group_issue.select_org(self.group_issue.group_code, group_com)
+        self.GI.select_org(self.GI.com_code, "32000000--中国人民财产保险股份有限公司江苏省分公司")
+        self.GI.select_org(self.GI.group_code, group_com)
         info("民族:{0}->政治面貌:{1}->学历:{2}".format(nation, visage, culture))
-        self.group_issue.select_base(nation, visage, culture)
+        self.GI.select_base(nation, visage, culture)
 
-    @allure.story("填写资质信息、合同信息")
+    @allure.story("新增普通代理制成员-资质信息、合同信息")
     @pytest.mark.usefixtures("login_jiangsu_p")
+    @pytest.mark.dependency(name='test_002', depends=["test_001"])
     @pytest.mark.parametrize("qualifytype, qualifyno,"
                              "qualifystartdate, agentType, qualifytype1, qualifyno1, qualifystartdate1, contractstartdate0,"
                              "contractenddate0, ruleNo, accountno, cardtype, saDAccount_bankName, saDAccount_bankareaname,"
@@ -54,68 +58,72 @@ class Test_YLDLZ_007():
                              qualifystartdate1, contractstartdate0, contractenddate0, ruleNo, accountno, cardtype,
                              saDAccount_bankName, saDAccount_bankareaname, bankName):
         info("切换到合同信息tab")
-        self.group_issue.switch_contract_tab()
-        self.group_issue.add_user_button()
-        self.group_issue.add_user_button()
+        self.GI.switch_contract_tab()
+        self.GI.add_user_button()
+        self.GI.add_user_button()
 
         info("证件类型:{0}->证件号码：{1}->发证日期：{2}->证件类型：{3}".format(qualifytype, qualifyno, qualifystartdate, agentType))
-        self.group_issue.input_qualify(0, qualifytype, qualifyno, qualifystartdate, agentType)
+        self.GI.input_qualify(0, qualifytype, qualifyno, qualifystartdate, agentType)
         info("证件类型:{0}->证件号码：{1}->发证日期：{2}".format(qualifytype1, qualifyno1, qualifystartdate1))
-        self.group_issue.input_qualify(1, qualifytype1, qualifyno1, qualifystartdate1)
+        self.GI.input_qualify(1, qualifytype1, qualifyno1, qualifystartdate1)
         info("资格证号码:{0}->执业证号码：{1}->合同起始日期：{2}->合同终止日期：{3}->佣金配置：{4}".format(qualifyno, qualifyno1, contractstartdate0,
                                                                              contractenddate0, ruleNo))
-        self.group_issue.input_contract(qualifyno, qualifyno1, contractstartdate0, contractenddate0, ruleNo)
+        self.GI.input_contract(qualifyno, qualifyno1, contractstartdate0, contractenddate0, ruleNo)
         info("收款人账号:{0}->卡折标志:{1}->银行名称：{2}->银行区域名称：{3}->联行号：{4}".format(accountno, cardtype, saDAccount_bankName,
                                                                          saDAccount_bankareaname, bankName))
-        self.group_issue.input_account(accountno, cardtype, saDAccount_bankName, saDAccount_bankareaname, bankName)
+        self.GI.input_account(accountno, cardtype, saDAccount_bankName, saDAccount_bankareaname, bankName)
         info("切换到基本信息tab")
-        self.group_issue.switch_user_tab()
+        self.GI.switch_user_tab()
         info("保存")
-        self.group_issue.prepare_add_deputy()
-        self.group_issue.choose_ok_on_alert()
+        self.GI.prepare_add_deputy()
+        self.GI.choose_ok_on_alert()
         sleep(3)
-        Test_YLDLZ_007.msg = self.group_issue.get_msg()
+        Test_YLDLZ_007.msg = self.GI.get_msg()
         info("人员代码{0}，合同号{1}".format(Test_YLDLZ_007.msg['usercode'], Test_YLDLZ_007.msg['contract']))
-        # 关闭
-        self.group_issue.click(self.group_issue.wait_until_el_xpath(self.group_issue.save_close))
+        text = self.GI.get_text(self.GI.get_element_xpath(self.GI.save_success))
+        self.GI.assertEqual("验证提交成功", text, "保存成功!")
 
-    @allure.story("团队成员信息修改")
-    @pytest.mark.usefixtures("login_jiangsu_p")
-    def test_03_edit_msg(self):
-        # 切换主页面
-        self.main_page.switch_to_window()
-        self.main_page.back_to_page()
-        # 输入条件usercode查询
-        self.main_page.query(Test_YLDLZ_007.msg['usercode'])
-        # 选择查询后的数据点击‘团队成员出单权赋予与变更’
-        status_list = self.main_page.get_cell_text_by_head('状态')
-        index = status_list.index('出单权赋予')
-        self.main_page.click(self.main_page.get_radio_by_head(index, '选择'))
-        self.main_page.click_btn('团队成员出单权赋予与变更')
-        self.group_issue.switch_to_window()
-        self.group_issue.maximize_window()
-        # 保存并提交
-        self.group_issue.click(self.group_issue.wait_until_el_xpath(self.group_issue.save_commit))
-        # 进入流程流转页面
-        self.group_issue.submit_interaction(iframe_xpath=self.group_issue.submit_iframe)
-        # 关闭
-        self.group_issue.click(self.group_issue.wait_until_el_xpath(self.group_issue.submit_close))
+    # @allure.story("团队成员信息修改")
+    # @pytest.mark.usefixtures("login_jiangsu_p")
+    # def test_03_edit_msg(self):
+    #     # 切换主页面
+    #     self.MOAS.switch_to_window()
+    #     self.MOAS.back_to_page()
+    #     # 输入条件usercode查询
+    #     self.MOAS.query(Test_YLDLZ_007.msg['usercode'])
+    #     # 选择查询后的数据点击‘团队成员出单权赋予与变更’
+    #     status_list = self.MOAS.get_cell_text_by_head('状态')
+    #     index = status_list.index('出单权赋予')
+    #     self.MOAS.click(self.MOAS.get_radio_by_head(index, '选择'))
+    #     self.MOAS.click_btn('团队成员出单权赋予与变更')
+    #     self.GI.switch_to_window()
+    #     self.GI.maximize_window()
+    #     # 保存并提交
+    #     self.GI.click(self.GI.wait_until_el_xpath(self.GI.save_commit))
+    #     # 进入流程流转页面
+    #     self.GI.submit_interaction(iframe_xpath=self.GI.submit_iframe)
+    #     # 关闭
+    #     self.GI.click(self.GI.wait_until_el_xpath(self.GI.submit_close))
 
-    @allure.story("省级销售管理综合岗复核流程")
+    @allure.story("新增普通代理制成员-复核")
+    @pytest.mark.dependency(name='test_003', depends=["test_001", "test_002"])
     @pytest.mark.usefixtures("login_jiangsu_p")
     def test_04_issue_recheck(self):
-        self.agent_sales_recheck.switch_to_window()
+        self.ASR.switch_to_window()
         info("综合管理->销售人员->代理制销售人员代码复核")
-        self.agent_sales_recheck.into_page()
+        self.ASR.into_page()
         info("查询人员代码{}".format(Test_YLDLZ_007.msg['usercode']))
-        self.agent_sales_recheck.query(Test_YLDLZ_007.msg['usercode'])
+        self.ASR.query(Test_YLDLZ_007.msg['usercode'])
         # 选择指定状态的数据进入复核页面
-        self.agent_sales_recheck.select_data("出单权赋予复核")
-        self.agent_sales_recheck.switch_to_window()
-        self.agent_sales_recheck.maximize_window()
+        self.ASR.select_data("出单权赋予复核")
+        self.ASR.switch_to_window()
+        self.ASR.maximize_window()
         # 复核信息检查
+        self.GIR.assertEqual("判断页面标题", self.GIR.get_head_text(), "出单权赋予复核")
         info("复核")
-        self.agent_sales_recheck.recheck_ope(textarea="ui测试")
+        self.GIR.recheck_ope(textarea="新增普通代理制成员-ui测试")
+        # text = self.GIR.get_text(self.GIR.get_element_xpath(self.GIR.save_success))
+        # self.GIR.assertEqual("验证复核成功", text, "保存成功!")
         # 关闭
-        self.agent_sales_recheck.click(
-            self.agent_sales_recheck.wait_until_el_xpath(self.agent_sales_recheck.submit_close))
+        self.GIR.click(
+            self.GIR.wait_until_el_xpath(self.GIR.submit_close))

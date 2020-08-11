@@ -17,7 +17,7 @@ class AgentSalesRecheck(TablePage, ProcessPage):
     identify_number_input = "//input[@id='identifyNumber']"
     rechect_btn = "//input[@id='success']"  # 复核按钮
     submit_iframe = "//iframe[@name='submitFrame']"  # 提交任务的iframe
-    submit_close = "//*[class='button_ty_over']"
+    submit_close = "//*[@class='button_ty_over']"
 
     @allure.step("综合管理->销售人员->代理制销售人员代码复核")
     def into_page(self):

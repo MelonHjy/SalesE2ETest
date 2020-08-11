@@ -7,6 +7,7 @@ import pytest
 
 from src.page.agent_sales_manage.edit_agent_sales_msg import EditAgentSaleMsg
 from src.page.agent_sales_manage.main_management_agent_salesmen import ManagementOfAgentSalesmen
+from src.page.integrated_management.edit_agent_sales_msg_recheck import EditAgentSaleMsgRecheck
 from src.page.integrated_management.main_agent_sales_recheck import AgentSalesRecheck
 from src.utils import csv_util
 from src.utils.log import info
@@ -17,6 +18,7 @@ class Test_YLDLZ_011():
     MOAS = ManagementOfAgentSalesmen()
     EASM = EditAgentSaleMsg()
     ASR = AgentSalesRecheck()
+    EASMR = EditAgentSaleMsgRecheck()
     msg = None
 
     data = csv_util.data_reader("agent_sales_manage/011_data.csv")
@@ -25,6 +27,7 @@ class Test_YLDLZ_011():
     #     "2018-02-15", "2019-07-10", "2021-08-13")]
 
     @allure.story("变更有效团队成员的团队")
+    @pytest.mark.dependency(name='test_001')
     @pytest.mark.usefixtures("login_jiangsu_p_fun")
     @pytest.mark.parametrize("user_code, mobile, nation, visage, culture, qualifytype,  qualifyno,"
                              "qualifystartdate, agentType, qualifytype1, qualifyno1, qualifystartdate1, contractstartdate0,"
@@ -63,6 +66,7 @@ class Test_YLDLZ_011():
         self.EASM.submit_process()
 
     @allure.story("省级销售管理综合岗复核流程")
+    @pytest.mark.dependency(name='test_002', depends=["test_001"])
     @pytest.mark.usefixtures("login_jiangsu_p_fun")
     def test_002(self):
         info("综合管理->销售人员->代理制销售人员代码复核")
@@ -72,11 +76,13 @@ class Test_YLDLZ_011():
         self.ASR.select_data("信息变更复核")
         self.ASR.switch_to_window()
         self.ASR.maximize_window()
+        self.EASMR.assertEqual("判断页面标题", self.EASMR.get_head_text(), "信息变更复核")
         info("复核")
-        self.ASR.recheck_ope(textarea="有效人员进行信息变更--ui测试")
-        self.ASR.click(self.ASR.wait_until_el_xpath(self.ASR.submit_close))
+        self.EASMR.recheck_ope(textarea="有效人员进行信息变更--ui测试")
+        # self.EASMR.click(self.ASR.wait_until_el_xpath(self.EASMR.submit_close))
 
     @allure.story("代理制销售人员代码查询验证")
+    @pytest.mark.dependency(name='test_003', depends=["test_001", "test_002"])
     @pytest.mark.usefixtures("login_jiangsu_p")
     def test_003(self):
         info("经营机构->销售人员->代理制销售人员代码管理")
