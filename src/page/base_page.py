@@ -49,16 +49,20 @@ class BasePage():
         """
         self.select_frame_id(self.frame_id)
         _module_menu = self.wait_until_el_xpath(self.module_menu.format(module_menu))
-        self.click(_module_menu)
+        # self.click(_module_menu)
         menu_list_id = self.get_attribute(_module_menu, 'onmouseover').split("'")[1]
-        _menu_list = self.menu_list.format(menu_list_id)
-        self.execute_script("arguments[0].style.visibility='visible';",
-                            self.wait_until_el_xpath(_menu_list))
+        # _menu_list = self.menu_list.format(menu_list_id)
+        script = "window.parent.document.getElementById('{0}').contentWindow.document.getElementById('{1}').style.visibility='{2}';"
+        visible_script = script.format(self.frame_id, menu_list_id, 'visible')
+        hidden_script = script.format(self.frame_id, menu_list_id, 'hidden')
+        self.execute_script(visible_script)
+        # self.execute_script("arguments[0].style.visibility='visible';", self.wait_until_el_xpath(_menu_list))
         self.click(self.wait_until_el_xpath(self.zk_menu.format(menu_list_id, zk_menu)))
-        self.execute_script("arguments[0].style.visibility='visible';",
-                            self.wait_until_el_xpath(_menu_list))
+        self.execute_script(visible_script)
+        # self.execute_script("arguments[0].style.visibility='visible';", self.wait_until_el_xpath(_menu_list))
         self.click(self.wait_until_el_xpath(self.menu.format(menu)))
-        #self.execute_script("arguments[0].style.visibility='hidden';", self.wait_until_el_xpath(_menu_list))
+        self.execute_script(hidden_script)
+        # self.execute_script("arguments[0].style.visibility='hidden';", self.wait_until_el_xpath(_menu_list))
         self.select_frame_id(self.iframe_page)
 
     def back_to_page(self):
@@ -375,7 +379,7 @@ class BasePage():
         g.driver.maximize_window()
 
     @catch_except
-    def execute_script(self, js, el):
+    def execute_script(self, js, *el):
         """
         通过js操作元素
         el：

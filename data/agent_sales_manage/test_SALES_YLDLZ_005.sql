@@ -1,6 +1,3 @@
-delete from sauuser where usercode = '83258554';
-/*插入基本信息*/
-INSERT INTO sauuser (userid, usercode, username, usertype, userclass, identifynumber, identifytype, disability, sex, mobile, groupid, pk_deptdoc, groupcode, comflag, comcode, makecom, tradetype, firomjob, secomjob, omjobeffctdate, fulltime, failtime, dismissreason, deleteflag, checkstatus, refereecode, onlineincreaseflag, validstatus, flag, message, remark, inserttimeforhis, operatetimeforhis) VALUES (1000000002297787, '83258554  ', '沈豪学ui测试', 'C0        ', null, '440115199103253426', '11', '0', ' ', '13311212125       ', null, '32990038', '1130B9100000000HSK7C', null, '32000000  ', '32990038', 'Y', 'P   ', '    ', null, null, null, '', '0', '          ', '', '0', '1         ', '          ', '', 'ui测试', TO_DATE('2020-07-21 16:54:24', '%Y-%m-%d %H:%M:%S'), TO_DATE('2020-08-10 15:39:14', '%Y-%m-%d %H:%M:%S'));
 
 delete from sadaccount where accountid='1000000001354587';
 INSERT INTO sadaccount (accountid, payeename, bankname, accountno, telephone, isprivate, cardtype, bankcode, bankareacode, bankareaname, cnaps, identifytype, identifynumber, pressing, sendsms, sendmail, email, comcode, updator, updatetime, validstatus, flag, remark, inserttimeforhis, operatetimeforhis) VALUES (1000000001354587, '沈豪学ui测试', '中国工商银行股份有限公司', '111516512226', '', '2', '2', 'ICBC        ', '6528', '新疆维吾尔自治区_巴音郭楞蒙古自治州', '102888000030', '1', '440115199103253426', '1', '0', '0', '', '32000000', 'A320000135', TO_DATE('2020-07-22 14:06:06', '%Y-%m-%d %H:%M:%S'), '1         ', null, null, TO_DATE('2020-07-21 16:54:27', '%Y-%m-%d %H:%M:%S'), TO_DATE('2020-07-22 14:06:11', '%Y-%m-%d %H:%M:%S'));
@@ -26,6 +23,10 @@ INSERT INTO scmssalesinfosyn (id, usercode, groupusercode, procode, inductiondat
 
 delete from saugroupjob where usercode = '83258554';
 insert into saugroupjob (groupcode, groupid, groupname, jobflag, pk_deptdoc, remark, roletype, usercode, username, validstatus, groupjobid) values ('1130B9100000000HSK7C', 1100000000560961, '测试0506营销', '0', '32990038', '', '1', '83258554', '沈豪学ui测试', '1', 1000001000000144);
+
+delete from sauuser where usercode = '83258554';
+/*插入基本信息*/
+INSERT INTO sauuser (userid, usercode, username, usertype, userclass, identifynumber, identifytype, disability, sex, mobile, groupid, pk_deptdoc, groupcode, comflag, comcode, makecom, tradetype, firomjob, secomjob, omjobeffctdate, fulltime, failtime, dismissreason, deleteflag, checkstatus, refereecode, onlineincreaseflag, validstatus, flag, message, remark, inserttimeforhis, operatetimeforhis) VALUES (1000000002297787, '83258554  ', '沈豪学ui测试', 'C0        ', null, '440115199103253426', '11', '0', ' ', '13311212125       ', null, '32990038', '1130B9100000000HSK7C', null, '32000000  ', '32990038', 'Y', 'P   ', '    ', null, null, null, '', '0', '          ', '', '0', '1         ', '          ', '', 'ui测试', TO_DATE('2020-07-21 16:54:24', '%Y-%m-%d %H:%M:%S'), TO_DATE('2020-08-10 15:39:14', '%Y-%m-%d %H:%M:%S'));
 
 delete from sabpmmain where businessno='83258554';
 delete from sadqualifyhis where usercode = '83258554';
