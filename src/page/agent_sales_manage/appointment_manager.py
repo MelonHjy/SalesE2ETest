@@ -152,6 +152,19 @@ class AppointmentManager(ProcessPage):
         self.code_select(self.group_code, text)
         sleep(2)
 
+    @allure.step("选择机构:{com_code}")
+    def select_org(self, xpath, com_code):
+        """
+        com_code:机构值
+        """
+        text = ""
+        i = 0
+        while text == "" and i < 3:
+            self.code_select(xpath, com_code)
+            text = self.get_attribute(self.get_element_xpath(xpath), "value")
+            i = i + 1
+        sleep(1)
+
     @allure.step("选择团队职务")
     def select_rolecode(self, text):
         self.select(self.rolecode, text)
