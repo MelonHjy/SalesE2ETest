@@ -36,7 +36,6 @@ class Test_YLDLZ_001():
     # data2 = [("杨闰圣ui测试", "61011519990217147x", "32000000", "测试0506营销")]
     data = csv_util.data_reader("agent_sales_manage/001_data.csv")
     data1 = csv_util.data_reader("agent_sales_manage/001_data1.csv")
-    data2 = csv_util.data_reader("agent_sales_manage/001_data2.csv")
     msg = None
 
     @allure.story("新增人员聘任为经理--基本信息")
@@ -103,13 +102,10 @@ class Test_YLDLZ_001():
 
     @allure.story("新增人员聘任为经理--聘任保存并提交")
     @pytest.mark.dependency(name='test_003', depends=['test_001', 'test_002'])
-    @pytest.mark.parametrize("name, id_cards, sjjg, group", data2)
     @pytest.mark.usefixtures("login_jiangsu_p_fun")
-    def test_003_commit(self, name, id_cards, sjjg, group):
+    def test_003_commit(self):
         self.MOAS.into_page()
         self.MOAS.query(Test_YLDLZ_001.msg['usercode'])
-        # self.MOAS.set_table_num(0)
-        sleep(2)  # 等待数据返回
         self.MOAS.select_data("内部流转码", Test_YLDLZ_001.msg['usercode'], "选择")
         self.MOAS.click_btn('营销团队经理聘任与解聘')
         self.AM.prepare_save_commit()
@@ -132,7 +128,6 @@ class Test_YLDLZ_001():
         info("检查信息点")
         info("复核")
         self.AMR.recheck_ope(textarea="新增人员聘任为经理--ui自动化测试")
-        sleep(3)
         # self.ASR.close_button_ty()
 
     @allure.story("新增人员聘任为经理--验证人员状态")
