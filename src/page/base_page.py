@@ -384,7 +384,7 @@ class BasePage():
         通过js操作元素
         el：
         """
-        g.driver.execute_script(js, el)
+        g.driver.execute_script(js, *el)
 
     @catch_except
     def execute_script_s(self, js, el, value):

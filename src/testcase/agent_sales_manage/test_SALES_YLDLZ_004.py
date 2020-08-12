@@ -38,19 +38,21 @@ class Test_YLDLZ_004():
         self.MOAS.query(user_code)
         self.MOAS.select_data("内部流转码", user_code, "选择")
         self.MOAS.click(self.MOAS.wait_until_el_xpath(self.MOAS.input_btn.format("营销团队经理聘任与解聘")))
-        self.MOAS.select_appointment()
+        # self.MOAS.select_appointment()
         self.AM.switch_to_window()
         self.AM.maximize_window()
         self.AM.assertEqual("判断页面标题", self.AM.get_head_text(), "营销团队经理聘任")
         self.AM.select_rolecode("经理")
         self.AM.switch_contract_tab()
         info("填写合同基本信息（资格证号码,执业证号码,合同起始日期,合同终止日期,佣金配置）")
-        self.AM.select("//*[@id='agentno1']", self.AM.get_attribute(self.AM.get_element_xpath(self.AM.qualifyno.format('0')),'value'))
-        self.AM.select("//*[@id='credentialno1']", self.AM.get_attribute(self.AM.get_element_xpath(self.AM.qualifyno.format('1')),'value'))
+        self.AM.select("//*[@id='agentno0']",
+                       self.AM.get_attribute(self.AM.get_element_xpath(self.AM.qualifyno.format('0')), 'value'))
+        self.AM.select("//*[@id='credentialno0']",
+                       self.AM.get_attribute(self.AM.get_element_xpath(self.AM.qualifyno.format('1')), 'value'))
         # 日期组件
-        self.AM.pick_date_old("//*[@id='imgBtncon1[1]']", contractstartdate0)
-        self.AM.pick_date_old("//*[@id='imgBtncon2[1]']", contractenddate0)
-        self.AM.js_group(self.AM.ruleNo,self.AM.saUContracts1.format('1'),ruleNo)
+        self.AM.pick_date_old("//*[@id='imgBtncon1[0]']", contractstartdate0)
+        self.AM.pick_date_old("//*[@id='imgBtncon2[0]']", contractenddate0)
+        self.AM.js_group(self.AM.ruleNo, self.AM.saUContracts1.format('0'), ruleNo)
         # self.AM.code_select(self.AM.ruleNo, ruleNo)
         self.AM.switch_user_tab()
         info("聘任保存并提交")
@@ -75,7 +77,7 @@ class Test_YLDLZ_004():
         self.AMR.recheck_ope(textarea="无效团队成员任命为经理--ui测试")
 
     @allure.story("验证审核通过后核对人员信息")
-    @pytest.mark.dependency(name='test_003', depends=["test_001","test_002"])
+    @pytest.mark.dependency(name='test_003', depends=["test_001", "test_002"])
     @pytest.mark.usefixtures("login_jiangsu_p_fun")
     def test_003_sales_query(self):
         self.SQ.into_page()
