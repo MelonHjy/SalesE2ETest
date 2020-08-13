@@ -70,11 +70,16 @@ class Test_YLDLZ_013():
         info("切换到确认注销页面")
         self.BP.switch_to_window()
         self.BP.maximize_window()
+        get_screenshot("注销")
         # 点击确认框
         info("确认页面信息并点击【注销】")
         self.BP.click(self.BP.wait_until_el_xpath(self.DC.dismiss))
         dismiss_reason = '自动化测试出单权注销'
         self.PP.submit_interaction(iframe_xpath=self.DC.submit_iframe, textarea=dismiss_reason)
+        text = self.BP.get_text(self.BP.get_element_xpath(self.DC.save_success))
+        self.BP.assertResult("验证提交成功", "保存成功!" in text)
+        get_screenshot("提交")
+        self.PP.close_button_ty()
         # sleep(60)
         # 专职营销员会出现提示框
         # dissmiss_text = self.deputy_check.get_alert_text()
@@ -112,6 +117,9 @@ class Test_YLDLZ_013():
         # self.BP.select_frame_id("submitFrame")
         # self.BP.wait_until_el_xpath(self.DR.submit_iframe)
         self.PP.submit_interaction(iframe_xpath=self.DR.submit_iframe, check_state="复核不通过", textarea=review_reason)
+        text = self.BP.get_text(self.BP.get_element_xpath(self.DC.save_success))
+        self.BP.assertResult("验证复核成功", "保存成功!" in text)
+        self.PP.close_button_ty()
 
     @pytest.mark.skip
     @allure.step("代理制销售人员出单权打回终止流程")
@@ -132,7 +140,7 @@ class Test_YLDLZ_013():
         self.BP.assertEqual("判断提示信息", end_text, "流程终止成功")
 
     @allure.step("有效人员进行注销--复核")
-    @pytest.mark.dependency(name='test_004', depends=['test_001'])
+    @pytest.mark.dependency(name='test_002', depends=['test_001'])
     @pytest.mark.usefixtures("login_jiangsu_p_fun")
     @allure.step("代理制销售人员出单权注销复核成功")
     def test_004(self):
@@ -144,7 +152,24 @@ class Test_YLDLZ_013():
         self.ASR.select_data("注销复核")
         self.BP.switch_to_window()
         self.BP.maximize_window()
+        get_screenshot("复核")
         info("复核")
         self.BP.click(self.BP.wait_until_el_xpath(self.DR.recheck))
         review_reason = "自动化测试复核通过"
         self.PP.submit_interaction(iframe_xpath=self.DR.submit_iframe, check_state="复核通过", textarea=review_reason)
+        text = self.BP.get_text(self.BP.get_element_xpath(self.DR.save_success))
+        self.BP.assertResult("验证复核成功", "保存成功!" in text)
+        get_screenshot("提交")
+        self.PP.close_button_ty()
+
+    @allure.story("有效人员进行信息变更-查询验证")
+    @pytest.mark.dependency(name='test_003', depends=["test_001", "test_002"])
+    @pytest.mark.usefixtures("login_jiangsu_p")
+    def test_003(self):
+        info("经营机构->销售人员->代理制销售人员代码管理")
+        self.MOAS.into_page()
+        info("查询人员代码{}->选择".format(Test_YLDLZ_013.msg["user_code"]))
+        self.MOAS.query(Test_YLDLZ_013.msg["user_code"])
+        text = self.MOAS.get_cell_text_by_head("状态", 0)
+        self.MOAS.assertEqual("判断是否结束复核状态", text, "手动注销")
+        get_screenshot("验证")

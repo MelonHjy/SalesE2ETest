@@ -19,3 +19,4 @@ class DeputyCheck(BasePage):
     dismiss = "//input[@id='dismiss']"
     # 提交任务的iframe
     submit_iframe = "//iframe[@name='submitFrame']"
+    save_success = "//body/table/tbody/tr/td[2]"    # 保存成功

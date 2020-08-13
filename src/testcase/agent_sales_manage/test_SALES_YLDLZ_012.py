@@ -9,6 +9,7 @@ from src.page.agent_sales_manage.edit_agent_sales_msg import EditAgentSaleMsg
 from src.page.agent_sales_manage.main_management_agent_salesmen import ManagementOfAgentSalesmen
 from src.page.integrated_management.main_agent_sales_recheck import AgentSalesRecheck
 from src.utils import csv_util
+from src.utils.except_util import get_screenshot
 from src.utils.log import info
 
 
@@ -42,6 +43,7 @@ class Test_YLDLZ_012():
         info("修改->收款人账号->账号类型->银行名称->银行区域名称->联行号")
         self.EASM.input_account(accountno, cardtype, saDAccount_bankName, saDAccount_bankareaname, bankName)
         self.EASM.manage_account()
+        get_screenshot("变更账号信息")
         # self.EASM.click(self.EASM.wait_until_el_xpath(self.EASM.close_btn))
 
     @allure.story("无效人员进行信息变更-验证修改信息")
@@ -76,3 +78,4 @@ class Test_YLDLZ_012():
         self.EASM.assertEqual("验证联行号",
                               self.EASM.get_attribute(self.EASM.get_element_xpath(self.EASM.bankName), 'value'),
                               bankName)
+        get_screenshot("验证")

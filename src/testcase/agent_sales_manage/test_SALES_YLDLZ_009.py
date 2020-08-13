@@ -11,6 +11,7 @@ from src.page.agent_sales_manage.main_management_agent_salesmen import Managemen
 from src.page.integrated_management.group_issue_recheck import GroupIssueRecheck
 from src.page.integrated_management.main_agent_sales_recheck import AgentSalesRecheck
 from src.utils import csv_util
+from src.utils.except_util import get_screenshot
 from src.utils.log import info
 
 
@@ -46,11 +47,16 @@ class Test_YLDLZ_009():
         self.GI.select("//*[@id='credentialno1']",
                        self.GI.get_attribute(self.GI.get_element_xpath(self.GI.qualifyno.format('1')), 'value'))
         self.GI.input_contract1(contractstartdate1, contractenddate1, ruleNo)
+        self.GI.js_group(self.GI.ruleNo, self.GI.saUContracts1.format('1'), ruleNo)
+        get_screenshot("合同信息")
+        self.GI.switch_user_tab()
         info("切换基本信息页->保存并提交")
-        self.GI.save_deputy()
+        self.GI.click(self.GI.get_element_xpath(self.GI.save_commit1))
         self.GI.submit_interaction(iframe_xpath=self.GI.submit_iframe)
         text = self.GI.get_text(self.GI.get_element_xpath(self.GI.save_success))
-        self.GI.assertEqual("验证提交成功", text, "保存成功!")
+        self.GI.assertResult("验证提交成功", "保存成功!" in text)
+        get_screenshot("提交")
+        self.GI.close_button_ty()
 
     # @pytest.mark.skip
     @allure.story("无效人员复效为团队成员-复核")
@@ -64,12 +70,14 @@ class Test_YLDLZ_009():
         self.ASR.select_data("出单权赋予复核")
         self.ASR.switch_to_window()
         self.ASR.maximize_window()
+        get_screenshot("复核")
         self.GIR.assertEqual("判断页面标题", self.GIR.get_head_text(), "出单权赋予复核")
         info("复核")
         self.GIR.recheck_ope(textarea="无效人员复效为团队成员--ui测试")
         # text = self.GIR.get_text(self.GIR.get_element_xpath(self.GIR.save_success))
         # self.GIR.assertEqual("验证复核成功", text, "保存成功!")
-        self.GIR.click(self.ASR.wait_until_el_xpath(self.GIR.submit_close))
+        get_screenshot("提交")
+        self.GIR.close_button_ty()
 
     # @pytest.mark.skip
     @allure.story("代理制销售人员代码查询验证")
@@ -84,3 +92,4 @@ class Test_YLDLZ_009():
         self.MOAS.assertEqual("验证团队成员状态为‘有效’", status, "有效")
         process = self.MOAS.get_cell_text_by_head("终止流程", 0)
         self.MOAS.assertEqual("判断最后一栏没有终止流程按钮", process, "")
+        get_screenshot("验证")

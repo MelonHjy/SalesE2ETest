@@ -12,7 +12,9 @@ from src.page.process_page import ProcessPage
 class GroupIssue(ProcessPage):
     case = "//*[@class='case']"
     save_button = "//input[@id='prepareadddeputy']"  # 保存
-    save_commit = "//input[@id='savedeputy']"  # 保存并提交
+    save_commit = "//input[@id='savedeputy2']"  # 保存并提交
+    save_commit1 = "//input[@id='savedeputy']"  # 保存并提交
+    add_deputy = "//*[@id='adddeputy']"
     close = "//input[@class='button_ty']"
     submit_dlg = "//div[@id='submitDlg_c']"
     submit_iframe = "//iframe[@name='submitFrame']"  # 提交任务的iframe
@@ -63,7 +65,7 @@ class GroupIssue(ProcessPage):
     imgBtncon2 = "//*[@id='imgBtncon2[0]']"  # 合同终止日期按钮
     imgBtncon2_1 = "//*[@id='imgBtncon2[1]']"
     ruleNo = "//*[@id='ruleNo']/following-sibling::input[1]"  # 佣金配置
-    saUContracts1 = "//*[@id='saUContracts1[0]']"   #佣金配置名
+    saUContracts1 = "//*[@id='saUContracts1[{0}]']"   #佣金配置名
     # 账户信息中的各项
     accountno = "//*[@id='accountno']"  # 收款人账号
     cardtype = "//*[@id='cardtype']"  # 卡折标志
@@ -143,12 +145,12 @@ class GroupIssue(ProcessPage):
         # self.code_select(self.ruleNo, ruleNo)
 
     @allure.step(
-        "填写合同基本信息（合同起始日期：{contractstartdate0},合同终止日期：{contractenddate0},佣金配置：{ruleNo}）")
+        "填写合同基本信息（合同起始日期：{contractstartdate1},合同终止日期：{contractenddate1},佣金配置：{ruleNo}）")
     def input_contract1(self, contractstartdate1, contractenddate1, ruleNo):
         # 日期组件
         self.pick_date_old(self.imgBtncon1_1, contractstartdate1)
         self.pick_date_old(self.imgBtncon2_1, contractenddate1)
-        self.code_select(self.ruleNo, ruleNo)
+        # self.code_select(self.ruleNo, ruleNo)
 
     @allure.step(
         "填写账户信息（收款人账号:{accountno},卡折标志:{cardtype},银行名称：{saDAccount_bankName},银行区域名称：{saDAccount_bankareaname},联行号：{bankName}）")
@@ -170,6 +172,8 @@ class GroupIssue(ProcessPage):
     def save_deputy(self):
         self.click(self.wait_until_el_xpath(self.save_commit))
 
+
+
     @allure.step("生成人员代码，合同号")
     def get_msg(self):
         text = self.get_text(self.wait_until_el_xpath(self.usercodeAndContract))
@@ -177,6 +181,7 @@ class GroupIssue(ProcessPage):
         msg = {'usercode': a[0].split('：')[1], "contract": a[1].split('：')[1]}
         return msg
 
+    @allure.step("修改团队信息")
     def code_edit(self, xpath, text):
         '''
         修改归属团队

@@ -10,6 +10,7 @@ from src.page.agent_sales_manage.main_management_agent_salesmen import Managemen
 from src.page.integrated_management.contract_renewal_recheck import ContractRenewalRecheck
 from src.page.integrated_management.main_agent_sales_recheck import AgentSalesRecheck
 from src.utils import csv_util
+from src.utils.except_util import get_screenshot
 from src.utils.log import info
 
 
@@ -41,8 +42,13 @@ class Test_YLDLZ_014():
         Test_YLDLZ_014.msg = {"contract_start_date": self.CR.get_value(self.CR.contract_start_date),
                               "contract_end_date": self.CR.get_value(self.CR.contract_end_date)}
         info("保存并提交")
+        get_screenshot("合同续签")
         self.CR.click(self.CR.get_element_xpath(self.CR.renew))
         self.CR.submit_interaction(self.CR.submit_iframe)
+        text = self.CR.get_text(self.CR.get_element_xpath(self.CR.save_success))
+        self.CR.assertResult("验证提交成功", "保存成功!" in text)
+        get_screenshot("提交")
+        self.CR.close_button_ty()
 
 
     @allure.story("有效人员进行合同续签-复核")
@@ -57,6 +63,7 @@ class Test_YLDLZ_014():
         self.ASR.switch_to_window()
         self.ASR.maximize_window()
         self.CRR.assertEqual("判断页面标题", self.CR.get_head_text(), "人员合同续签复核")
+        get_screenshot("复核")
         contract_start_date = self.CRR.get_text(self.CRR.get_element_xpath(self.CRR.contract_start_date))
         contract_end_date = self.CRR.get_text(self.CRR.get_element_xpath(self.CRR.contract_end_date))
         self.CRR.assertEqual("验证合同起始日期", contract_start_date, Test_YLDLZ_014.msg["contract_start_date"])
@@ -64,3 +71,4 @@ class Test_YLDLZ_014():
         info("复核")
         self.CRR.click(self.CRR.get_element_xpath(self.CRR.success))
         self.CRR.submit_interaction(self.CRR.submit_iframe, textarea="合同续签（有效人员进行合同续签）--ui测试")
+        get_screenshot("提交")

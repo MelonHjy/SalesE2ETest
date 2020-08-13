@@ -15,6 +15,7 @@ class EditAgentSaleMsg(ProcessPage):
     close_over = "//input[@class='button_ty_over']"
     close_btn = "//input[@class='button_ty']"
     manage_account_btn = "//input[@id='manageAccount']"  # 修改账号
+    save_success = "//body/table/tbody/tr/td[2]"    # 保存成功
     # ---------------------人员基础信息填写项------------------------------ #
     user_tab = "//*[@id='folder-label-userTab']"
     username = "//input[@id='userName']"
@@ -115,8 +116,8 @@ class EditAgentSaleMsg(ProcessPage):
 
     def submit_process(self, textarea=""):
         self.submit_interaction(iframe_xpath=self.submit_iframe, textarea=textarea)
-        sleep(2)
-        self.click(self.wait_until_el_xpath(self.close_over))
+        # sleep(2)
+        # self.click(self.wait_until_el_xpath(self.close_over))
 
     @allure.step(
         "填写账户信息（收款人账号:{accountno},卡折标志:{cardtype},银行名称：{saDAccount_bankName},银行区域名称：{saDAccount_bankareaname},联行号：{bankName}）")
@@ -134,6 +135,7 @@ class EditAgentSaleMsg(ProcessPage):
     def manage_account(self):
         self.click(self.wait_until_el_xpath(self.manage_account_btn))
 
+    @allure.step("选择账号类型")
     def get_cardtype(self):
         value = self.get_element_xpath(self.cardtype).get_attribute('value')
         cardtype = {'1': '卡', '2': '折', '3': '对公账号'}

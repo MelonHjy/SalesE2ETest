@@ -13,6 +13,7 @@ from src.page.integrated_management.appointment_manager_recheck import Appointme
 from src.page.integrated_management.main_agent_sales_recheck import AgentSalesRecheck
 from src.utils import csv_util
 from src.utils.driver_util import *
+from src.utils.except_util import get_screenshot
 
 
 @allure.feature("代理制人员代码管理>>营销团队经理聘任与解聘（有效团队成员任命为经理）")
@@ -44,12 +45,16 @@ class Test_YLDLZ_002():
         self.MOAS.switch_to_window()
         self.MOAS.maximize_window()
         self.AM.assertEqual("判断页面标题", self.AM.get_head_text(), "营销团队经理聘任")
+        get_screenshot("聘任")
         info("团队职务选择")
         self.AM.select_rolecode("经理")
         info("保存并提交")
         self.AM.click(self.AM.wait_until_el_xpath(self.AM.save_commit2))
         self.AM.choose_ok_on_alert()
         self.AM.submit_interaction(self.AM.submit_iframe)
+        text = self.AM.get_text(self.AM.get_element_xpath(self.AM.save_success))
+        self.AM.assertResult("验证提交成功", "保存成功!" in text)
+        get_screenshot("提交")
         # 关闭
         # 切换
         # self.MOAS.back_to_page()
@@ -70,12 +75,15 @@ class Test_YLDLZ_002():
         self.ASR.select_data("经理聘任复核")
         self.ASR.switch_to_window()
         self.ASR.maximize_window()
+        get_screenshot("复核页")
         info("复核")
         self.AMR.assertEqual("判断页面标题", self.AMR.get_head_text(), "经理聘任复核")
         self.AMR.recheck_ope(textarea="有效团队成员任命为经理--ui测试")
+        get_screenshot("提交")
+        self.AMR.close_button_ty()
         # 关闭
 
-    @pytest.mark.dependency(name='test_003', depends=["test_001","test_002"])
+    @pytest.mark.dependency(name='test_003', depends=["test_001", "test_002"])
     @allure.story("验证审核通过后核对人员信息")
     @pytest.mark.parametrize("user_code", data)
     @pytest.mark.usefixtures("login_jiangsu_p_fun")
@@ -83,4 +91,5 @@ class Test_YLDLZ_002():
         self.SQ.into_page()
         self.SQ.query(user_code)
         text = self.SQ.get_cell_text_by_head("职级", row=0)
+        get_screenshot("验证")
         self.SQ.assertEqual("判断该销售人员职级是否营销团队经理", text, "营销团队经理")

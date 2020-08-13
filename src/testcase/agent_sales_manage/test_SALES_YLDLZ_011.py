@@ -10,6 +10,7 @@ from src.page.agent_sales_manage.main_management_agent_salesmen import Managemen
 from src.page.integrated_management.edit_agent_sales_msg_recheck import EditAgentSaleMsgRecheck
 from src.page.integrated_management.main_agent_sales_recheck import AgentSalesRecheck
 from src.utils import csv_util
+from src.utils.except_util import get_screenshot
 from src.utils.log import info
 
 
@@ -26,7 +27,7 @@ class Test_YLDLZ_011():
     #     "83258580", "13111111111", "汉族", "共青团员", "本科", "资格证", "111111", "2018-01-17", "B", "执业证", "222222",
     #     "2018-02-15", "2019-07-10", "2021-08-13")]
 
-    @allure.story("变更有效团队成员的团队")
+    @allure.story("有效人员进行信息变更")
     @pytest.mark.dependency(name='test_001')
     @pytest.mark.usefixtures("login_jiangsu_p_fun")
     @pytest.mark.parametrize("user_code, mobile, nation, visage, culture, qualifytype,  qualifyno,"
@@ -52,6 +53,7 @@ class Test_YLDLZ_011():
         self.EASM.select_nation(nation)
         self.EASM.select_visage(visage)
         self.EASM.select_culture(culture)
+        get_screenshot("变更基本信息")
         info("切换合同信息页")
         self.EASM.switch_contract_tab()
         info("修改->资质信息")
@@ -59,13 +61,17 @@ class Test_YLDLZ_011():
         self.EASM.input_qualify(1, qualifytype1, qualifyno1, qualifystartdate1)
         info("修改->合同信息")
         self.EASM.input_contract(qualifyno, qualifyno1, contractstartdate0, contractenddate0)
+        get_screenshot("变更合同信息")
         info("切换人员信息页")
         self.EASM.switch_user_tab()
         info("保存并提交")
         self.EASM.save_commit()
         self.EASM.submit_process()
+        text = self.EASM.get_text(self.EASM.get_element_xpath(self.EASM.save_success))
+        self.EASM.assertResult("验证提交成功", "保存成功!" in text)
+        get_screenshot("提交")
 
-    @allure.story("省级销售管理综合岗复核流程")
+    @allure.story("有效人员进行信息变更-复核")
     @pytest.mark.dependency(name='test_002', depends=["test_001"])
     @pytest.mark.usefixtures("login_jiangsu_p_fun")
     def test_002(self):
@@ -77,11 +83,15 @@ class Test_YLDLZ_011():
         self.ASR.switch_to_window()
         self.ASR.maximize_window()
         self.EASMR.assertEqual("判断页面标题", self.EASMR.get_head_text(), "信息变更复核")
+        get_screenshot("复核")
         info("复核")
         self.EASMR.recheck_ope(textarea="有效人员进行信息变更--ui测试")
+        text = self.EASMR.get_text(self.EASMR.get_element_xpath(self.EASMR.save_success))
+        self.EASMR.assertResult("验证提交成功", "保存成功!" in text)
+        get_screenshot("提交")
         # self.EASMR.click(self.ASR.wait_until_el_xpath(self.EASMR.submit_close))
 
-    @allure.story("代理制销售人员代码查询验证")
+    @allure.story("有效人员进行信息变更-查询验证")
     @pytest.mark.dependency(name='test_003', depends=["test_001", "test_002"])
     @pytest.mark.usefixtures("login_jiangsu_p")
     def test_003(self):
@@ -91,3 +101,4 @@ class Test_YLDLZ_011():
         self.MOAS.query(Test_YLDLZ_011.msg["usercode"])
         text = self.MOAS.get_cell_text_by_head("状态", 0)
         self.MOAS.assertEqual("判断是否结束复核状态", text, "有效")
+        get_screenshot("验证")

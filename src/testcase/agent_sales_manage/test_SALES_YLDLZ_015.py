@@ -11,6 +11,7 @@ from src.page.agent_sales_manage.main_management_agent_salesmen import Managemen
 from src.page.integrated_management.group_issue_recheck import GroupIssueRecheck
 from src.page.integrated_management.main_agent_sales_recheck import AgentSalesRecheck
 from src.utils import csv_util
+from src.utils.except_util import get_screenshot
 from src.utils.log import info
 
 
@@ -23,13 +24,17 @@ class Test_YLDLZ_015():
     msg = None
 
     data = csv_util.data_reader("agent_sales_manage/015_data.csv")
-    data1 = csv_util.data_reader("agent_sales_manage/015_data1.csv")
+    # data1 = csv_util.data_reader("agent_sales_manage/015_data1.csv")
 
-    @allure.story("人员转制-（团队成员出单权赋予）-基本1信息")
-    @pytest.mark.usefixtures("login_jiangsu_p")
+    @allure.story("人员转制-（团队成员出单权赋予）")
+    @pytest.mark.usefixtures("login_jiangsu_p_fun")
     @pytest.mark.dependency(name='test_001')
-    @pytest.mark.parametrize("id_cards,com_group,group", data)
-    def test_001(self, id_cards, com_group, group):
+    @pytest.mark.parametrize(
+        "id_cards,com_group,group,qualifytype,qualifyno,qualifystartdate,agentType,qualifytype1,qualifyno1,qualifystartdate1,contractstartdate0,contractenddate0,ruleNo,accountno,cardtype,saDAccount_bankName,saDAccount_bankareaname,bankName",
+        data)
+    def test_001(self, id_cards, com_group, group, qualifytype, qualifyno, qualifystartdate, agentType, qualifytype1,
+                 qualifyno1, qualifystartdate1, contractstartdate0, contractenddate0, ruleNo, accountno, cardtype,
+                 saDAccount_bankName, saDAccount_bankareaname, bankName):
         info("经营机构->销售人员->代理制销售人员代码管理")
         self.MOAS.into_page()
         info("团队成员出单权赋予与变更")
@@ -48,17 +53,7 @@ class Test_YLDLZ_015():
         # self.GI.js_group(self.GI.group_code, self.GI.group_name, group, self.GI.group_code_hold, group_code_hold)
         self.GI.select_org(self.GI.com_code, com_group)
         self.GI.select_org(self.GI.group_code, group)
-
-    @allure.story("人员转制-（团队成员出单权赋予）-资质信息、合同信息")
-    @pytest.mark.usefixtures("login_jiangsu_p")
-    @pytest.mark.dependency(name='test_002', depends=['test_001'])
-    @pytest.mark.parametrize("qualifytype, qualifyno,"
-                             "qualifystartdate, agentType, qualifytype1, qualifyno1, qualifystartdate1, contractstartdate0,"
-                             "contractenddate0, ruleNo, accountno, cardtype, saDAccount_bankName, saDAccount_bankareaname,"
-                             "bankName", data1)
-    def test_002(self, qualifytype, qualifyno, qualifystartdate, agentType, qualifytype1, qualifyno1,
-                 qualifystartdate1, contractstartdate0, contractenddate0, ruleNo, accountno, cardtype,
-                 saDAccount_bankName, saDAccount_bankareaname, bankName):
+        get_screenshot("基本信息")
         info("切换到合同信息tab")
         self.GI.switch_contract_tab()
         self.GI.add_user_button()
@@ -70,26 +65,25 @@ class Test_YLDLZ_015():
         info("资格证号码:{0}->执业证号码：{1}->合同起始日期：{2}->合同终止日期：{3}->佣金配置：{4}".format(qualifyno, qualifyno1, contractstartdate0,
                                                                              contractenddate0, ruleNo))
         self.GI.input_contract(qualifyno, qualifyno1, contractstartdate0, contractenddate0, ruleNo)
-        self.GI.js_group(self.GI.ruleNo, self.GI.saUContracts1, ruleNo)
+        self.GI.js_group(self.GI.ruleNo, self.GI.saUContracts1.format('0'), ruleNo)
         info("收款人账号:{0}->卡折标志:{1}->银行名称：{2}->银行区域名称：{3}->联行号：{4}".format(accountno, cardtype, saDAccount_bankName,
                                                                          saDAccount_bankareaname, bankName))
         self.GI.input_account(accountno, cardtype, saDAccount_bankName, saDAccount_bankareaname, bankName)
+        get_screenshot("合同信息")
         info("切换到基本信息tab")
         self.GI.switch_user_tab()
         info("保存并提交")
-        self.GI.save_deputy()
+        self.GI.click(self.GI.get_element_xpath(self.GI.save_commit1))
         sleep(3)
         self.GI.submit_interaction(self.GI.submit_iframe)
         text = self.GI.get_text(self.GI.get_element_xpath(self.GI.save_success))
-        self.GI.assertResult("验证提交成功","保存成功!" in text)
-        # Test_YLDLZ_015.msg = self.GI.get_msg()
-        # info("人员代码{0}，合同号{1}".format(Test_YLDLZ_015.msg['usercode'], Test_YLDLZ_015.msg['contract']))
-        # # 关闭
-        # self.GI.click(self.GI.wait_until_el_xpath(self.GI.submit_close))
+        self.GI.assertResult("验证提交成功", "保存成功!" in text)
+        get_screenshot("提交")
+        self.GI.close_button_ty()
 
     @allure.story("人员转制-（团队成员出单权赋予）-复核")
-    @pytest.mark.dependency(name='test_003', depends=['test_001', 'test_002'])
-    @pytest.mark.usefixtures("login_jiangsu_p")
+    @pytest.mark.dependency(name='test_002', depends=['test_001'])
+    @pytest.mark.usefixtures("login_jiangsu_p_fun")
     def test_003(self):
         info("综合管理->销售人员->代理制销售人员代码复核")
         self.ASR.into_page()
@@ -99,18 +93,23 @@ class Test_YLDLZ_015():
         self.ASR.switch_to_window()
         self.ASR.maximize_window()
         self.GIR.assertEqual("判断页面标题", self.GIR.get_head_text(), "出单权赋予复核")
+        get_screenshot("复核")
         # 检查点
         info("复核")
         self.GIR.click(self.GIR.get_element_xpath(self.GIR.success))
         self.GIR.submit_interaction(self.GIR.submit_iframe, textarea="人员转制-（团队成员出单权赋予）-ui测试")
+        text = self.GIR.get_text(self.GIR.get_element_xpath(self.GIR.save_success))
+        self.GIR.assertResult("验证提交成功", "保存成功!" in text)
+        get_screenshot("提交")
+        self.GIR.close_button_ty()
 
     @allure.story("人员转制-（团队成员出单权赋予）-验证人员状态")
-    @pytest.mark.dependency(name='test_004', depends=['test_001', 'test_002', 'test_003'])
+    @pytest.mark.dependency(name='test_003', depends=['test_001', 'test_002'])
     @pytest.mark.usefixtures("login_jiangsu_p_fun")
     def test_004(self):
         info("经营机构->销售人员->代理制销售人员代码管理")
         self.MOAS.into_page()
-        # info("查询人员代码：{}，未提交状态".format(Test_YLDLZ_015.msg["user_code"]))
-        # self.MOAS.query(Test_YLDLZ_015.msg["user_code"])
-        self.MOAS.query("32748460 ")
+        info("查询人员代码：{}，未提交状态".format(Test_YLDLZ_015.msg["user_code"]))
+        self.MOAS.query(Test_YLDLZ_015.msg["user_code"])
         self.MOAS.assertEqual("判断该人员状态为‘有效’", self.MOAS.get_cell_text_by_head("状态", 0), "有效")
+        get_screenshot("验证")
