@@ -5,7 +5,6 @@
 import allure
 
 from config.global_var import sleep
-from src.page.base_page import BasePage
 from src.page.process_page import ProcessPage
 
 
