@@ -46,7 +46,7 @@ class AppointmentManager(ProcessPage):
     save_button = "//input[@id='prepareadddeputy']"
     # 聘任保存并提交
     save_commit = "//input[@id='savedeputy']"
-
+    save_commit1 = "//input[@id='adddeputy']"
     # ---------------------合同信息填写项------------------------------ #
     contract_tab = "//*[@id='folder-label-contractTab']"
 
@@ -204,22 +204,12 @@ class AppointmentManager(ProcessPage):
         msg = {'usercode': a[0].split('：')[1], "contract": a[1].split('：')[1]}
         return msg
 
-    def close_btn(self):
-        self.click(self.wait_until_el_xpath(self.close))
-        sleep(3)
-
-    def submit_process(self, textarea=""):
-        self.submit_interaction(iframe_xpath=self.submit_iframe, textarea=textarea)
-        sleep(2)
-        self.click(self.wait_until_el_xpath(self.close_over))
-
     def js_set_value(self, xpath, value):
         """
         通过js设置标签内value的值
         """
         self.execute_script_s("arguments[0].setAttribute('value',arguments[1]);",
                                  self.get_element_xpath(xpath), value)
-
 
     def js_group(self,group_code_xpath, group_name_xpath, org, group_code_hold_xpath=None ,group_code_hold=None):
         """
@@ -267,6 +257,4 @@ class AppointmentManager(ProcessPage):
             self.choose_ok_on_alert()
         self.switch_contract_tab()
 
-    def commit_ope(self):
-        self.submit_interaction(iframe_xpath=self.submit_iframe)
 

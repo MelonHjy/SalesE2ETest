@@ -19,7 +19,6 @@ class AgentSalesRecheck(TablePage, ProcessPage):
     submit_iframe = "//iframe[@name='submitFrame']"  # 提交任务的iframe
     submit_close = "//*[@class='button_ty_over']"
 
-    @allure.step("综合管理->销售人员->代理制销售人员代码复核")
     def into_page(self):
         self.to_main_page("综合管理", "销售人员", "代理制销售人员代码复核")
 

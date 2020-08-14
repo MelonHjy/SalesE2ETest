@@ -11,6 +11,7 @@ class ContractRenewal(ProcessPage):
     contract_end_date = "//*[@id='contractenddate']"  # 合同结束日期
     renew = "//*[@id='renew']"  #保存并提交
     submit_iframe = "//iframe[@name='submitFrame']"  # 提交任务的iframe
+    save_success = "//body/table/tbody/tr/td[2]"    # 保存成功
 
     def get_head_text(self):
         return self.get_text(self.get_element_xpath(self.case))

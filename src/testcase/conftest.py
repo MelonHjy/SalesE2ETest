@@ -30,6 +30,7 @@ def db_conn():
     set_windows_resolution(768, 1366)
     yield
     set_windows_resolution(1080, 1920)
+    info("关闭数据库连接")
     g.db.close_connection()
 
 

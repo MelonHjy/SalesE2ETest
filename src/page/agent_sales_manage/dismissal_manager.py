@@ -2,6 +2,8 @@
 # @Time : 2020/7/21 17:16
 # @Author: fyl
 # @File : dismissal_manager.py
+import allure
+
 from src.page.process_page import ProcessPage
 from src.page.table_page import TablePage
 
@@ -20,6 +22,7 @@ class DismissalManager(TablePage, ProcessPage):
         return self.get_text(
             self.get_element_xpath(self.case))
 
+    @allure.step("根据人员代码：{user_code}——>查询")
     def select_by_user_code(self, user_code):
         """
         选择需要解聘的员工并返回归属团队代码
@@ -42,6 +45,7 @@ class DismissalManager(TablePage, ProcessPage):
         """
         self.click(self.wait_until_el_xpath(self.prepare_save_close_btn))
 
+    @allure.step("保存并提交")
     def save_submit(self):
         """
         解聘保存并提交

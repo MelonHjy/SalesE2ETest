@@ -2,6 +2,8 @@
 # @Time : 2020/8/6 15:59
 # @Author: fyl
 # @File : appointment_manager_recheck.py    营销团队经理聘任与解聘复核
+import allure
+
 from src.page.process_page import ProcessPage
 
 
@@ -9,6 +11,7 @@ class AppointmentManagerRecheck(ProcessPage):
     case = "//*[@class='case']"
     submit_iframe = "//iframe[@name='submitFrame']"  # 提交任务的iframe
     success = "//*[@id='success']"  #复核按钮
+    save_success = "//body/table/tbody/tr/td[2]"    # 保存成功
 
     def get_head_text(self):
         return self.get_text(

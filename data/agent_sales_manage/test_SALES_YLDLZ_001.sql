@@ -1,11 +1,11 @@
 --数据准备
-delete from sabpmmain where businessno = (select usercode from sauuser where IdentifyNumber ='220101198208075298');
-delete from saucontract where usercode =(select usercode from sauuser where IdentifyNumber ='220101198208075298');
-delete from sadqualify where usercode=(select usercode from sauuser where IdentifyNumber ='220101198208075298');
-delete from sadaccount where IdentifyNumber = '220101198208075298';
-delete from prpdsellerno  where sellercode = (select usercode from sauuser where IdentifyNumber ='220101198208075298');
-delete from sauusersub where userid = (select userid from sauuser where IdentifyNumber ='220101198208075298');
-delete from sauuser where IdentifyNumber ='220101198208075298';
+delete from sabpmmain where businessno = (select usercode from sauuser where IdentifyNumber ='310119198401148984');
+delete from saucontract where usercode =(select usercode from sauuser where IdentifyNumber ='310119198401148984');
+delete from sadqualify where usercode=(select usercode from sauuser where IdentifyNumber ='310119198401148984');
+delete from sadaccount where IdentifyNumber = '310119198401148984';
+delete from prpdsellerno  where sellercode = (select usercode from sauuser where IdentifyNumber ='310119198401148984');
+delete from sauusersub where userid = (select userid from sauuser where IdentifyNumber ='310119198401148984');
+delete from sauuser where IdentifyNumber ='310119198401148984';
 
 
 --辅助查询sql

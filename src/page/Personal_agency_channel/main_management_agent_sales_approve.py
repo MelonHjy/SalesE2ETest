@@ -15,10 +15,10 @@ class ManagementAgentSalesApprove(TablePage, ProcessPage):
     success_btn = "//input[@id='success']"  # 审核
     submit_iframe = "//iframe[@name='submitFrame']"
 
-    @allure.step("综合管理->销售团队->团队查询")
     def into_page(self):
         self.to_main_page("个代渠道", "销售人员", "代理制销售人员代码审批")
 
+    @allure.step("根据人员代码：{user_code1}->进行查询")
     def query(self, user_code1, status='未提交'):
         self.click(self.wait_until_el_xpath(self.user_code))
         self.send_keys(self.wait_until_el_xpath(self.user_code), user_code1)

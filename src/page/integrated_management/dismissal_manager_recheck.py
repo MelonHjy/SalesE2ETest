@@ -2,6 +2,8 @@
 # @Time : 2020/8/6 15:59
 # @Author: fyl
 # @File : appointment_manager_recheck.py    营销团队经理聘任与解聘复核
+import allure
+
 from src.page.process_page import ProcessPage
 
 

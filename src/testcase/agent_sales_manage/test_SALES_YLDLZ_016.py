@@ -6,11 +6,13 @@ import allure
 import pytest
 
 from config.global_var import sleep
+from src.page.Personal_agency_channel.sales_query import SalesQuery
 from src.page.agent_sales_manage.appointment_manager import AppointmentManager
 from src.page.agent_sales_manage.main_management_agent_salesmen import ManagementOfAgentSalesmen
 from src.page.integrated_management.appointment_manager_recheck import AppointmentManagerRecheck
 from src.page.integrated_management.main_agent_sales_recheck import AgentSalesRecheck
 from src.utils import csv_util
+from src.utils.except_util import get_screenshot
 from src.utils.log import info
 
 
@@ -20,9 +22,8 @@ class Test_YLDLZ_016():
     AM = AppointmentManager()
     ASR = AgentSalesRecheck()
     AMR = AppointmentManagerRecheck()
+    SQ = SalesQuery()
     msg = None
-
-    # data = csv_util.data_reader("agent_sales_manage/014_data.csv")
 
     # data = [("320102195201282450", "13999999999", "32019937--ces团队0319", "1131B81000000002I5DD", "汉族", "本科", "群众","经理")]
     # data1 = [("资格证", "123456", "2019-01-01", "B", "执业证", "654321", "2019-02-02", "2019-07-08", '2020-09-08',
@@ -30,13 +31,18 @@ class Test_YLDLZ_016():
     #           "新疆维吾尔自治区_巴音郭楞蒙古自治州", "中国工商银行股份有限公司库尔勒人民东路支行")]
 
     data = csv_util.data_reader("agent_sales_manage/015_data.csv")
-    data1 = csv_util.data_reader("agent_sales_manage/015_data1.csv")
+    # data1 = csv_util.data_reader("agent_sales_manage/015_data1.csv")
 
-    @allure.story("人员转制-（营销团队经理聘任与解聘）-基本信息")
-    @pytest.mark.usefixtures("login_jiangsu_p")
+    @allure.story("人员转制-（营销团队经理聘任与解聘）")
+    @pytest.mark.usefixtures("login_jiangsu_p_fun")
     @pytest.mark.dependency(name='test_001')
-    @pytest.mark.parametrize("id_cards,com_group,group", data)
-    def test_001(self, id_cards,com_group,group):
+    @pytest.mark.parametrize("id_cards,com_group,group,qualifytype, qualifyno,"
+                             "qualifystartdate, agentType, qualifytype1, qualifyno1, qualifystartdate1, contractstartdate0,"
+                             "contractenddate0, ruleNo, accountno, cardtype, saDAccount_bankName, saDAccount_bankareaname,"
+                             "bankName", data)
+    def test_001(self, id_cards,com_group,group,qualifytype, qualifyno, qualifystartdate, agentType, qualifytype1, qualifyno1,
+                 qualifystartdate1, contractstartdate0, contractenddate0, ruleNo, accountno, cardtype,
+                 saDAccount_bankName, saDAccount_bankareaname, bankName):
         info("经营机构->销售人员->代理制销售人员代码管理")
         self.MOAS.into_page()
         info("团队成员出单权赋予与变更")
@@ -56,17 +62,7 @@ class Test_YLDLZ_016():
         self.AM.select_org(self.AM.com_code, com_group)
         self.AM.select_org(self.AM.group_code, group)
         self.AM.select_rolecode("经理")
-
-    @allure.story("人员转制-（营销团队经理聘任与解聘）--资质信息、合同信息")
-    @pytest.mark.usefixtures("login_jiangsu_p")
-    @pytest.mark.dependency(name='test_002', depends=['test_001'])
-    @pytest.mark.parametrize("qualifytype, qualifyno,"
-                             "qualifystartdate, agentType, qualifytype1, qualifyno1, qualifystartdate1, contractstartdate0,"
-                             "contractenddate0, ruleNo, accountno, cardtype, saDAccount_bankName, saDAccount_bankareaname,"
-                             "bankName", data1)
-    def test_002(self, qualifytype, qualifyno, qualifystartdate, agentType, qualifytype1, qualifyno1,
-                 qualifystartdate1, contractstartdate0, contractenddate0, ruleNo, accountno, cardtype,
-                 saDAccount_bankName, saDAccount_bankareaname, bankName):
+        get_screenshot("基本信息")
         info("切换到合同信息tab")
         self.AM.switch_contract_tab()
         self.AM.add_user_button()
@@ -82,6 +78,7 @@ class Test_YLDLZ_016():
         info("收款人账号:{0}->卡折标志:{1}->银行名称：{2}->银行区域名称：{3}->联行号：{4}".format(accountno, cardtype, saDAccount_bankName,
                                                                          saDAccount_bankareaname, bankName))
         self.AM.input_account(accountno, cardtype, saDAccount_bankName, saDAccount_bankareaname, bankName)
+        get_screenshot("合同信息")
         info("切换到基本信息tab")
         self.AM.switch_user_tab()
         info("保存并提交")
@@ -90,14 +87,12 @@ class Test_YLDLZ_016():
         self.AM.submit_interaction(self.AM.submit_iframe)
         text = self.AM.get_text(self.AM.get_element_xpath(self.AM.save_success))
         self.AM.assertResult("验证提交成功", "保存成功!" in text)
-        # Test_YLDLZ_015.msg = self.GI.get_msg()
-        # info("人员代码{0}，合同号{1}".format(Test_YLDLZ_015.msg['usercode'], Test_YLDLZ_015.msg['contract']))
-        # # 关闭
-        # self.AM.click(self.AM.wait_until_el_xpath(self.AM.submit_close))
+        get_screenshot("提交")
+        self.AM.close_button_ty()
 
     @allure.story("人员转制-（营销团队经理聘任与解聘）--复核")
-    @pytest.mark.dependency(name='test_003', depends=['test_001', 'test_002'])
-    @pytest.mark.usefixtures("login_jiangsu_p")
+    @pytest.mark.dependency(name='test_002', depends=['test_001'])
+    @pytest.mark.usefixtures("login_jiangsu_p_fun")
     def test_003(self):
         info("综合管理->销售人员->代理制销售人员代码复核")
         self.ASR.into_page()
@@ -107,17 +102,24 @@ class Test_YLDLZ_016():
         self.ASR.switch_to_window()
         self.ASR.maximize_window()
         self.AMR.assertEqual("判断页面标题", self.AMR.get_head_text(), "经理聘任复核")
+        get_screenshot("复核")
         # 检查点
         info("复核")
         self.AMR.click(self.AMR.get_element_xpath(self.AMR.success))
         self.AMR.submit_interaction(self.AMR.submit_iframe, textarea="人员转制-（营销团队经理聘任与解聘）-ui测试")
+        text = self.AMR.get_text(self.AMR.get_element_xpath(self.AMR.save_success))
+        self.AMR.assertResult("验证提交成功", "保存成功!" in text)
+        get_screenshot("提交")
+        self.AMR.close_button_ty()
 
     @allure.story("人员转制-（营销团队经理聘任与解聘）--验证人员状态")
-    @pytest.mark.dependency(name='test_004', depends=['test_001', 'test_002', 'test_003'])
+    @pytest.mark.dependency(name='test_003', depends=['test_001', 'test_002'])
     @pytest.mark.usefixtures("login_jiangsu_p_fun")
     def test_004(self):
-        info("经营机构->销售人员->代理制销售人员代码管理")
-        self.MOAS.into_page()
+        info("个代渠道->销售人员->销售人员查询")
+        self.SQ.into_page()
         info("查询人员代码：{}，未提交状态".format(Test_YLDLZ_016.msg["user_code"]))
-        self.MOAS.query(Test_YLDLZ_016.msg["user_code"])
-        self.MOAS.assertEqual("判断该人员状态为‘有效’", self.MOAS.get_cell_text_by_head("状态", 0), "有效")
+        self.SQ.query(Test_YLDLZ_016.msg["user_code"])
+        text = self.SQ.get_cell_text_by_head("职级", row=0)
+        self.SQ.assertEqual("判断该销售人员职级是否营销团队经理", text, "营销团队经理")
+        get_screenshot("验证")

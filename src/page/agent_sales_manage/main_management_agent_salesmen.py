@@ -28,11 +28,10 @@ class ManagementOfAgentSalesmen(TablePage):
     dismissal_btn = "//form[@id='fm1']/table/tbody/tr[4]/td/input[2]"  # 解聘按钮
     appointment_btn = "//form[@id='fm1']/table/tbody/tr[4]/td/input[1]" # 聘任按钮
 
-    @allure.step("经营机构->销售人员->代理制销售人员代码管理")
     def into_page(self):
         self.to_main_page("经营机构", "销售人员", "代理制销售人员代码管理")
 
-    @allure.step("查询")
+    @allure.step("根据人员代码：{user_code1}->查询")
     def query(self, user_code1, status="100"):
         """
         user_code1:人员代码
@@ -62,7 +61,7 @@ class ManagementOfAgentSalesmen(TablePage):
         self.assertEqual("验证上级机构", sjjg1, sjjg)
         self.assertEqual("验证归属团队", group1, group)
 
-    @allure.step("{btn_text}")
+    @allure.step("点击{btn_text}")
     def click_btn(self, btn_text):
         self.click(self.wait_until_el_xpath(self.input_btn.format(btn_text)))
         sleep(4)
@@ -70,6 +69,7 @@ class ManagementOfAgentSalesmen(TablePage):
         self.switch_to_window()
         self.maximize_window()
 
+    @allure.step("选择人员：{user_code}")
     def select_by_user_code(self, user_code):
         """
         选择需要解聘的员工并返回归属团队代码
@@ -79,6 +79,7 @@ class ManagementOfAgentSalesmen(TablePage):
         self.click(self.get_radio_by_head(index, '选择'))
         return index
 
+    @allure.step("点击解聘")
     def select_dismissal(self):
         """
         切换提示框frame，并点击解聘按钮
@@ -86,6 +87,7 @@ class ManagementOfAgentSalesmen(TablePage):
         self.select_frame_id(self.wait_until_el_xpath(self.submit_frame))
         self.click(self.wait_until_el_xpath(self.dismissal_btn))
 
+    @allure.step("点击聘任")
     def select_appointment(self):
         """
         切换提示框frame，并点击聘任按钮

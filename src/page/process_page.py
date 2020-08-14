@@ -2,6 +2,8 @@
 # @Time : 2020/7/24 10:35
 # @Author: fyl
 # @File : process_page.py
+import allure
+
 from src.page.base_page import BasePage
 from src.utils.log import info
 
@@ -16,6 +18,7 @@ class ProcessPage(BasePage):
     state = "//option[contains(text(), '通过')]/.."
     next = "//option[contains(text(), '打回')]/.."
 
+    @allure.step("提交任务")
     def submit_interaction(self, iframe_xpath, check_state="", next_node="", textarea=""):
         """
         下拉菜单、打回岗位（关键字通过）、审核意见、失败原因

@@ -18,3 +18,4 @@ class DeputyRecheck(BasePage):
     # submit_iframe = "//div[@id='submitDlg']/iframe[@name='submitFrame']"
     # submit_iframe = "//div[@id='submitDlg']"
     submit_iframe = "//iframe[@name='submitFrame']"  # 提交任务的iframe
+    save_success = "//body/table/tbody/tr/td[2]"    # 保存成功

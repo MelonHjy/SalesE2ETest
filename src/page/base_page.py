@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-#
+import allure
 import pytest
 from selenium import webdriver
 from selenium.webdriver import ActionChains
@@ -40,6 +41,7 @@ class BasePage():
 
     # ------------------------  常用操作封装 ------------------------#
 
+    @allure.step("{module}->{zk_menu}->{menu}")
     def to_main_page(self, module_menu, zk_menu, menu):
         """
         选择菜单进入功能页面
@@ -49,7 +51,8 @@ class BasePage():
         """
         self.select_frame_id(self.frame_id)
         _module_menu = self.wait_until_el_xpath(self.module_menu.format(module_menu))
-        # self.click(_module_menu)
+        self.click(_module_menu)
+        sleep(2)
         menu_list_id = self.get_attribute(_module_menu, 'onmouseover').split("'")[1]
         # _menu_list = self.menu_list.format(menu_list_id)
         script = "window.parent.document.getElementById('{0}').contentWindow.document.getElementById('{1}').style.visibility='{2}';"
@@ -58,6 +61,7 @@ class BasePage():
         self.execute_script(visible_script)
         # self.execute_script("arguments[0].style.visibility='visible';", self.wait_until_el_xpath(_menu_list))
         self.click(self.wait_until_el_xpath(self.zk_menu.format(menu_list_id, zk_menu)))
+        sleep(2)
         self.execute_script(visible_script)
         # self.execute_script("arguments[0].style.visibility='visible';", self.wait_until_el_xpath(_menu_list))
         self.click(self.wait_until_el_xpath(self.menu.format(menu)))
