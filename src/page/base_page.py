@@ -41,7 +41,7 @@ class BasePage():
 
     # ------------------------  常用操作封装 ------------------------#
 
-    @allure.step("{module}->{zk_menu}->{menu}")
+    @allure.step("{module_menu}->{zk_menu}->{menu}")
     def to_main_page(self, module_menu, zk_menu, menu):
         """
         选择菜单进入功能页面
