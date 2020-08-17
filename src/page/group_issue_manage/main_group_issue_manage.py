@@ -19,7 +19,3 @@ class MainGroupIssueManage(TablePage):
     def click_btn(self, btn_text):
         self.click(self.wait_until_el_xpath(self.input_btn.format(btn_text)))
         sleep(2)
-
-    def switch_max_window(self):
-        self.switch_to_window()
-        self.maximize_window()

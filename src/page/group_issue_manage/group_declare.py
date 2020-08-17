@@ -4,10 +4,10 @@
 # @File : group_declare.py  团队申报
 import allure
 
-from src.page.base_page import BasePage
+from src.page.process_page import ProcessPage
 
 
-class GroupDeclare(BasePage):
+class GroupDeclare(ProcessPage):
     case = "//*[@class='case']"
     group_name = "//*[@id='groupName']"  # 团队名称
     com_code = "//*[@id='comCode']"  # 上级机构
@@ -15,6 +15,8 @@ class GroupDeclare(BasePage):
     business_name = "//*[@id='businessName']"  # 团队主营业务分类
     img_Btn = "//*[@id='imgBtn']"  # 团队组建日期
     submit_btn = "*[@id='buttonA']"  # 保存并提交
+    submit_iframe = "//iframe[@name='submitFrame']"  # 提交任务的iframe
+    save_success = "//body/table/tbody/tr/td[2]"    # 保存成功
 
     def get_head_text(self):
         return self.get_text(self.get_element_xpath(self.case))
