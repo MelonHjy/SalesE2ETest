@@ -24,6 +24,7 @@ def catch_except(func):
             return func(*args, **kwargs)
         except Exception as e:
             get_screenshot("异常")
+            g.driver.quit()
             raise e
 
     return wrapper

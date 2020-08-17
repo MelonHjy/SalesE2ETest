@@ -49,4 +49,8 @@ class AgentSalesRecheck(TablePage, ProcessPage):
         index = status_list.index(status_text)
         self.click(self.get_a_by_head(index, '操作'))
 
+    def switch_max_window(self):
+        self.switch_to_window()
+        self.maximize_window()
+
 

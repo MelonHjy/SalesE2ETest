@@ -24,12 +24,12 @@ def db_conn():
     password = g.config[db]['password']
     g.db = DBUtils(url, user, password)
 
-    width = win32api.GetSystemMetrics(0)
-    height = win32api.GetSystemMetrics(1)
-    print('before-size:%s-%s' % (width, height))
-    set_windows_resolution(768, 1366)
+    # width = win32api.GetSystemMetrics(0)
+    # height = win32api.GetSystemMetrics(1)
+    # print('before-size:%s-%s' % (width, height))
+    # set_windows_resolution(768, 1366)
     yield
-    set_windows_resolution(1080, 1920)
+    # set_windows_resolution(1080, 1920)
     info("关闭数据库连接")
     g.db.close_connection()
 
