@@ -6,6 +6,7 @@ from time import sleep
 
 from config.constants import Constants
 from src.page.base_page import BasePage
+from src.utils.driver_util import set_wait
 from src.utils.log import info
 
 
@@ -29,6 +30,7 @@ class CommonSteps():
     def login(self):
         self.login_base(self.cons.NANJING_USERNAME, self.cons.NANJING_PASSWORD)
 
+    @set_wait(60)
     def login_base(self, user_name, pwd):
         username = self.base_page.wait_until_el_xpath(self.username)
         self.base_page.send_keys(username, user_name)

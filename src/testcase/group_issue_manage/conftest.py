@@ -19,7 +19,7 @@ def login_jiangsu_p_fun():
     url = g.config['DEFAULT']['url2']
     browser = g.config['DEFAULT']['browser']
     g.driver = get_browser(browser)
-    g.wait = WebDriverWait(g.driver, 60)
+    g.wait = WebDriverWait(g.driver, 15)
     BasePage().maximize_window()
     info("进入%s", url)
     BasePage().open_url(url)
