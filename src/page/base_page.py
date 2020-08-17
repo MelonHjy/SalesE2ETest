@@ -49,6 +49,7 @@ class BasePage():
         zk_menu：需要展开菜单的菜单名
         menu：最终菜单名
         """
+        self.execute_script("window.onbeforeunload = null;")
         self.select_frame_id(self.frame_id)
         _module_menu = self.wait_until_el_xpath(self.module_menu.format(module_menu))
         self.click(_module_menu)
