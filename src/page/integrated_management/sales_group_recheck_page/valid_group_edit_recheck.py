@@ -6,4 +6,6 @@ from src.page.integrated_management.sales_group_recheck_page.sales_group_recheck
 
 
 class ValidGroupEditRecheck(SalesGroupRecheckCommon):
-    pass
+
+    submit_btn = "//*[@id='addFarm']"  # 非重要信息审核按钮
+    submit_iframe = "//iframe[@name='submitFrame']"  # 提交任务的iframe
