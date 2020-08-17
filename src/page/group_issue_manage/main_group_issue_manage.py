@@ -1,19 +1,55 @@
 #  -*- coding:utf-8 -*-
 # @Time : 2020/8/14 1:54
 # @Author: fyl
-# @File : main_group_issue_page.py    团队出单权管理
-import allure
 
-from config.global_var import sleep
+import allure
+import requests
+
+from config.global_var import sleep, g
 from src.page.table_page import TablePage
+import xml.etree.ElementTree as Etree
+
+from src.utils.log import info
 
 
 class MainGroupIssueManage(TablePage):
-
     input_btn = "//input[@value='{}']"  # 按钮
-    group_name = "//*[@id='groupName']" # 团队名称
+    group_name = "//*[@id='groupName']"  # 团队名称
     status = "//input[@id='state1{}']"  # 任务状态
-    pk_deptdoc = "//*[@id='pk_deptdoc']"    # 团队代码
+    pk_deptdoc = "//*[@id='pk_deptdoc']"  # 团队代码
+
+    xml = '''
+    <?xml version="1.0" encoding="GBK"?>
+    <requestXml>
+        <requesthead>
+            <uuid>f55b5c5f-bda4-4b63-b5a4-415d2aa7b47e</uuid>
+            <flowintime>2020-08-14 14:47:00</flowintime>
+            <user>0306</user>
+            <request_type>05220020</request_type>
+            <password>9b5ef3d5-64d0-4dad-a754-bc4930db3913</password>
+            <server_version>00000000</server_version>
+            <sender>0306</sender>
+        </requesthead>
+        <requestbody>
+            <hrGroupInFo>
+                <msgId>%s</msgId>
+                <businessType>{0}</businessType>
+                <groupCode>%s</groupCode>
+                <pkDeptdoc>0001B9100000000THGYS</pkDeptdoc>
+                <groupName>%s</groupName>
+                <groupType>%s</groupType>
+                <comCode>%s</comCode>
+                <licenseFlag>N</licenseFlag>
+                <optTime>2020-07-27 17:13:38</optTime>
+                <optUser>%s</optUser>
+                <state>2</state>
+                <reaSon>批准！</reaSon>
+                <auditTime>2020-08-14 14:47:00</auditTime>
+                <auditUser>销管系统测试账号</auditUser>
+            </hrGroupInFo>
+        </requestbody>
+    </requestXml>
+    '''
 
     def into_page(self):
         self.to_main_page("经营机构", "销售团队", "团队出单权管理")
@@ -57,4 +93,22 @@ class MainGroupIssueManage(TablePage):
 
     def switch_max_window(self):
         self.switch_to_window()
-        self.switch_max_window()
+        self.maximize_window()
+
+    def hr_send_msg(self, group_name, business_type):
+        sql = "select msgid,pk_deptdoc,groupName,groupType,comCode,optUser from saugroupbackmsg where groupid in " \
+              "(select groupid from saugroup where groupname='%s' and businessType='%s' and state='1');" % (
+              group_name, business_type)
+        data = g.db.execute(sql)
+        if len(data) < 1:
+            info("团队反馈表没有此团队：%s" % group_name)
+            return
+        url = g.config['DEFAULT']['url'].replace('main.jsp', 'HRMsgService')
+        res = requests.post(url=url, data=self.xml.format(business_type) % data[0].encode('GBK'))
+        print(res.text)
+        response_head = Etree.fromstring(res.text).find('responseHead')
+        response_code = response_head.find('response_code').text
+        if response_code == '1':
+            info("模拟hr推送信息成功")
+        else:
+            info("模拟hr推送信息失败，错误信息：%s" % response_head.find('error_message').text)

@@ -14,6 +14,7 @@ import random
 import jaydebeapi
 
 from config.global_var import g
+from src.utils.log import info
 
 
 class DBUtils:
@@ -27,7 +28,8 @@ class DBUtils:
         try:
             self.conn.close()
         except BaseException as e:
-            raise
+            info('关闭连接错误信息:%s' % e)
+            # raise
 
     @staticmethod
     def random_choice(results, num=1):
@@ -79,19 +81,19 @@ if __name__ == '__main__':
     password = 'u^6m.8LA0'
     db = DBUtils(url, user, password)
     try:
-        # 增删改示例
-        sql = '''
-delete from saucontract where usercode = '83258551';
-/*插入合同信息*/
-insert into saucontract (agentarea, agentenddate, agentid, agentno, agentstartdate, batchno, checkstatus, comfeedate, contractno, contractaddress, contractcount, contractenddate, contractstartdate, creator, credentialenddate, credentialid, credentialno, credentstartdate, effecttime, effectivedate, failuretime, flag, guarantoraddress, guarantorcardnum, guarantorname, guarantorphone, inputtime, lastcontractid, remark, ruleno, updatetime, updator, usercode, userid, validstatus, ucontractid) values ('', '', 1000000002071305, '123456', '2019-01-01', '', 'a', 0, '320000110200146', '', 1, '2022-08-03', '2020-08-06', 'A320000135', '', 1000000002071436, '654321', '2019-01-01', '', '', '', '', '', '', '', '', '2020-08-06 09:44:30', '', '', 'RULE20120000000000001', '', '', '83258551', 1000000002297783, '1', 1000000001904324);
-'''
-        data = db.execute(sql)
-        print(data)
+#         # 增删改示例
+#         sql = '''
+# delete from saucontract where usercode = '83258551';
+# /*插入合同信息*/
+# insert into saucontract (agentarea, agentenddate, agentid, agentno, agentstartdate, batchno, checkstatus, comfeedate, contractno, contractaddress, contractcount, contractenddate, contractstartdate, creator, credentialenddate, credentialid, credentialno, credentstartdate, effecttime, effectivedate, failuretime, flag, guarantoraddress, guarantorcardnum, guarantorname, guarantorphone, inputtime, lastcontractid, remark, ruleno, updatetime, updator, usercode, userid, validstatus, ucontractid) values ('', '', 1000000002071305, '123456', '2019-01-01', '', 'a', 0, '320000110200146', '', 1, '2022-08-03', '2020-08-06', 'A320000135', '', 1000000002071436, '654321', '2019-01-01', '', '', '', '', '', '', '', '', '2020-08-06 09:44:30', '', '', 'RULE20120000000000001', '', '', '83258551', 1000000002297783, '1', 1000000001904324);
+# '''
+#         data = db.execute(sql)
+#         print(data)
 
         # 查示例
-        sql2 = "select * from SaUUser"
+        sql2 = "select msgid,groupCode,groupName,groupType,comCode,optUser from saugroupbackmsg where groupid in (select groupid from saugroup where groupname='ui测试-001');"
         data2 = db.select(sql2)
-        data2 = db.random_choice(data2, 3)
+        # data2 = db.random_choice(data2, 3)
         for d in data2:
             print(d)
     finally:

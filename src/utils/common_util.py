@@ -13,6 +13,15 @@ from enum import Enum
 from functools import wraps
 
 
+class BusinessType(Enum):
+    '''
+        枚举业务类型：新增、变更、注销
+    '''
+    create = 1
+    change = 2
+    logout = 3
+
+
 class DecoratorType(Enum):
     '''
         枚举传入测试数据的装饰器
