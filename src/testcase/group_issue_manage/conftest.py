@@ -16,7 +16,7 @@ from src.utils.driver_util import get_config, get_browser
 @allure.severity('blocker')
 def login_jiangsu_p_fun():
     g.config = get_config()
-    url = g.config['DEFAULT']['url2']
+    url = g.config['DEFAULT']['url']
     browser = g.config['DEFAULT']['browser']
     g.driver = get_browser(browser)
     g.wait = WebDriverWait(g.driver, 15)

@@ -14,6 +14,7 @@ import random
 import jaydebeapi
 
 from config.global_var import g
+from src.utils.log import info
 
 
 class DBUtils:
@@ -27,7 +28,8 @@ class DBUtils:
         try:
             self.conn.close()
         except BaseException as e:
-            raise
+            info('关闭连接错误信息:%s' % e)
+            # raise
 
     @staticmethod
     def random_choice(results, num=1):

@@ -22,6 +22,7 @@ def db_conn():
     url = g.config[db]['url']
     user = g.config[db]['user']
     password = g.config[db]['password']
+    info("获取数据库连接")
     g.db = DBUtils(url, user, password)
 
     # width = win32api.GetSystemMetrics(0)
@@ -30,9 +31,8 @@ def db_conn():
     # set_windows_resolution(768, 1366)
     yield
     # set_windows_resolution(1080, 1920)
-    info("关闭数据库连接")
     g.db.close_connection()
-
+    info("关闭数据库连接")
 
 def set_windows_resolution(height, width):
     dm = win32api.EnumDisplaySettings(None, 0)
@@ -49,17 +49,19 @@ def restore_data():
     test_dir = current[2]
     test_name = current[3].split('.')[0]
     sql_path = g.root_path + '/data/' + test_dir + '/' + test_name + '.sql'
+    # csv_path = g.root_path + '/data/' + test_dir + '/' + test_name + '.csv'
+    # data = data_reader(csv_path, DecoratorType.fixture)
     if os.path.exists(sql_path):
         with open(sql_path, 'r', encoding='utf-8') as f:
             sql = f.read()
-            restore_log('CURRENT_TEST:%s/%s 正在恢复数据' % (test_dir, test_name))
+            restore_log('CURRENT_TEST:%s/%s 正在准备数据' % (test_dir, test_name))
             try:
                 data = g.db.execute(sql)
-                restore_log('CURRENT_TEST:%s/%s 恢复数据成功' % (test_dir, test_name))
-            except Exception:
-                restore_log('CURRENT_TEST:%s/%s 恢复数据失败' % (test_dir, test_name))
+                restore_log('CURRENT_TEST:%s/%s 准备数据成功' % (test_dir, test_name))
+            except Exception as e:
+                restore_log('CURRENT_TEST:%s/%s 准备数据失败。详细信息:%s' % (test_dir, test_name, e))
     else:
-        restore_log('CURRENT_TEST:%s/%s 没有恢复数据sql脚本文件' % (test_dir, test_name))
+        restore_log('CURRENT_TEST:%s/%s 没有准备数据sql脚本文件' % (test_dir, test_name))
     yield
 
 
