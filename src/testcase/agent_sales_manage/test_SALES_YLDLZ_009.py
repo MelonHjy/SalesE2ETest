@@ -86,7 +86,7 @@ class Test_YLDLZ_009():
     def test_003(self):
         info("经营机构->销售人员->代理制销售人员代码管理")
         self.MOAS.into_page()
-        info("查询无效人员代码{}->选择".format(Test_YLDLZ_009.msg))
+        info("查询人员代码{}".format(Test_YLDLZ_009.msg))
         self.MOAS.query(user_code1=Test_YLDLZ_009.msg)
         status = self.MOAS.get_cell_text_by_head("状态", 0)
         self.MOAS.assertEqual("验证团队成员状态为‘有效’", status, "有效")
