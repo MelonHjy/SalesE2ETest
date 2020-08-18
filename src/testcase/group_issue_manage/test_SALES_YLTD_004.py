@@ -1,7 +1,7 @@
 #  -*- coding:utf-8 -*-
 # @Time : 2020/8/14 1:47
 # @Author: fyl
-# @File : test_SALES_YLTD_003.py    团队出单权管理>>团队信息变更（变更团队非重要信息）
+# @File : test_SALES_YLTD_004.py    团队出单权管理>>团队信息变更（变更团队非重要信息）
 import allure
 import pytest
 
@@ -10,7 +10,6 @@ from src.page.group_issue_manage.main_group_issue_manage import MainGroupIssueMa
 from src.page.group_issue_manage.main_group_issue_page.edit_group import EditGroup
 from src.page.group_issue_manage.main_group_issue_page.group_view import GroupView
 from src.page.integrated_management.main_sales_group import MainSalesGroup
-from src.page.integrated_management.sales_group_recheck_page.edit_group_recheck import EditGroupRecheck
 from src.page.integrated_management.sales_group_recheck_page.valid_group_edit_recheck import ValidGroupEditRecheck
 from src.utils.log import info
 
