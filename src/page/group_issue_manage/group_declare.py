@@ -14,7 +14,7 @@ class GroupDeclare(ProcessPage):
     grouptype1 = "//*[@id='grouptype1']"  # 团队属性
     business_name = "//*[@id='businessName']"  # 团队主营业务分类
     img_Btn = "//*[@id='imgBtn']"  # 团队组建日期
-    submit_btn = "*[@id='buttonA']"  # 保存并提交
+    submit_btn = "//*[@id='buttonA']"  # 保存并提交
     submit_iframe = "//iframe[@name='submitFrame']"  # 提交任务的iframe
     save_success = "//body/table/tbody/tr/td[2]"    # 保存成功
 
