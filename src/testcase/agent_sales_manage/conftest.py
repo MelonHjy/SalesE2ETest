@@ -4,12 +4,13 @@
 # @File : conftest.py
 import allure
 import pytest
-from selenium.webdriver.support.wait import WebDriverWait
 
+from selenium.webdriver.support.wait import WebDriverWait
 from config.global_var import g
 from src.page.base_page import BasePage, info
 from src.testcase.base_step.commonsteps import CommonSteps
 from src.utils.driver_util import get_config, get_browser
+
 
 
 @pytest.fixture(scope="class", autouse=False)

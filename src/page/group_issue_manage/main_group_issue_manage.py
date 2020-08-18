@@ -1,7 +1,7 @@
 #  -*- coding:utf-8 -*-
 # @Time : 2020/8/14 1:54
 # @Author: fyl
-# @File : main_group_issue_page.py    团队出单权管理
+
 import allure
 import requests
 
