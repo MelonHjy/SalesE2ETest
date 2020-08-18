@@ -25,14 +25,17 @@ def db_conn():
     info("获取数据库连接")
     g.db = DBUtils(url, user, password)
 
-    # width = win32api.GetSystemMetrics(0)
-    # height = win32api.GetSystemMetrics(1)
-    # print('before-size:%s-%s' % (width, height))
-    # set_windows_resolution(768, 1366)
+    width = win32api.GetSystemMetrics(0)
+    height = win32api.GetSystemMetrics(1)
+    print('before-size:%s-%s' % (width, height))
+    if width == 1536 and height == 864:
+        set_windows_resolution(768, 1366)
     yield
-    # set_windows_resolution(1080, 1920)
+    if width == 1536 and height == 864:
+        set_windows_resolution(1080, 1920)
     g.db.close_connection()
     info("关闭数据库连接")
+
 
 def set_windows_resolution(height, width):
     dm = win32api.EnumDisplaySettings(None, 0)

@@ -6,15 +6,20 @@ from config.global_var import *
 from functools import wraps
 from datetime import datetime
 
+from src.utils.log import info
+
 
 def get_screenshot(filename):
     now = datetime.now().strftime('%H%M%S%f')  # 时间戳
     filename = now + filename + ".png"  # 拼接文件名 时间戳+文件名+.png
     filepath = os.path.join(r".\report\allure-results\screenshot", filename)
-    g.driver.get_screenshot_as_file(filepath)
-    with open(filepath, 'rb') as f:
-        file = f.read()
-        allure.attach(file, "截图", allure.attachment_type.PNG)
+    try:
+        g.driver.get_screenshot_as_file(filepath)
+        with open(filepath, 'rb') as f:
+            file = f.read()
+            allure.attach(file, "截图", allure.attachment_type.PNG)
+    except Exception as e:
+        info("截图时出错：%s" % e)
 
 
 def catch_except(func):
@@ -24,7 +29,7 @@ def catch_except(func):
             return func(*args, **kwargs)
         except Exception as e:
             get_screenshot("异常")
-            g.driver.quit()
+            sleep(2)
             raise e
 
     return wrapper
