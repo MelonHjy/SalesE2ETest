@@ -22,6 +22,7 @@ class Test_SALES_YLTD_001():
     MSG = MainSalesGroup()
     SGR = SalesGroupRecheck()
     msg = None
+    # msg = {"group_name":"ui测试-001"}
 
     data = [("ui测试-001", "32000000--中国人民财产保险股份有限公司江苏省分公司", "营销团队", "其它--营销", "2020-09-30")]
 
@@ -76,14 +77,14 @@ class Test_SALES_YLTD_001():
         sleep(2)
         text = self.SGR.get_alert_text()
         info("提示信息：{}".format(text))
-        self.MSG.assertEqual("判断提示信息", text, "{}:团队信息推送成功！")
+        self.MSG.assertEqual("判断提示信息", text, "{}:团队信息推送成功！".format(Test_SALES_YLTD_001.msg["group_name"]))
         self.MSG.choose_ok_on_alert()
 
     @allure.story("团队申报-验证")
     @pytest.mark.usefixtures("login_jiangsu_p_fun")
     @pytest.mark.dependency(name='test_003', depends=['test_002'])
     def test_003(self):
-        self.MGIM.hr_send_msg(Test_SALES_YLTD_001.msg["group_name"], BusinessType.create)
+        self.MGIM.hr_send_create(Test_SALES_YLTD_001.msg["group_name"], '32999999', '1130B810000000UITEST')
         info("团队出单权管理页")
         self.MGIM.into_page()
         info("查询团队名称：{}".format(Test_SALES_YLTD_001.msg["group_name"]))
