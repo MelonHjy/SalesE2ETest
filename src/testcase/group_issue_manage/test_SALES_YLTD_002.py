@@ -8,6 +8,7 @@ import pytest
 from config.global_var import sleep
 from src.page.group_issue_manage.main_group_issue_manage import MainGroupIssueManage
 from src.page.group_issue_manage.main_group_issue_page.edit_group import EditGroup
+from src.page.integrated_management.main_sales_group import MainSalesGroup
 from src.page.integrated_management.sales_group_recheck_page.edit_group_recheck import EditGroupRecheck
 from src.utils.log import info
 
@@ -17,10 +18,11 @@ from src.utils.log import info
 class Test_SALES_YLTD_002():
     MGIM = MainGroupIssueManage()
     EG = EditGroup()
+    MSG = MainSalesGroup()
     EGR = EditGroupRecheck()
     msg = None
 
-    data = [("32990088", "ui测试-002")]
+    data = [("32990092", "ui测试-002x")]
 
     @allure.story("无效的团队进行复效")
     @pytest.mark.dependency(name='test_001')
@@ -40,7 +42,8 @@ class Test_SALES_YLTD_002():
         self.EG.assertEqual("判断页面标题", self.EG.get_head_text(), "团队修改")
         info("保存并提交")
         self.EG.click(self.EG.get_element_xpath(self.EG.submit_btn))
-        self.EG.submit_interaction()
+        self.EG.submit_interaction(self.EG.submit_iframe)
+        self.EG.close_button_ty()
 
     @allure.story("无效的团队进行复效-审核")
     @pytest.mark.dependency(name='test_002', depends=['test_001'])
@@ -50,7 +53,7 @@ class Test_SALES_YLTD_002():
         self.MSG.into_page()
         info("查询团队名称：{}".format(Test_SALES_YLTD_002.msg["group_name"]))
         self.MSG.query(group_name=Test_SALES_YLTD_002.msg["group_name"])
-        self.MSG.select_data(self.MSG.select_data("无效修改审核"))
+        self.MSG.select_data("无效修改审核")
         self.MSG.switch_max_window()
         self.EGR.assertEqual("判断页面标题", self.EGR.get_head_text(), "无效修改团队审核")
         info("审核")
