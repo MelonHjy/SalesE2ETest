@@ -13,7 +13,6 @@ from src.page.integrated_management.sales_group_recheck_page.edit_group_recheck 
 from src.utils.log import info
 
 
-
 @allure.feature("团队出单权管理>>团队信息变更（无效的团队进行复效）")
 class Test_SALES_YLTD_002():
     MGIM = MainGroupIssueManage()
@@ -66,11 +65,16 @@ class Test_SALES_YLTD_002():
         sleep(2)
         text = self.EGR.get_alert_text()
         info("提示信息：{}".format(text))
-        self.EGR.assertEqual("判断提示信息", text, "{}:团队信息推送成功！")
+        self.EGR.assertEqual("判断提示信息", text, "{}:团队信息推送成功！".format(Test_SALES_YLTD_002.msg["group_name"]))
         self.EGR.choose_ok_on_alert()
 
+    @allure.story("模拟Hr推送至销管系统")
+    @pytest.mark.dependency(name='test_send', depends=['test_002'])
+    def test_send(self):
+        self.MGIM.hr_send_recovery(Test_SALES_YLTD_002.msg["group_name"])
+
     @allure.story("无效的团队进行复效-验证")
-    @pytest.mark.dependency(name='test_003', depends=['test_001', 'test_002'])
+    @pytest.mark.dependency(name='test_003', depends=['test_send'])
     @pytest.mark.usefixtures("login_jiangsu_p_fun")
     def test_003(self):
         info("团队出单权管理页")
@@ -78,7 +82,7 @@ class Test_SALES_YLTD_002():
         info("查询团队名称：{}".format(Test_SALES_YLTD_002.msg["group_name"]))
         self.MGIM.query(group_name=Test_SALES_YLTD_002.msg["group_name"])
         # self.MGIM.query("ui测试-002")
-        text = self.MGIM.get_cell_text_by_head("团队状态",0)
+        text = self.MGIM.get_cell_text_by_head("团队状态", 0)
         self.MGIM.assertEqual("判断团队状态是否有效", text, "有效")
         process = self.MGIM.get_cell_text_by_head("终止流程", 0)
         self.MGIM.assertEqual("判断最后一栏没有终止流程按钮", process, "")

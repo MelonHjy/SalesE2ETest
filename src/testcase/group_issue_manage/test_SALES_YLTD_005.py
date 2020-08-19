@@ -69,8 +69,13 @@ class Test_SALES_YLTD_005():
         self.DGR.assertEqual("判断提示信息", text, "{}:团队信息推送成功！".format(Test_SALES_YLTD_005.msg["group_name"]))
         self.DGR.choose_ok_on_alert()
 
+    @allure.story("模拟Hr推送至销管系统")
+    @pytest.mark.dependency(name='test_send', depends=['test_002'])
+    def test_send(self):
+        self.MGIM.hr_send_logout(Test_SALES_YLTD_005.msg["group_name"])
+
     @allure.story("团队申报-验证")
-    @pytest.mark.dependency(name='test_003', depends=["test_001", "test_002"])
+    @pytest.mark.dependency(name='test_003', depends=["test_send"])
     @pytest.mark.usefixtures("login_jiangsu_p_fun")
     def test_003(self):
         info("团队出单权管理页")
