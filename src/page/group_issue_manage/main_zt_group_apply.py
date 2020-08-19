@@ -9,6 +9,8 @@ from src.page.table_page import TablePage
 
 
 class MainZtGroupApply(TablePage):
+
+    case = "//*[@class='case']"
     com_code = "//*[@id='comCode']" #上级机构
     pk_deptdoc = "//*[@id='pk_deptdoc']"    # 团队代码
     group_name = "//*[@id='groupName']" # 团队名称
@@ -49,3 +51,7 @@ class MainZtGroupApply(TablePage):
         status_list = self.get_cell_text_by_head(column_name)
         index = status_list.index(column_value)
         self.click(self.get_a_by_head(index, row_ope))
+
+    def get_head_text(self):
+        return self.get_text(
+            self.get_element_xpath(self.case))
