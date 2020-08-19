@@ -27,8 +27,7 @@ class Test_YLDLZ_001():
     #           "新疆维吾尔自治区_巴音郭楞蒙古自治州", "中国工商银行股份有限公司库尔勒人民东路支行")]
     # data2 = [("杨闰圣ui测试", "61011519990217147x", "32000000", "测试0506营销")]
 
-    data = csv_util.data_reader("agent_sales_manage/001_data.csv")
-    # data1 = csv_util.data_reader("agent_sales_manage/001_data1.csv")
+    data = csv_util.data_reader("agent_sales_manage/test_SALES_YLDLZ_001.csv")
     msg = None
 
     @allure.story("新增人员聘任为经理--填写信息")

@@ -22,7 +22,7 @@ class Test_YLDLZ_010():
     GIR = GroupIssueRecheck()
     msg = None
 
-    data = csv_util.data_reader("agent_sales_manage/010_data.csv")
+    data = csv_util.data_reader("agent_sales_manage/test_SALES_YLDLZ_010.csv")
     # data = [("83258549", "32990046--测试0610营销修改")]
 
 

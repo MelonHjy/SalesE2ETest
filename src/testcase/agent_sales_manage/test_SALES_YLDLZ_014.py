@@ -22,7 +22,7 @@ class Test_YLDLZ_014():
     CRR = ContractRenewalRecheck()
     msg = None
 
-    data = csv_util.data_reader("agent_sales_manage/014_data.csv")
+    data = csv_util.data_reader("agent_sales_manage/test_SALES_YLDLZ_014.csv")
 
     # data = ["83258551"]   # 83258551  83258572  83258562
 

@@ -21,7 +21,7 @@ class Test_YLDLZ_012():
     msg = None
 
     # data = [("83258561", "1112223334521", "折", "交通银行", "天津市_天津市", "交通银行天津南开支行")]#83258557
-    data = csv_util.data_reader("agent_sales_manage/012_data.csv")
+    data = csv_util.data_reader("agent_sales_manage/test_SALES_YLDLZ_012.csv")
 
     @allure.story("无效人员进行信息变更")
     @pytest.mark.usefixtures("login_jiangsu_p_fun")

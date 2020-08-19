@@ -10,6 +10,7 @@ from src.page.group_issue_manage.main_group_issue_manage import MainGroupIssueMa
 from src.page.group_issue_manage.main_group_issue_page.group_declare import GroupDeclare
 from src.page.integrated_management.main_sales_group import MainSalesGroup
 from src.page.integrated_management.sales_group_recheck_page.sales_group_recheck import SalesGroupRecheck
+from src.utils import csv_util
 from src.utils.except_util import get_screenshot
 from src.utils.log import info
 
@@ -23,7 +24,8 @@ class Test_SALES_YLTD_001():
 
     msg = None
 
-    data = [("ui测试-001", "32000000--中国人民财产保险股份有限公司江苏省分公司", "营销团队", "其它--营销", "2020-09-30")]
+    # data = [("ui测试-001", "32000000--中国人民财产保险股份有限公司江苏省分公司", "营销团队", "其它--营销", "2020-09-30")]
+    data = csv_util.data_reader("group_issue_manage/Test_SALES_YLTD_001.csv")
 
     @allure.story("团队申报")
     @pytest.mark.parametrize("group_name,com_code,group_type,business_name,build_date", data)

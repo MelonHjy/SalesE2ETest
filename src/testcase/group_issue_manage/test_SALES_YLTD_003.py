@@ -12,6 +12,7 @@ from src.page.group_issue_manage.main_group_issue_page.group_view import GroupVi
 from src.page.integrated_management.main_sales_group import MainSalesGroup
 from src.page.integrated_management.sales_group_recheck_page.edit_group_recheck import EditGroupRecheck
 from src.page.integrated_management.sales_group_recheck_page.valid_group_edit_recheck import ValidGroupEditRecheck
+from src.utils import csv_util
 from src.utils.log import info
 
 
@@ -24,7 +25,8 @@ class Test_SALES_YLTD_003():
     GV = GroupView()
     msg = None
 
-    data = [("32990089", "ui测试-003", "直销团队", "其它", "重点客户", "ui测试指定客户")]
+    # data = [("32990089", "ui测试-003", "直销团队", "其它", "重点客户", "ui测试指定客户")]
+    data = csv_util.data_reader("group_issue_manage/Test_SALES_YLTD_003.csv")
 
     @allure.story("变更团队重要信息")
     @pytest.mark.dependency(name='test_001')

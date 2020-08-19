@@ -23,7 +23,7 @@ class Test_YLDLZ_009():
     GIR = GroupIssueRecheck()
     msg = None
 
-    data = csv_util.data_reader("agent_sales_manage/009_data.csv")
+    data = csv_util.data_reader("agent_sales_manage/test_SALES_YLDLZ_009.csv")
 
     @allure.story("无效人员复效为团队成员")
     @pytest.mark.usefixtures("login_jiangsu_p_fun")

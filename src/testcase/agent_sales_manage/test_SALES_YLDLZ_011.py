@@ -22,7 +22,7 @@ class Test_YLDLZ_011():
     EASMR = EditAgentSaleMsgRecheck()
     msg = None
 
-    data = csv_util.data_reader("agent_sales_manage/011_data.csv")
+    data = csv_util.data_reader("agent_sales_manage/test_SALES_YLDLZ_011.csv")
     # data = [(
     #     "83258580", "13111111111", "汉族", "共青团员", "本科", "资格证", "111111", "2018-01-17", "B", "执业证", "222222",
     #     "2018-02-15", "2019-07-10", "2021-08-13")]

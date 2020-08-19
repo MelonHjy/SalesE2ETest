@@ -27,7 +27,7 @@ class Test_YLDLZ_007():
     # data1 = [("资格证", "123456", "2019-01-01", "B", "执业证", "654321", "2019-02-02", "2020-07-08", '2022-07-08',
     #           "RULE20120000000000001--保险经纪公司", "121222333529", "折", "中国工商银行股份有限公司",
     #           "新疆维吾尔自治区_巴音郭楞蒙古自治州", "中国工商银行股份有限公司库尔勒人民东路支行")]
-    data = csv_util.data_reader("agent_sales_manage/007_data.csv")
+    data = csv_util.data_reader("agent_sales_manage/test_SALES_YLDLZ_007.csv")
     # data1 = csv_util.data_reader("agent_sales_manage/007_data1.csv")
 
     @allure.story("新增普通代理制成员-填写信息")

@@ -10,6 +10,7 @@ from src.page.group_issue_manage.main_group_issue_manage import MainGroupIssueMa
 from src.page.group_issue_manage.main_group_issue_page.dismiss_group import DismissGroup
 from src.page.integrated_management.sales_group_recheck_page.dismiss_group_recheck import DismissGroupRecheck
 from src.page.integrated_management.main_sales_group import MainSalesGroup
+from src.utils import csv_util
 from src.utils.log import info
 
 
@@ -21,7 +22,9 @@ class Test_SALES_YLTD_005():
     DGR = DismissGroupRecheck()
     msg = None
 
-    data = [("32990087", "ui测试-005")]
+    # data = [("32990087", "ui测试-005")]
+    data = csv_util.data_reader("group_issue_manage/Test_SALES_YLTD_005.csv")
+
     # @pytest.mark.skip
     @allure.story("团队注销")
     @pytest.mark.dependency(name='test_001')
