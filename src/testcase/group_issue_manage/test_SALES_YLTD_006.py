@@ -8,6 +8,7 @@ import pytest
 from src.page.group_issue_manage.main_zt_group_apply import MainZtGroupApply
 from src.page.integrated_management.main_zt_group_approval import MainZtGroupApproval
 from src.page.integrated_management.zt_group_approval_page.zt_group_approval import ZtGroupApproval
+from src.utils import csv_util
 from src.utils.log import info
 
 
@@ -18,7 +19,8 @@ class Test_SALES_YLTD_006():
     ZTP = ZtGroupApproval()
     msg = None
 
-    data = [("32019960", "ui测试-006")]
+    # data = [("32019960", "ui测试-006")]
+    data = csv_util.data_reader("group_issue_manage/Test_SALES_YLTD_006.csv")
 
     @allure.story("综拓团队申请")
     @pytest.mark.dependency(name='test_001')

@@ -23,7 +23,7 @@ class Test_YLDLZ_015():
     GIR = GroupIssueRecheck()
     msg = None
 
-    data = csv_util.data_reader("agent_sales_manage/015_data.csv")
+    data = csv_util.data_reader("agent_sales_manage/test_SALES_YLDLZ_015.csv")
     # data1 = csv_util.data_reader("agent_sales_manage/015_data1.csv")
 
     @allure.story("人员转制-（团队成员出单权赋予）")
