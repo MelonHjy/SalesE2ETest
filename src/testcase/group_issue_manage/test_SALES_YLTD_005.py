@@ -22,8 +22,9 @@ class Test_SALES_YLTD_005():
     msg = None
 
     data = [("32990087", "ui测试-005")]
-
+    # @pytest.mark.skip
     @allure.story("团队注销")
+    @pytest.mark.dependency(name='test_001')
     @pytest.mark.parametrize("pk_deptdoc, group_name", data)
     @pytest.mark.usefixtures("login_jiangsu_p_fun")
     def test_001(self, pk_deptdoc, group_name):
@@ -44,13 +45,15 @@ class Test_SALES_YLTD_005():
         self.DG.close_button_ty()
 
     @allure.story("团队注销-审核")
+    @pytest.mark.dependency(name='test_002', depends=["test_001"])
     @pytest.mark.usefixtures("login_jiangsu_p_fun")
     def test_002(self):
         info("团队审核")
         self.MSG.into_page()
         info("查询团队名称：{}".format(Test_SALES_YLTD_005.msg["group_name"]))
         self.MSG.query(group_name=Test_SALES_YLTD_005.msg["group_name"])
-        self.MSG.select_data(self.MSG.select_data("注销审核"))
+        # self.MSG.query(group_name="32990087")
+        self.MSG.select_data(status_text="注销审核")
         self.MSG.switch_max_window()
         self.DGR.assertEqual("判断页面标题", self.DGR.get_head_text(), "团队注销")
         info("审核")
@@ -63,10 +66,11 @@ class Test_SALES_YLTD_005():
         sleep(2)
         text = self.DGR.get_alert_text()
         info("提示信息：{}".format(text))
-        self.DGR.assertEqual("判断提示信息", text, "{}:团队信息推送成功！")
+        self.DGR.assertEqual("判断提示信息", text, "{}:团队信息推送成功！".format(Test_SALES_YLTD_005.msg["group_name"]))
         self.DGR.choose_ok_on_alert()
 
     @allure.story("团队申报-验证")
+    @pytest.mark.dependency(name='test_003', depends=["test_001", "test_002"])
     @pytest.mark.usefixtures("login_jiangsu_p_fun")
     def test_003(self):
         info("团队出单权管理页")

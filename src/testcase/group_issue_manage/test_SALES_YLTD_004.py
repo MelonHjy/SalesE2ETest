@@ -8,6 +8,8 @@ import pytest
 from config.global_var import sleep
 from src.page.group_issue_manage.main_group_issue_manage import MainGroupIssueManage
 from src.page.group_issue_manage.main_group_issue_page.edit_group import EditGroup
+from src.page.group_issue_manage.main_group_issue_page.group_view import GroupView
+from src.page.integrated_management.main_sales_group import MainSalesGroup
 from src.page.integrated_management.sales_group_recheck_page.edit_group_recheck import EditGroupRecheck
 from src.page.integrated_management.sales_group_recheck_page.valid_group_edit_recheck import ValidGroupEditRecheck
 from src.utils.log import info
@@ -17,17 +19,20 @@ from src.utils.log import info
 class Test_SALES_YLTD_004():
     MGIM = MainGroupIssueManage()
     EG = EditGroup()
+    MSG = MainSalesGroup()
     VGER = ValidGroupEditRecheck()
+    GV = GroupView()
     msg = None
 
-    data = [("32990090", "ui测试-004", "重点行业", "ui测试指定重点行业","2021-01-01")]
+    data = [("32990090", "ui测试-004", "重点行业", "ui测试指定重点行业", "2021-01-01")]
 
     @allure.story("变更团队非重要信息")
     @pytest.mark.dependency(name='test_001')
     @pytest.mark.parametrize("pk_deptdoc, group_name, business_focus, business_desc,build_date", data)
     @pytest.mark.usefixtures("login_jiangsu_p_fun")
-    def test_001(self, pk_deptdoc, group_name, business_focus, business_desc,build_date):
-        Test_SALES_YLTD_004.msg = {"pk_deptdoc": pk_deptdoc, "group_name": group_name}
+    def test_001(self, pk_deptdoc, group_name, business_focus, business_desc, build_date):
+        Test_SALES_YLTD_004.msg = {"pk_deptdoc": pk_deptdoc, "group_name": group_name, "business_focus": business_focus,
+                                   "business_desc": business_desc, "build_date": build_date}
         info("进入团队出单权管理页")
         self.MGIM.into_page()
         info("查询团队名：{}".format(group_name))
@@ -39,12 +44,12 @@ class Test_SALES_YLTD_004():
         info("团队信息变更页")
         self.EG.assertEqual("判断页面标题", self.EG.get_head_text(), "团队修改")
         info("修改->重点发展->建团日期")
-        self.EG.select(self.EG.business_focus,business_focus)
+        self.EG.select(self.EG.business_focus, business_focus)
         self.EG.send_keys(self.EG.get_element_xpath(self.EG.business_desc), business_desc)
-        self.EG.pick_date_old(self.EG.img_Btn,build_date)
+        self.EG.pick_date_old(self.EG.img_Btn, build_date)
         info("保存并提交")
         self.EG.click(self.EG.get_element_xpath(self.EG.submit_btn))
-        self.EG.submit_interaction()
+        self.EG.submit_interaction(self.EG.submit_iframe)
         self.EG.close_button_ty()
 
     @allure.story("变更团队非重要信息-审核")
@@ -55,32 +60,32 @@ class Test_SALES_YLTD_004():
         self.MSG.into_page()
         info("查询团队名称：{}".format(Test_SALES_YLTD_004.msg["group_name"]))
         self.MSG.query(group_name=Test_SALES_YLTD_004.msg["group_name"])
-        self.MSG.select_data(self.MSG.select_data("有效修改审核"))
+        self.MSG.select_data("有效修改审核")
         self.MSG.switch_max_window()
         self.VGER.assertEqual("判断页面标题", self.VGER.get_head_text(), "有效修改团队审核")
         info("审核")
-        self.VGER.click(self.VGER.wait_until_el_xpath(self.VGER.recheck_btn))
+        self.VGER.click(self.VGER.wait_until_el_xpath(self.VGER.submit_btn))
+        self.VGER.submit_interaction(iframe_xpath=self.VGER.submit_iframe, textarea="ui测试-变更团队非重要信息-审核")
+        self.VGER.close_button_ty()
         sleep(2)
-        text = self.VGER.get_alert_text()
-        info("提示信息：{}".format(text))
-        self.VGER.assertEqual("判断提示信息", text, "确定推送至HR系统吗？")
-        self.VGER.choose_ok_on_alert()
-        sleep(2)
-        text = self.SGR.get_alert_text()
-        info("提示信息：{}".format(text))
-        self.VGER.assertEqual("判断提示信息", text, "{}:团队信息推送成功！")
-        self.VGER.choose_ok_on_alert()
 
-    # @allure.story("变更团队重要信息-验证")
-    # @pytest.mark.dependency(name='test_003', depends=['test_001', 'test_002'])
-    # @pytest.mark.usefixtures("login_jiangsu_p_fun")
-    # def test_003(self):
-    #     info("团队出单权管理页")
-    #     self.MGIM.into_page()
-    #     info("查询团队名称：{}".format(Test_SALES_YLTD_004.msg["group_name"]))
-    #     self.MGIM.query(group_name=Test_SALES_YLTD_004.msg["group_name"])
-    #     # self.MGIM.query("ui测试-002")
-    #     text = self.MGIM.get_cell_text_by_head("团队状态", 0)
-    #     self.MGIM.assertEqual("判断团队状态是否有效", text, "有效")
-    #     process = self.MGIM.get_cell_text_by_head("终止流程", 0)
-    #     self.MGIM.assertEqual("判断最后一栏没有终止流程按钮", process, "")
+
+    @allure.story("变更团队非重要信息-验证")
+    @pytest.mark.dependency(name='test_003', depends=['test_001', 'test_002'])
+    @pytest.mark.usefixtures("login_jiangsu_p_fun")
+    def test_003(self):
+        info("团队出单权管理页")
+        self.MGIM.into_page()
+        info("查询团队名称：{}".format(Test_SALES_YLTD_004.msg["group_name"]))
+        self.MGIM.query(group_name=Test_SALES_YLTD_004.msg["group_name"])
+        # self.MGIM.query("ui测试-003")
+        text = self.MGIM.get_cell_text_by_head("团队状态", 0)
+        self.MGIM.assertEqual("判断团队状态是否有效", text, "有效")
+        process = self.MGIM.get_cell_text_by_head("终止流程", 0)
+        self.MGIM.assertEqual("判断最后一栏没有终止流程按钮", process, "")
+        self.MGIM.select_data("团队名称", Test_SALES_YLTD_004.msg["group_name"], "查看")
+        self.MGIM.switch_max_window()
+        self.GV.assertEqual("判断页面标题", self.GV.get_head_text(), "团队查看")
+        # self.GV.assertEqual("验证重点发展", self.GV.get_business_focus(), Test_SALES_YLTD_004.msg["business_focus"])
+        self.GV.assertEqual("验证重点发展描述", self.GV.get_business_desc(), Test_SALES_YLTD_004.msg["business_desc"])
+        self.GV.assertEqual("验证团队组建日期", self.GV.get_build_date().strip(), Test_SALES_YLTD_004.msg["build_date"])
