@@ -10,7 +10,6 @@ from src.page.group_issue_manage.main_group_issue_manage import MainGroupIssueMa
 from src.page.group_issue_manage.main_group_issue_page.group_declare import GroupDeclare
 from src.page.integrated_management.main_sales_group import MainSalesGroup
 from src.page.integrated_management.sales_group_recheck_page.sales_group_recheck import SalesGroupRecheck
-from src.utils.common_util import BusinessType
 from src.utils.except_util import get_screenshot
 from src.utils.log import info
 
