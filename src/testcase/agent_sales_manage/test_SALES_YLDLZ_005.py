@@ -26,7 +26,7 @@ class Test_YLDLZ_005():
     msg = None
 
     # data = [("83258554")]
-    data = csv_util.data_reader("agent_sales_manage/005_data.csv")
+    data = csv_util.data_reader("agent_sales_manage/test_SALES_YLDLZ_005.csv")
 
     @allure.story("有效的经理解聘该人员经理职务")
     @pytest.mark.dependency(name='test_001')

@@ -2,15 +2,28 @@
 # @Time : 2020/6/30 13:57
 # @Author: fyl
 # @File : commonsteps.py
+import sys
 from time import sleep
 
 from config.constants import Constants
 from src.page.base_page import BasePage
+from src.utils import csv_util
 from src.utils.driver_util import set_wait
 from src.utils.log import info
 
 
-class CommonSteps():
+# class base_test():
+#     data = None
+#
+#     @classmethod
+#     def get_data(cls):
+#         a= cls.__class__
+#         b=a.__name__
+#         c=cls.__name__
+#         cls.data = csv_util.data_reader(b)
+#         return cls.data
+
+class CommonSteps:
     # 登录名输入框
     username = "//input[@id='username1']"
     # 密码输入框

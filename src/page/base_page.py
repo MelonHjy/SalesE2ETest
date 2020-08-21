@@ -116,10 +116,11 @@ class BasePage():
         xpath:要双击组件的xpath
         text:要选择的文本值
         '''
-        self.click(self.wait_until_el_xpath(xpath))
         self.double_click(self.wait_until_el_xpath(xpath))
         sleep(2)
         self.switch_to_window()
+        # 取消选择页面的onbeforeunload
+        self.execute_script("window.onbeforeunload = null;")
         option = self.wait_until_el_xpath("//select/option[contains(@value,'{0}')]".format(text.split('--')[0]))
         self.click(option)
         confirm = self.wait_until_el_xpath("//input[@value='确定']")

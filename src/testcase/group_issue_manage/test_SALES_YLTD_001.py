@@ -10,6 +10,7 @@ from src.page.group_issue_manage.main_group_issue_manage import MainGroupIssueMa
 from src.page.group_issue_manage.main_group_issue_page.group_declare import GroupDeclare
 from src.page.integrated_management.main_sales_group import MainSalesGroup
 from src.page.integrated_management.sales_group_recheck_page.sales_group_recheck import SalesGroupRecheck
+from src.utils import csv_util
 from src.utils.except_util import get_screenshot
 from src.utils.log import info
 
@@ -22,9 +23,9 @@ class Test_SALES_YLTD_001():
     SGR = SalesGroupRecheck()
 
     msg = None
-    # msg = {"group_name":"ui测试-001"}
 
-    data = [("ui测试-001", "32000000--中国人民财产保险股份有限公司江苏省分公司", "营销团队", "其它--营销", "2020-09-30")]
+    # data = [("ui测试-001", "32000000--中国人民财产保险股份有限公司江苏省分公司", "营销团队", "其它--营销", "2020-09-30")]
+    data = csv_util.data_reader("group_issue_manage/Test_SALES_YLTD_001.csv")
 
     @allure.story("团队申报")
     @pytest.mark.parametrize("group_name,com_code,group_type,business_name,build_date", data)
@@ -80,11 +81,15 @@ class Test_SALES_YLTD_001():
         self.MSG.assertEqual("判断提示信息", text, "{}:团队信息推送成功！".format(Test_SALES_YLTD_001.msg["group_name"]))
         self.MSG.choose_ok_on_alert()
 
+    @allure.story("模拟Hr推送至销管系统")
+    @pytest.mark.dependency(name='test_send', depends=['test_002'])
+    def test_send(self):
+        self.MGIM.hr_send_create(Test_SALES_YLTD_001.msg["group_name"], '32999999', '1130B810000000UITEST')
+
     @allure.story("团队申报-验证")
     @pytest.mark.usefixtures("login_jiangsu_p_fun")
-    @pytest.mark.dependency(name='test_003', depends=['test_002'])
+    @pytest.mark.dependency(name='test_003', depends=['test_send'])
     def test_003(self):
-        self.MGIM.hr_send_create(Test_SALES_YLTD_001.msg["group_name"], '32999999', '1130B810000000UITEST')
         info("团队出单权管理页")
         self.MGIM.into_page()
         info("查询团队名称：{}".format(Test_SALES_YLTD_001.msg["group_name"]))

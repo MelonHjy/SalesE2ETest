@@ -24,7 +24,7 @@ class Test_YLDLZ_004():
     SQ = SalesQuery()
     user_code = None
 
-    data = csv_util.data_reader("agent_sales_manage/004_data.csv")
+    data = csv_util.data_reader("agent_sales_manage/test_SALES_YLDLZ_004.csv")
 
     @allure.story("无效人员复效并任命为经理")
     @pytest.mark.usefixtures("login_jiangsu_p_fun")

@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-#
 import logging.config, logging
-import os
 import traceback
 
 from config.global_var import g

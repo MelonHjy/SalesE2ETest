@@ -24,7 +24,7 @@ class Test_YLDLZ_002():
     SQ = SalesQuery()
     AMR = AppointmentManagerRecheck()
 
-    data = csv_util.data_reader("agent_sales_manage/002_data.csv")
+    data = csv_util.data_reader("agent_sales_manage/test_SALES_YLDLZ_002.csv")
     msg = None
 
     @allure.story("提交有效团队成员任命为经理")

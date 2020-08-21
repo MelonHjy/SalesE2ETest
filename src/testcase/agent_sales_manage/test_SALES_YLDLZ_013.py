@@ -31,23 +31,7 @@ class Test_YLDLZ_013():
     TP = TablePage()
     msg = None
 
-    # 准备测试数据
-    # url = 'jdbc:informix-sqli://10.10.68.24:10001/salesdbcs:informixserver=test1;NEWLOCALE=zh_CN,zh_CN;NEWCODESET=gb18030,8859-1,819;'
-    # user = 'xsglifx1'
-    # password = 'u^6m.8LA0'
-    # conn = jaydebeapi.connect('com.informix.jdbc.IfxDriver', url, [user, password],
-    #                                os.path.abspath('./config/ifxjdbc.jar'))
-    #
-    #
-    # try:
-    #     cur = conn.cursor()
-    #     sql = "update sauuser set deleteflag='1' where usercode = ? and validstatus= ?"
-    #     result = cur.execute(sql,('83258440','1'))
-    #
-    # finally:
-    #     #g.db.close_connection()
-    #     cur.close();
-    data = csv_util.data_reader("agent_sales_manage/013_data.csv")
+    data = csv_util.data_reader("agent_sales_manage/test_SALES_YLDLZ_013.csv")
 
     @allure.step("代理制销售人员出单权查询并注销")
     @pytest.mark.dependency(name='test_001')

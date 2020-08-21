@@ -30,7 +30,7 @@ class Test_YLDLZ_016():
     #           "RULE20120000000000001--保险经纪公司", "123222333529", "折", "中国工商银行股份有限公司",
     #           "新疆维吾尔自治区_巴音郭楞蒙古自治州", "中国工商银行股份有限公司库尔勒人民东路支行")]
 
-    data = csv_util.data_reader("agent_sales_manage/015_data.csv")
+    data = csv_util.data_reader("agent_sales_manage/test_SALES_YLDLZ_016.csv")
     # data1 = csv_util.data_reader("agent_sales_manage/015_data1.csv")
 
     @allure.story("人员转制-（营销团队经理聘任与解聘）")

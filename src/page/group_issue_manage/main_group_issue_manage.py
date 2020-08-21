@@ -51,6 +51,9 @@ class MainGroupIssueManage(TablePage):
             </requestbody>
         </requestXml>'''
 
+    base_sql = "select msgid,%s,%s,groupName,groupType,comCode,optUser from saugroupbackmsg where groupid in " \
+               "(select groupid from saugroup where groupname='%s') and businessType='%s' and state='1';"
+
     def into_page(self):
         self.to_main_page("经营机构", "销售团队", "团队出单权管理")
 
@@ -74,7 +77,7 @@ class MainGroupIssueManage(TablePage):
         j = 0
         for i in status:
             el = self.wait_until_el_xpath(self.status.format(j))
-            if (el.is_selected() == False and i == "1") or (el.is_selected() and i == "0"):
+            if (not el.is_selected() and i == "1") or (el.is_selected() and i == "0"):
                 self.click(el)
             j = j + 1
         self.click(self.wait_until_el_xpath(self.input_btn.format("查询")))
@@ -100,21 +103,19 @@ class MainGroupIssueManage(TablePage):
         pk_deptdoc:8位数字  32999999
         group_code：CHAR(20) 1130B810000000UITEST
         '''
-        sql = "select msgid,'%s','%s',groupName,groupType,comCode,optUser from saugroupbackmsg where groupid in " \
-              "(select groupid from saugroup where groupname='%s' and businessType='%s' and state='1');" % (
-                  pk_deptdoc, group_code, group_name, BusinessType.create.value)
+        sql = self.base_sql % ("'" + pk_deptdoc + "'", "'" + group_code + "'", group_name, BusinessType.create.value)
+        self.__hr_send_msg(sql, group_name, self.xml.format(BusinessType.create.value))
+
+    def hr_send_recovery(self, group_name):
+        sql = self.base_sql % ("pk_deptdoc", "groupCode", group_name, BusinessType.create.value)
         self.__hr_send_msg(sql, group_name, self.xml.format(BusinessType.create.value))
 
     def hr_send_change(self, group_name):
-        sql = "select msgid,pk_deptdoc,groupCode,groupName,groupType,comCode,optUser from saugroupbackmsg where groupid in " \
-              "(select groupid from saugroup where groupname='%s' and businessType='%s' and state='1');" % (
-                  group_name, BusinessType.change.value)
+        sql = self.base_sql % ("pk_deptdoc", "groupCode", group_name, BusinessType.change.value)
         self.__hr_send_msg(sql, group_name, self.xml.format(BusinessType.change.value))
 
     def hr_send_logout(self, group_name):
-        sql = "select msgid,pk_deptdoc,groupCode,groupName,groupType,comCode,optUser from saugroupbackmsg where groupid in " \
-              "(select groupid from saugroup where groupname='%s' and businessType='%s' and state='1');" % (
-                  group_name, BusinessType.logout.value)
+        sql = self.base_sql % ("pk_deptdoc", "groupCode", group_name, BusinessType.logout.value)
         self.__hr_send_msg(sql, group_name, self.xml.format(BusinessType.logout.value))
 
     def __hr_send_msg(self, sql, group_name, xml):
@@ -122,13 +123,16 @@ class MainGroupIssueManage(TablePage):
         group_name:团队名称
         business_type：业务类型
         '''
+        # 查询团队反馈表指定团队、指定业务类型、状态state为1的数据
         sql_data = g.db.select(sql)
         if len(sql_data) < 1:
             info("团队反馈表没有此团队：%s" % group_name)
             return
+        # 获取hr推送销管的url
         url = g.config['DEFAULT']['url'].replace('main.jsp', 'HRMsgService')
-        data = xml % sql_data[0].encode('GBK')
-        res = requests.post(url=url, data=data)
+        # 把查询出的数据拼接到xml报文
+        data = xml % sql_data[0]
+        res = requests.post(url=url, data=data.encode('GBK'))
         print(res.text)
         response_head = Etree.fromstring(res.text).find('responseHead')
         response_code = response_head.find('response_code').text
