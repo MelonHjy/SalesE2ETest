@@ -24,7 +24,7 @@ class DBUtils:
         jar_path = g.root_path + '/config/ifxjdbc.jar'
         self.conn = jaydebeapi.connect('com.informix.jdbc.IfxDriver', url, [user, password], jar_path)
         info('连接conn id：%s' % (id(self.conn)))
-        self.execute("SET LOCK MODE TO WAIT 18")
+        self.execute("SET LOCK MODE TO WAIT 30")
 
     def close_connection(self):
         try:

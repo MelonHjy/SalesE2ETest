@@ -115,7 +115,6 @@ class BasePage():
         xpath:要双击组件的xpath
         text:要选择的文本值
         '''
-        self.click(self.wait_until_el_xpath(xpath))
         self.double_click(self.wait_until_el_xpath(xpath))
         sleep(2)
         self.switch_to_window()
