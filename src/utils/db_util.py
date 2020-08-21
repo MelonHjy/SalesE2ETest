@@ -9,7 +9,6 @@
 @Contact    :   huangjiayi@sinosoft.com.cn
 @Desc       :   None
 '''
-import os
 import random
 import jaydebeapi
 
@@ -19,13 +18,17 @@ from src.utils.log import info
 
 class DBUtils:
     __limit = 100
+    test_name = None
 
     def __init__(self, url, user, password):
         jar_path = g.root_path + '/config/ifxjdbc.jar'
         self.conn = jaydebeapi.connect('com.informix.jdbc.IfxDriver', url, [user, password], jar_path)
+        info('连接conn id：%s' % (id(self.conn)))
+        self.execute("SET LOCK MODE TO WAIT 18")
 
     def close_connection(self):
         try:
+            info('%s关闭conn id：%s' % (self.test_name, id(self.conn)))
             self.conn.close()
         except BaseException as e:
             info('关闭连接错误信息:%s' % e)
@@ -62,6 +65,7 @@ class DBUtils:
         :return: 影响的行数
         '''
         try:
+            info('%s执行语句conn id：%s' % (self.test_name, id(self.conn)))
             cur = self.conn.cursor()
             if args:
                 cur.execute(sql, args)
@@ -81,14 +85,14 @@ if __name__ == '__main__':
     password = 'u^6m.8LA0'
     db = DBUtils(url, user, password)
     try:
-#         # 增删改示例
-#         sql = '''
-# delete from saucontract where usercode = '83258551';
-# /*插入合同信息*/
-# insert into saucontract (agentarea, agentenddate, agentid, agentno, agentstartdate, batchno, checkstatus, comfeedate, contractno, contractaddress, contractcount, contractenddate, contractstartdate, creator, credentialenddate, credentialid, credentialno, credentstartdate, effecttime, effectivedate, failuretime, flag, guarantoraddress, guarantorcardnum, guarantorname, guarantorphone, inputtime, lastcontractid, remark, ruleno, updatetime, updator, usercode, userid, validstatus, ucontractid) values ('', '', 1000000002071305, '123456', '2019-01-01', '', 'a', 0, '320000110200146', '', 1, '2022-08-03', '2020-08-06', 'A320000135', '', 1000000002071436, '654321', '2019-01-01', '', '', '', '', '', '', '', '', '2020-08-06 09:44:30', '', '', 'RULE20120000000000001', '', '', '83258551', 1000000002297783, '1', 1000000001904324);
-# '''
-#         data = db.execute(sql)
-#         print(data)
+        #         # 增删改示例
+        #         sql = '''
+        # delete from saucontract where usercode = '83258551';
+        # /*插入合同信息*/
+        # insert into saucontract (agentarea, agentenddate, agentid, agentno, agentstartdate, batchno, checkstatus, comfeedate, contractno, contractaddress, contractcount, contractenddate, contractstartdate, creator, credentialenddate, credentialid, credentialno, credentstartdate, effecttime, effectivedate, failuretime, flag, guarantoraddress, guarantorcardnum, guarantorname, guarantorphone, inputtime, lastcontractid, remark, ruleno, updatetime, updator, usercode, userid, validstatus, ucontractid) values ('', '', 1000000002071305, '123456', '2019-01-01', '', 'a', 0, '320000110200146', '', 1, '2022-08-03', '2020-08-06', 'A320000135', '', 1000000002071436, '654321', '2019-01-01', '', '', '', '', '', '', '', '', '2020-08-06 09:44:30', '', '', 'RULE20120000000000001', '', '', '83258551', 1000000002297783, '1', 1000000001904324);
+        # '''
+        #         data = db.execute(sql)
+        #         print(data)
 
         # 查示例
         sql2 = "select msgid,groupCode,groupName,groupType,comCode,optUser from saugroupbackmsg where groupid in (select groupid from saugroup where groupname='ui测试-001');"
