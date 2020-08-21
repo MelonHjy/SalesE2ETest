@@ -5,7 +5,6 @@ from selenium import webdriver
 from functools import wraps
 
 from selenium.webdriver.support.wait import WebDriverWait
-from config.global_var import *
 from src.utils.log import *
 import configparser
 import win32api

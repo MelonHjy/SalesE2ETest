@@ -2,6 +2,8 @@
 # @Time : 2020/8/14 1:47
 # @Author: fyl
 # @File : test_SALES_YLTD_003.py    团队出单权管理>>团队信息变更（变更团队重要信息）   待处理
+import sys
+
 import allure
 import pytest
 
@@ -10,9 +12,9 @@ from src.page.group_issue_manage.main_group_issue_manage import MainGroupIssueMa
 from src.page.group_issue_manage.main_group_issue_page.edit_group import EditGroup
 from src.page.group_issue_manage.main_group_issue_page.group_view import GroupView
 from src.page.integrated_management.main_sales_group import MainSalesGroup
-from src.page.integrated_management.sales_group_recheck_page.edit_group_recheck import EditGroupRecheck
 from src.page.integrated_management.sales_group_recheck_page.valid_group_edit_recheck import ValidGroupEditRecheck
 from src.utils import csv_util
+
 from src.utils.log import info
 
 
@@ -27,6 +29,9 @@ class Test_SALES_YLTD_003():
 
     # data = [("32990089", "ui测试-003", "直销团队", "其它", "重点客户", "ui测试指定客户")]
     data = csv_util.data_reader("group_issue_manage/Test_SALES_YLTD_003.csv")
+
+    # def get_data(self):
+    #     return super().get_data()
 
     @allure.story("变更团队重要信息")
     @pytest.mark.dependency(name='test_001')
@@ -104,7 +109,7 @@ class Test_SALES_YLTD_003():
         self.MGIM.select_data("团队名称", Test_SALES_YLTD_003.msg["group_name"], "查看")
         self.MGIM.switch_max_window()
         self.GV.assertEqual("判断页面标题", self.GV.get_head_text(), "团队查看")
-        self.GV.assertEqual("验证团队属性", self.GV.get_group_type(),Test_SALES_YLTD_003.msg["group_type"])
-        self.GV.assertEqual("验证主营业务", self.GV.get_business_name(),Test_SALES_YLTD_003.msg["business_name"])
+        self.GV.assertEqual("验证团队属性", self.GV.get_group_type(), Test_SALES_YLTD_003.msg["group_type"])
+        self.GV.assertEqual("验证主营业务", self.GV.get_business_name(), Test_SALES_YLTD_003.msg["business_name"])
         # self.GV.assertEqual("验证重点发展", self.GV.get_business_focus(),Test_SALES_YLTD_003.msg["business_focus"])
-        self.GV.assertEqual("验证重点发展描述", self.GV.get_business_desc(),Test_SALES_YLTD_003.msg["business_desc"])
+        self.GV.assertEqual("验证重点发展描述", self.GV.get_business_desc(), Test_SALES_YLTD_003.msg["business_desc"])

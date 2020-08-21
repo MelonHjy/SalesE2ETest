@@ -3,6 +3,7 @@
 # @Author: fyl
 # @File : conftest.py
 import os
+import re
 
 import allure
 import pytest
@@ -10,6 +11,8 @@ import win32api
 
 from config.global_var import g
 from src.page.base_page import info
+from src.utils.common_util import DecoratorType
+from src.utils.csv_util import data_reader
 from src.utils.db_util import DBUtils
 from src.utils.driver_util import get_config
 
@@ -52,17 +55,26 @@ def restore_data():
     test_dir = current[2]
     test_name = current[3].split('.')[0]
     sql_path = g.root_path + '/data/' + test_dir + '/' + test_name + '.sql'
-    # csv_path = g.root_path + '/data/' + test_dir + '/' + test_name + '.csv'
-    # data = data_reader(csv_path, DecoratorType.fixture)
+    csv_path = test_dir + '/' + test_name + '.csv'
+    g.db.test_name = test_name
+
     if os.path.exists(sql_path):
-        with open(sql_path, 'r', encoding='utf-8') as f:
-            sql = f.read()
-            restore_log('CURRENT_TEST:%s/%s 正在准备数据' % (test_dir, test_name))
-            try:
-                data = g.db.execute(sql)
-                restore_log('CURRENT_TEST:%s/%s 准备数据成功' % (test_dir, test_name))
-            except Exception as e:
-                restore_log('CURRENT_TEST:%s/%s 准备数据失败。详细信息:%s' % (test_dir, test_name, e))
+        restore_log('CURRENT_TEST:%s/%s 正在准备数据' % (test_dir, test_name))
+        sql = get_sql(csv_path, sql_path)
+        try:
+            data = g.db.execute(sql)
+            restore_log('CURRENT_TEST:%s/%s 准备数据成功' % (test_dir, test_name))
+        except Exception as e:
+            restore_log('CURRENT_TEST:%s/%s 准备数据失败。详细信息:%s' % (test_dir, test_name, e))
+        # success = True
+        # for sql in get_sql(csv_path, sql_path):
+        #     try:
+        #         data = g.db.execute(sql)
+        #     except Exception as e:
+        #         restore_log('CURRENT_TEST:%s/%s 准备数据失败。详细信息:%s' % (test_dir, test_name, e))
+        #         success = False
+        # if success:
+        #     restore_log('CURRENT_TEST:%s/%s 准备数据成功' % (test_dir, test_name))
     else:
         restore_log('CURRENT_TEST:%s/%s 没有准备数据sql脚本文件' % (test_dir, test_name))
     yield
@@ -71,3 +83,24 @@ def restore_data():
 @allure.step("{log}")
 def restore_log(log):
     info(log)
+
+
+def get_sql(csv_path, sql_path):
+    datas = data_reader(csv_path, DecoratorType.fixture)
+    sql = ""
+    with open(sql_path, 'r', encoding='utf-8') as f:
+        for line in f:
+            if line.__contains__('{'):
+                params = re.findall(r"{(.*?)}", line)
+                for data in datas:
+                    format_data = ""
+                    for param in params:
+                        format_data += "{0}='{1}',".format(param, data[param])
+                    format_data = format_data[:-1]
+                    sql += eval("line.format({})".format(format_data))
+                    # yield eval("sql.format({})".format(format_data))
+            # elif not sql.startswith('--') and sql.strip():  # 如果此行不以--开头，或不为空行
+            #     yield sql
+            else:
+                sql += line
+    return sql
