@@ -87,7 +87,7 @@ class Test_SALES_YLZJ_004():
         # 关闭
         self.NAO.close_button_ty()
 
-    @pytest.mark.skip
+    # @pytest.mark.skip
     @allure.story("中介机构新增-审批")
     @pytest.mark.usefixtures("login_jiangsu_p")
     @pytest.mark.dependency(name='test_002', depend='test_001')
@@ -114,7 +114,7 @@ class Test_SALES_YLZJ_004():
         self.NACA.assertResult("验证提交成功", "保存成功!" in text)
         self.NACA.close_button_ty()
 
-    @pytest.mark.skip
+    # @pytest.mark.skip
     @allure.story("中介机构新增-验证")
     @pytest.mark.usefixtures("login_jiangsu_p")
     @pytest.mark.dependency(name='test_003', depend='test_001')
