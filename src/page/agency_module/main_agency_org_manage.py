@@ -13,6 +13,7 @@ class MainAgencyOrgManage(TablePage):
     contractType = "//*[@id='condition.contractType']"
     status = "//input[@id='state{}']"  # 任务状态
     input_btn = "//input[@value='{}']"  # 按钮
+    contract_no = "//*[@id='condition.contractNo']"
     # 部门类型
     apartment_type = "//*[contains(text(), '部门类型')]/../td[2]/div[contains(@style,'DISPLAY: inline')]/div[contains(@style,'DISPLAY: inline')]/input"
     query_data = "//*[@id='yui-dt-table0']/tbody[1]/tr/td"
@@ -27,7 +28,7 @@ class MainAgencyOrgManage(TablePage):
         sleep(2)
 
     @allure.step("查询")
-    def query(self, contractType=None, apartment_type='0', status="100"):
+    def query(self,contract_no, contractType=None, apartment_type='0', status="100"):
         """
         contractType:合同/协议类型
         status：任务提交：0->未选定）,1->被选定，未提交，已提交，被打回
@@ -35,6 +36,8 @@ class MainAgencyOrgManage(TablePage):
         self.select(self.contractType, contractType)
         if apartment_type == '1':
             self.click(self.wait_until_el_xpath(self.apartment_type))
+        if contract_no:
+            self.send_keys(self.wait_until_el_xpath(self.contract_no),contract_no)
         j = 0
         for i in status:
             if j == 2:

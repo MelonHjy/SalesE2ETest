@@ -45,7 +45,7 @@ class Test_SALES_YLZJ_004():
         "his_payee_name,his_account_no,sa_Account_bankName,bank_area,bank_Name", data)
     def test_001(self, channel, contract_type, com_code, agent_name, contract_start, contract_end, sa_agent_code,
                  sa_comCode, fee_rule_No, his_payee_name, his_account_no, sa_Account_bankName, bank_area, bank_Name):
-        Test_SALES_YLZJ_004.msg = {"channel": channel, }
+        Test_SALES_YLZJ_004.msg = {"channel": channel,"contract_type":contract_type }
         info("中介机构新增和变更申报页")
         self.MAOM.into_page(channel)
         info("中介机构新增页")
@@ -92,6 +92,7 @@ class Test_SALES_YLZJ_004():
     @pytest.mark.usefixtures("login_jiangsu_p")
     @pytest.mark.dependency(name='test_002', depend='test_001')
     def test_002(self):
+        self.MAOA.switch_to_window()
         info("中介机构审批页")
         self.MAOA.into_page(Test_SALES_YLZJ_004.msg["channel"])
         info("查询合同号：{}".format(Test_SALES_YLZJ_004.msg["contract_no"]))
@@ -116,12 +117,13 @@ class Test_SALES_YLZJ_004():
     @pytest.mark.skip
     @allure.story("中介机构新增-验证")
     @pytest.mark.usefixtures("login_jiangsu_p")
-    # @pytest.mark.dependency(name='test_003', depend='test_001')
+    @pytest.mark.dependency(name='test_003', depend='test_001')
     def test_003(self):
+        self.MAOM.switch_to_window()
         info("中介机构审批页")
         self.MAOM.into_page(Test_SALES_YLZJ_004.msg["channel"])
         info("查询合同号：{}".format(Test_SALES_YLZJ_004.msg["contract_no"]))
-        self.MAOA.query(Test_SALES_YLZJ_004.msg["contract_no"])
+        self.MAOM.query(Test_SALES_YLZJ_004.msg["contract_no"],Test_SALES_YLZJ_004.msg["contract_type"],"1")
         # self.MAOM.into_page("个代渠道")
         # info("查询合同号：{}".format("32993J220082101"))
         # self.MAOM.query("32993J220082101")
