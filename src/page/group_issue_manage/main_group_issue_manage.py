@@ -14,6 +14,7 @@ from src.utils.log import info
 
 
 class MainGroupIssueManage(TablePage):
+    case = "//*[@class='case']"
     input_btn = "//input[@value='{}']"  # 按钮
     group_name = "//*[@id='groupName']"  # 团队名称
     status = "//input[@id='state1{}']"  # 任务状态

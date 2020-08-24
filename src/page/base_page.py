@@ -63,7 +63,8 @@ class BasePage():
         hidden_script = script.format(self.frame_id, menu_list_id, 'hidden')
         self.execute_script(visible_script)
         # self.execute_script("arguments[0].style.visibility='visible';", self.wait_until_el_xpath(_menu_list))
-        self.click(self.wait_until_el_xpath(self.zk_menu.format(menu_list_id, zk_menu)))
+        if not self.is_element_exist(self.menu.format(menu)):
+            self.click(self.wait_until_el_xpath(self.zk_menu.format(menu_list_id, zk_menu)))
         sleep(2)
         self.execute_script(visible_script)
         # self.execute_script("arguments[0].style.visibility='visible';", self.wait_until_el_xpath(_menu_list))
