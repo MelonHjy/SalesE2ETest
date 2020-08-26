@@ -61,6 +61,8 @@ class NewAgencyOrg(ProcessPage):
         sleep(2)
         self.switch_to_window()
 
-    def send_keys_bank(self, xpath, param):
-        self.send_keys(self.get_element_xpath(xpath), param)
+    def send_keys_(self, xpath, param):
+        el = self.get_element_xpath(xpath)
+        self.execute_script("arguments[0].focus();", el)
+        self.send_keys(el, param)
         sleep(2)

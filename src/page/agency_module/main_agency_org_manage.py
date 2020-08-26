@@ -28,7 +28,7 @@ class MainAgencyOrgManage(TablePage):
         sleep(2)
 
     @allure.step("查询")
-    def query(self,contract_no, contractType=None, apartment_type='0', status="100"):
+    def query(self, contract_no, contractType=None, apartment_type='0', status="100"):
         """
         contractType:合同/协议类型
         status：任务提交：0->未选定）,1->被选定，未提交，已提交，被打回
@@ -37,7 +37,7 @@ class MainAgencyOrgManage(TablePage):
         if apartment_type == '1':
             self.click(self.wait_until_el_xpath(self.apartment_type))
         if contract_no:
-            self.send_keys(self.wait_until_el_xpath(self.contract_no),contract_no)
+            self.send_keys(self.wait_until_el_xpath(self.contract_no), contract_no)
         j = 0
         for i in status:
             if j == 2:
@@ -63,3 +63,17 @@ class MainAgencyOrgManage(TablePage):
     def get_head_text(self):
         return self.get_text(
             self.wait_until_el_xpath(self.case))
+
+    def is_selected(self, status):
+        return self.get_element_xpath(self.status.format(status)).is_selected()
+
+    def select_data(self, column_name, column_value, row_ope):
+        """
+        根据指定列中指定的值获取该行数据，并对该行数据进行操作
+        column_name：列名
+        column_value：该列所指定的值
+        row_ope：对该行进行点击的列名
+        """
+        status_list = self.get_cell_text_by_head(column_name)
+        index = status_list.index(column_value)
+        self.click(self.get_a_by_head(index, row_ope))
