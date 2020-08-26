@@ -1,7 +1,7 @@
 #  -*- coding:utf-8 -*-
 # @Time : 2020/8/24 9:48
 # @Author: fyl
-# @File : test_SALES_YLZJ_002.py    中介机构>>中介机构新增和变更申报>>重置
+# @File : test_SALES_YLZJ_003.py    中介机构>>中介机构新增和变更申报>>重置
 import allure
 import pytest
 
@@ -10,7 +10,7 @@ from src.utils.log import info
 
 
 @allure.feature("中介机构>>中介机构新增和变更申报>>重置")
-class Test_SALES_YLZJ_002():
+class Test_SALES_YLZJ_003():
     MAOM = MainAgencyOrgManage()
 
     # data = [("个代渠道", "交叉销售委托合同", "32993J220082100"), ("经代渠道", "保险专业代理委托合同", "1"), ("银保渠道", "保险专业代理委托合同", "1"),
@@ -24,5 +24,4 @@ class Test_SALES_YLZJ_002():
         info("中介机构新增和变更申报页:{}".format(channel))
         self.MAOM.into_page(channel)
         info("查询")
-        self.MAOM.query(contract_no,contractType, "1")
-        
+        self.MAOM.query(contract_no, contractType, "1")

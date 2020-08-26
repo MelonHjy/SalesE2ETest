@@ -51,6 +51,7 @@ class DBUtils:
         :param limit: 只取limit前的数据，默认为__limit
         :return: 查询的结果
         '''
+        info('%s执行select语句conn id：%s' % (self.test_name, id(self.conn)))
         cur = self.conn.cursor()
         cur.execute(sql, args)
         results = cur.fetchmany(limit) if limit else cur.fetchall()  # fetchmany()获取最多指定数量的记录
@@ -65,7 +66,7 @@ class DBUtils:
         :return: 影响的行数
         '''
         try:
-            info('%s执行语句conn id：%s' % (self.test_name, id(self.conn)))
+            info('%s执行execute语句conn id：%s' % (self.test_name, id(self.conn)))
             cur = self.conn.cursor()
             if args:
                 cur.execute(sql, args)

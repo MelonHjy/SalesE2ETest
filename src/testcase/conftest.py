@@ -38,6 +38,9 @@ def db_conn():
         set_windows_resolution(1080, 1920)
     g.db.close_connection()
     info("关闭数据库连接")
+    # task_kill("IEDriverServer.exe")
+    # task_kill("iexplore.exe")
+    # info("关闭ie相关进程")
 
 
 def set_windows_resolution(height, width):
@@ -47,6 +50,11 @@ def set_windows_resolution(height, width):
     dm.BitsPerPel = 32
     dm.DisplayFixedOutput = 0
     win32api.ChangeDisplaySettings(dm, 0)
+
+
+def task_kill(name):
+    if os.system("tasklist |findstr {}".format(name)) == 0:
+        os.system("taskkill /f /im {}".format(name))
 
 
 @pytest.fixture(scope='class', autouse=True)
@@ -86,21 +94,24 @@ def restore_log(log):
 
 
 def get_sql(csv_path, sql_path):
-    datas = data_reader(csv_path, DecoratorType.fixture)
     sql = ""
     with open(sql_path, 'r', encoding='utf-8') as f:
-        for line in f:
-            if line.__contains__('{'):
-                params = re.findall(r"{(.*?)}", line)
-                for data in datas:
-                    format_data = ""
-                    for param in params:
-                        format_data += "{0}='{1}',".format(param, data[param])
-                    format_data = format_data[:-1]
-                    sql += eval("line.format({})".format(format_data))
-                    # yield eval("sql.format({})".format(format_data))
-            # elif not sql.startswith('--') and sql.strip():  # 如果此行不以--开头，或不为空行
-            #     yield sql
-            else:
-                sql += line
+        if os.path.exists(csv_path):
+            datas = data_reader(csv_path, DecoratorType.fixture)
+            for line in f:
+                if line.__contains__('{'):
+                    params = re.findall(r"{(.*?)}", line)
+                    for data in datas:
+                        format_data = ""
+                        for param in params:
+                            format_data += "{0}='{1}',".format(param, data[param])
+                        format_data = format_data[:-1]
+                        sql += eval("line.format({})".format(format_data))
+                        # yield eval("sql.format({})".format(format_data))
+                # elif not sql.startswith('--') and sql.strip():  # 如果此行不以--开头，或不为空行
+                #     yield sql
+                else:
+                    sql += line
+        else:
+            sql = f.read()
     return sql
