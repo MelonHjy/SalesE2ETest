@@ -1,7 +1,6 @@
 # -*- encoding: utf-8 -*-
 import codecs
 import allure
-from jpype import java
 
 from config.global_var import *
 from functools import wraps
