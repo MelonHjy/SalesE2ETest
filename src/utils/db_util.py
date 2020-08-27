@@ -10,11 +10,13 @@
 @Desc       :   None
 '''
 import random
+from functools import wraps
+
 import jaydebeapi
+from jpype import java
 
 from config.global_var import g
 from src.utils.driver_util import get_config
-from src.utils.except_util import catch_socket_exception
 from src.utils.log import info
 
 
@@ -27,6 +29,21 @@ def get_conn():
     password = g.config[db]['password']
     info("获取数据库连接")
     g.db = DBUtils(url, user, password)
+
+
+def catch_socket_exception(func):
+    @wraps(func)
+    def wrapper(*args, **kwargs):
+        try:
+            return func(*args, **kwargs)
+        except java.net.SocketException as e:
+            info("出现SocketException：%s，重新进行连接" % e)
+            # SocketException 关闭连接，重新获取连接
+            g.db.close_connection()
+            get_conn()
+            return func(*args, **kwargs)
+
+    return wrapper
 
 
 class DBUtils:
@@ -45,7 +62,6 @@ class DBUtils:
             self.conn.close()
         except BaseException as e:
             info('关闭连接错误信息:%s' % e)
-            # raise
 
     @staticmethod
     def random_choice(results, num=1):

@@ -13,8 +13,7 @@ from config.global_var import g
 from src.page.base_page import info
 from src.utils.common_util import DecoratorType
 from src.utils.csv_util import data_reader
-from src.utils.db_util import DBUtils, get_conn
-from src.utils.driver_util import get_config
+from src.utils.db_util import get_conn
 
 
 @pytest.fixture(scope='session', autouse=True)

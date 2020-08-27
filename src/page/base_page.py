@@ -15,7 +15,7 @@ from src.utils.high_light_element import high_light
 from src.utils.log import *
 
 
-class BasePage():
+class BasePage:
     # ------------------------  菜单 ------------------------#
     frame_id = 'main'
     iframe_page = "page"
