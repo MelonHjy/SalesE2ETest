@@ -19,9 +19,9 @@ class Test_SALES_YLZJ_005():
     ACM = AgencyContractModify()
     MAOA = MainAgencyOrgApproval()  # 审批
     ACMA = AgencyContractModifyApproval()
-    msg = None
 
     data = csv_util.data_reader("agency_org_manage/Test_SALES_YLZJ_005.csv")
+
     # data = [("个代渠道", "交叉销售委托合同", "32993J220082501"), ("经代渠道", "保险专业代理委托合同", "329921120082500"), ("银保渠道", "保险专业代理委托合同(外部)", "329930020082601"),
     #         ("车商渠道", "保险兼业代理委托合同(外部)", "329930020082502")]
     # data = [("车商渠道", "保险兼业代理委托合同(外部)", "329930020082502", "2020-12-30", "中国工商银行股份有限公司", "新疆维吾尔自治区_巴音郭楞蒙古自治州",
@@ -56,18 +56,15 @@ class Test_SALES_YLZJ_005():
         self.ACM.submit_interaction(self.ACM.submit_iframe)
         text = self.ACM.get_text(self.ACM.get_element_xpath(self.ACM.save_success))
         self.ACM.assertResult("验证提交成功", "保存成功!" in text)
-        Test_SALES_YLZJ_005.msg = {"channel": channel, "contract_no": text.split("：")[1]}
+        contract_no = text.split("：")[1]
         # 关闭
         self.ACM.close_button_ty()
         info("中介机构修改-审批")
         self.MAOA.switch_to_window()
         info("中介机构审批页")
-        self.MAOA.into_page(Test_SALES_YLZJ_005.msg["channel"])
-        info("查询合同号：{}".format(Test_SALES_YLZJ_005.msg["contract_no"]))
-        self.MAOA.query(Test_SALES_YLZJ_005.msg["contract_no"])
-        # self.MAOM.into_page("个代渠道")
-        # info("查询合同号：{}".format("32013J220082000"))
-        # self.MAOM.query("32013J220082000")
+        self.MAOA.into_page(channel)
+        info("查询合同号：{}".format(contract_no))
+        self.MAOA.query(contract_no)
         info("选择数据")
         self.MAOA.select_data("修改审批")
         info("中介合同修改审批页")
@@ -77,7 +74,7 @@ class Test_SALES_YLZJ_005():
         self.ACMA.click(self.ACMA.get_element_xpath(self.ACMA.pass_check))
         self.ACMA.choose_ok_on_alert()
         info("提交任务")
-        self.ACMA.submit_interaction("中介机构修改-ui测试")
+        self.ACMA.submit_interaction(self.ACMA.submit_iframe, "中介机构修改-ui测试")
         text = self.ACMA.get_text(self.ACMA.get_element_xpath(self.ACMA.save_success))
         self.ACMA.assertResult("验证提交成功", "保存成功!" in text)
         self.ACMA.close_button_ty()

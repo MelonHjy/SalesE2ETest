@@ -299,13 +299,14 @@ class BasePage:
         el.clear()
 
     @catch_except
-    def send_keys(self, el, value):
+    def send_keys(self, el, value, clear=True):
         """
         向el元素填写文本
         el:元素
         value：文本值
         """
-        el.clear()
+        if clear:
+            el.clear()
         el.send_keys(value)
 
     @set_wait(1)

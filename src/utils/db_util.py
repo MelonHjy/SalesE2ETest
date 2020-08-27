@@ -10,6 +10,7 @@
 @Desc       :   None
 '''
 import random
+import traceback
 from functools import wraps
 
 import jaydebeapi
@@ -37,7 +38,7 @@ def catch_socket_exception(func):
         try:
             return func(*args, **kwargs)
         except java.net.SocketException as e:
-            info("出现SocketException：%s，重新进行连接" % e)
+            info("出现SocketException：%s，重新进行连接" % traceback.format_exc())
             # SocketException 关闭连接，重新获取连接
             g.db.close_connection()
             get_conn()

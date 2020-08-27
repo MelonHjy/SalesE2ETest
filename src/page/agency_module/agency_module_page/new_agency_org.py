@@ -17,11 +17,12 @@ class NewAgencyOrg(ProcessPage):
     add_agent_contract_button = "//*[@id='addAgentContractButton']"  # 增加按钮
     sa_agent_code = "//*[@id='saAAgentContractList[{}].agentCode']"  # 渠道码
     sa_comCode = "//*[@id='saAAgentContractList[{}].comCode']"  # 我司专营机构/团队
-    fee_rule_No = "//*[@id='feeruleNo']/../input[1]"  # 配置单号
+    fee_rule_No = "//input[@name='saAAgentContractList[0].ruleNo']"
+                  # "//*[@id='feeruleNo']/../input[1]"  # 配置单号
     add_account = "//*[@id='addAccount[{}]']"  # 编辑银行账号
     # -----银行账号编辑-----#
-    his_payee_name = "//*[@id='hispayeename']"  # 收款人姓名
-    his_account_no = "//*[@id='hisaccountno']"  # 收款人账号/卡号
+    his_payee_name = "//*[@id='saDAccount.payeename']"  # 收款人姓名
+    his_account_no = "//*[@id='saDAccount.accountno']"  # 收款人账号/卡号
     sa_Account_bankName = "//*[@id='saDAccount.bankName']"  # 银行代码
     bank_area = "//*[@id='saDAccount.bankareaname']"  # 银行区域
     bank_Name = "//*[@id='bankName']"  # 联行号
