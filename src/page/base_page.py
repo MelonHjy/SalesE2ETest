@@ -2,6 +2,7 @@
 import allure
 import pytest
 from selenium import webdriver
+from selenium.common.exceptions import NoAlertPresentException
 from selenium.webdriver import ActionChains
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
@@ -21,6 +22,7 @@ class BasePage:
     iframe_page = "page"
     module_menu = "//a[contains(text(), '{}')]/.."  # 模块
     zk_menu = "//div[@id='{0}']/div/div/div/div/table/tbody/tr/td[2]/a[text()='{1}']/../../td[1]"  # 展开菜单
+
     # menu = "//a[text()='{}']"  # 选择菜单名
     menu = "//div[@id='{0}']/div/div/div/div/div/div/table/tbody/tr/td[3]/a[text()='{1}']"
     menu_list = "//*[@id='{}']"
@@ -64,11 +66,13 @@ class BasePage:
         hidden_script = script.format(self.frame_id, menu_list_id, 'hidden')
         self.execute_script(visible_script)
         # self.execute_script("arguments[0].style.visibility='visible';", self.wait_until_el_xpath(_menu_list))
+
         if not self.is_element_exist(self.menu.format(menu_list_id, menu)):
             self.click(self.wait_until_el_xpath(self.zk_menu.format(menu_list_id, zk_menu)))
         sleep(2)
         self.execute_script(visible_script)
         # self.execute_script("arguments[0].style.visibility='visible';", self.wait_until_el_xpath(_menu_list))
+
         self.click(self.wait_until_el_xpath(self.menu.format(menu_list_id, menu)))
         self.execute_script(hidden_script)
         # self.execute_script("arguments[0].style.visibility='hidden';", self.wait_until_el_xpath(_menu_list))
@@ -395,6 +399,10 @@ class BasePage:
         g.driver.switch_to.frame(id)
 
     @catch_except
+    def switch_parent_frame(self):
+        g.driver.switch_to.parent_frame()
+
+    @catch_except
     def maximize_window(self):
         """
         窗口最大化
@@ -449,6 +457,17 @@ class BasePage:
         切换指定句柄的窗口
         """
         g.driver.switch_to.window(handle)
+
+    def alert_is_present(self):
+        """
+        判断是否存在提示框
+        """
+        try:
+            sleep(1)
+            alert = g.driver.switch_to.alert
+            return True
+        except NoAlertPresentException:
+            return False
 
     # ------------------------  assert api ------------------------#
 

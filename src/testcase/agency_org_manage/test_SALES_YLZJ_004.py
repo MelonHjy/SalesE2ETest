@@ -1,6 +1,7 @@
 #  -*- coding:utf-8 -*-
 # @Time : 2020/8/20 10:30
 # @Author: fyl
+
 # @File : test_SALES_YLZJ_004.py    中介机构>>中介机构新增和变更申报>>新增
 import allure
 import pytest
@@ -46,8 +47,10 @@ class Test_SALES_YLZJ_004():
     @allure.story("中介机构新增")
     @pytest.mark.usefixtures("login_jiangsu_p")
     @pytest.mark.dependency(name='test_001')
+
     def test_001(self, channel, contract_type, com_code, agent_name, contract_start, contract_end, sa_agent_code,
                  sa_comCode, fee_rule_No, his_payee_name, his_account_no, sa_Account_bankName, bank_area, bank_Name):
+
         info("中介机构新增和变更申报页:{}".format(channel))
         self.MAOM.into_page(channel)
         info("中介机构新增页")
@@ -64,6 +67,7 @@ class Test_SALES_YLZJ_004():
         info("合同日期")
         self.NAO.contract_date(contract_start, contract_end)
         self.NAO.click(self.NAO.get_element_xpath(self.NAO.add_agent_contract_button))
+
         info("渠道码{}".format(sa_agent_code.split("--")[0]))
         text = sa_agent_code.split("--")[0]
         self.NAO.send_keys_(self.NAO.sa_agent_code.format("0"), text)
@@ -76,6 +80,7 @@ class Test_SALES_YLZJ_004():
         self.NAO.switch_to_window()
         if self.NAO.get_head_text() == "银行账号编辑":
             info("添加银行账号")
+
             self.NAO.send_keys_(self.NAO.his_payee_name, his_payee_name)
             self.NAO.send_keys_(self.NAO.his_account_no, his_account_no)
             self.NAO.send_keys_(self.NAO.sa_Account_bankName, sa_Account_bankName)
@@ -89,9 +94,11 @@ class Test_SALES_YLZJ_004():
         self.NAO.submit_interaction(self.NAO.submit_iframe)
         text = self.NAO.get_text(self.NAO.get_element_xpath(self.NAO.save_success))
         self.NAO.assertResult("验证提交成功", "保存成功!" in text)
+
         Test_SALES_YLZJ_004.msg = {"contract_no": text.split("：")[1]}
         # 关闭
         self.NAO.close_button_ty()
+
 
     @allure.story("中介机构新增-审批")
     @pytest.mark.usefixtures("login_jiangsu_p")
@@ -100,6 +107,7 @@ class Test_SALES_YLZJ_004():
                  sa_comCode, fee_rule_No, his_payee_name, his_account_no, sa_Account_bankName, bank_area, bank_Name):
         self.MAOA.switch_to_window()
         info("中介机构审批页")
+
         self.MAOA.into_page(channel)
         info("查询合同号：{}".format(Test_SALES_YLZJ_004.msg["contract_no"]))
         self.MAOA.query(Test_SALES_YLZJ_004.msg["contract_no"])
@@ -114,11 +122,13 @@ class Test_SALES_YLZJ_004():
         info("审批")
         self.NACA.click(self.NACA.get_element_xpath(self.NACA.pass_check))
         self.NACA.choose_ok_on_alert()
+
         info("提交任务")
         self.NACA.submit_interaction(self.NACA.submit_iframe, "中介机构新增-ui测试")
         text = self.NACA.get_text(self.NACA.get_element_xpath(self.NACA.save_success))
         self.NACA.assertResult("验证提交成功", "保存成功!" in text)
         self.NACA.close_button_ty()
+
 
     @allure.story("中介机构新增-验证")
     @pytest.mark.usefixtures("login_jiangsu_p")
@@ -126,7 +136,8 @@ class Test_SALES_YLZJ_004():
     def test_003(self, channel, contract_type, com_code, agent_name, contract_start, contract_end, sa_agent_code,
                  sa_comCode, fee_rule_No, his_payee_name, his_account_no, sa_Account_bankName, bank_area, bank_Name):
         self.MAOM.switch_to_window()
-        info("中介机构审批页")
+
+        info("中介机构新增和变更申报页")
         self.MAOM.into_page(channel)
         info("查询合同号：{}".format(Test_SALES_YLZJ_004.msg["contract_no"]))
         self.MAOM.query(Test_SALES_YLZJ_004.msg["contract_no"], contract_type, "1")

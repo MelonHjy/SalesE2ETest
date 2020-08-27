@@ -87,6 +87,7 @@ def restore_log(log):
 
 
 def get_sql(csv_path, sql_path):
+
     sql = ""
     with open(sql_path, 'r', encoding='utf-8') as f:
         if os.path.exists(csv_path):

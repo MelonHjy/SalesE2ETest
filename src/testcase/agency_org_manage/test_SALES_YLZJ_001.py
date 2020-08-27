@@ -6,6 +6,7 @@ import allure
 import pytest
 
 from src.page.agency_module.main_agency_org_manage import MainAgencyOrgManage
+from src.utils import csv_util
 from src.utils.log import info
 
 
@@ -13,8 +14,8 @@ from src.utils.log import info
 class Test_SALES_YLZJ_001():
     MAOM = MainAgencyOrgManage()
 
-    data = [("个代渠道", "交叉销售委托合同", "1"), ("经代渠道", "保险专业代理委托合同", "1"), ("银保渠道", "保险专业代理委托合同(外部)", "1"),
-            ("车商渠道", "保险兼业代理委托合同(外部)", "1")]
+
+    data = csv_util.data_reader("agency_org_manage/test_SALES_YLZJ_001.csv")
 
     @allure.story("查询")
     @pytest.mark.usefixtures("login_jiangsu_c_fun")
@@ -22,6 +23,7 @@ class Test_SALES_YLZJ_001():
     def test_001(self, channel, contractType, apartment_type):
         info("中介机构新增和变更申报页:{}".format(channel))
         self.MAOM.into_page(channel)
+        self.MAOM.assertEqual("验证页面标题", self.MAOM.get_head_text(), "中介机构新增和变更申报")
         info("查询")
         self.MAOM.query(contractType)
         alert = self.MAOM.get_alert_text()
@@ -32,3 +34,4 @@ class Test_SALES_YLZJ_001():
         info(text)
         flag = self.MAOM.table_cell_text("合同类型", contractType)
         self.MAOM.assertResult("判断查询数据是无记录或者有记录列表", text in "无记录." or flag)
+        self.MAOM.switch_to_default_content()

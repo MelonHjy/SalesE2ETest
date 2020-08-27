@@ -5,11 +5,11 @@
 import allure
 
 from config.global_var import sleep
+from src.page.agency_module.common_main_page import CommonMainPage
 from src.page.table_page import TablePage
 
 
-class MainAgencyOrgApproval(TablePage):
-    case = "//*[@class='case']"
+class MainAgencyOrgApproval(CommonMainPage):
     input_btn = "//input[@value='{}']"  # 按钮
     status = "//*[contains(text(),'未提交')]/input[@value='{}']"  # 状态
     contract_no = "//*[@id='condition.contractNo']"  # 合同编号
@@ -19,19 +19,12 @@ class MainAgencyOrgApproval(TablePage):
 
     def into_page(self, module_menu):
         self.to_main_page(module_menu, "中介机构", "中介机构审批")
-        self.assertEqual("验证页面标题", self.get_text(self.wait_until_el_xpath(self.case)), "中介机构审批")
-
-    @allure.step("点击{btn_text}")
-    def click_btn(self, btn_text):
-        self.click(self.wait_until_el_xpath(self.input_btn.format(btn_text)))
-        sleep(2)
 
     @allure.step("查询")
     def query(self, contract_no, contractType=None, status="未提交"):
         """
         contract_no:合同编号
         status：任务状态
-
         """
         if contractType:
             self.select(self.contractType, contractType)

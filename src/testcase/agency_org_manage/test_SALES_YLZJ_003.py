@@ -6,22 +6,29 @@ import allure
 import pytest
 
 from src.page.agency_module.main_agency_org_manage import MainAgencyOrgManage
+from src.utils import csv_util
 from src.utils.log import info
 
 
 @allure.feature("中介机构>>中介机构新增和变更申报>>重置")
 class Test_SALES_YLZJ_003():
     MAOM = MainAgencyOrgManage()
-
-    # data = [("个代渠道", "交叉销售委托合同", "32993J220082100"), ("经代渠道", "保险专业代理委托合同", "1"), ("银保渠道", "保险专业代理委托合同", "1"),
-    #         ("车商渠道", "保险兼业代理委托合同(外部)", "1")]
-    data = [("个代渠道", "交叉销售委托合同", "32993J220082100")]
+    data = csv_util.data_reader("agency_org_manage/test_SALES_YLZJ_003.csv")
 
     @allure.story("查询")
-    @pytest.mark.usefixtures("login_jiangsu_c_fun")
+    @pytest.mark.usefixtures("login_jiangsu_p")
     @pytest.mark.parametrize("channel,contractType,contract_no", data)
     def test_001(self, channel, contractType, contract_no):
         info("中介机构新增和变更申报页:{}".format(channel))
         self.MAOM.into_page(channel)
+        self.MAOM.assertEqual("验证页面标题", self.MAOM.get_head_text(), "中介机构新增和变更申报")
         info("查询")
         self.MAOM.query(contract_no, contractType, "1")
+        info("重置")
+        self.MAOM.click_btn("重置")
+        self.MAOM.assertEqual("验证合同号输入框被清空",
+                              self.MAOM.get_attribute(self.MAOM.get_element_xpath(self.MAOM.contract_no), "value"), "")
+        flag = (not self.MAOM.is_selected("0")) or (not self.MAOM.is_selected("1")) or (not self.MAOM.is_selected("3"))
+        self.MAOM.assertResult("验证任务状态清空", flag)
+        self.MAOM.switch_to_default_content()
+

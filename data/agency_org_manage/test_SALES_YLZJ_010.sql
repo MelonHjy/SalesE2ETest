@@ -1,0 +1,10 @@
+delete from saaagenttyperesult where agenttype='2111CD';
+delete from sapagenttype where NEWAGENTTYPE='2111CD';
+delete from saaagenttype where newAgentType='2111CD';
+INSERT INTO saaagenttyperesult (id, agenttype, agenttypename, operatetime, operateorcode, approvetime, approvercode, reason, agenttypestatus, flag) VALUES (1000000000007843, '2111CD', '个代ui测试-010', TO_DATE('2020-08-26', '%Y-%m-%d'), 'A320000135', TO_DATE('2020-08-26', '%Y-%m-%d'), 'A000008254', 'ui测试-个代渠道类型码修改', '1 ', null);
+INSERT INTO sapagenttype (agenttypecode, agenttypename, newagenttype, validstatus, flag, remark, inserttimeforhis, operatetimeforhis) VALUES ('2111CD      ', '个代ui测试-010', '2111CD      ', '1', null, null, TO_DATE('2020-08-26 15:58:34', '%Y-%m-%d %H:%M:%S'), TO_DATE('2020-08-26 16:03:03', '%Y-%m-%d %H:%M:%S'));
+INSERT INTO saaagenttype (agenttypecode, agenttypename, newagenttype, validstatus, flag, remark, inserttimeforhis, operatetimeforhis) VALUES ('2111CD      ', '个代ui测试-010', '2111CD      ', '1', '4N        ', null, TO_DATE('2020-08-26 16:03:03', '%Y-%m-%d %H:%M:%S'), TO_DATE('2020-08-26 16:03:03', '%Y-%m-%d %H:%M:%S'));
+delete from sapagenttypehis where agenttypecode='2111CD';
+INSERT INTO sapagenttypehis (id, agenttypecode, agenttypename, newagenttype, validstatus, flag, remark, checkstatus, inserttimeforhis, operatetimeforhis) VALUES (1000000000000211, '2111CD      ', '个代ui测试-010', '2111CD      ', '1', '4N        ', null, '          ', TO_DATE('2020-08-26 16:24:21', '%Y-%m-%d %H:%M:%S'), TO_DATE('2020-08-26 16:31:30', '%Y-%m-%d %H:%M:%S'));
+delete from saaagenttypeotherinfohis where agenttype='2111CD';
+INSERT INTO saaagenttypeotherinfohis (id, agenttype, fullname, organizationcode, permitno, permitrange, permitdate, copyway, permitclass, flag, checkstatus, inserttimeforhis, operatetimeforhis) VALUES (1000000000000197, '2111CD', '个代ui测试-010', '', '188888888888888       ', '0000', TO_DATE('2026-11-24', '%Y-%m-%d'), null, 'PUB', null, '          ', TO_DATE('2020-08-26 16:24:21', '%Y-%m-%d %H:%M:%S'), TO_DATE('2020-08-26 16:31:30', '%Y-%m-%d %H:%M:%S'));
