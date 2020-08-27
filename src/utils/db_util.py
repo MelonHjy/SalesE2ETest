@@ -13,7 +13,20 @@ import random
 import jaydebeapi
 
 from config.global_var import g
+from src.utils.driver_util import get_config
+from src.utils.except_util import catch_socket_exception
 from src.utils.log import info
+
+
+def get_conn():
+    g.config = get_config()
+    # 获取数据库连接
+    db = g.config['DEFAULT']['db']
+    url = g.config[db]['url']
+    user = g.config[db]['user']
+    password = g.config[db]['password']
+    info("获取数据库连接")
+    g.db = DBUtils(url, user, password)
 
 
 class DBUtils:
@@ -43,6 +56,7 @@ class DBUtils:
             results.remove(choice)
         return data
 
+    @catch_socket_exception
     def select(self, sql, args=None, limit=__limit):
         '''
         查询
@@ -58,6 +72,7 @@ class DBUtils:
         cur.close()
         return results
 
+    @catch_socket_exception
     def execute(self, sql, args=None):
         '''
         增删改
@@ -65,18 +80,15 @@ class DBUtils:
         :param args:参数（数据类型为元组）  ('37010000','haha')
         :return: 影响的行数
         '''
-        try:
-            info('%s执行execute语句conn id：%s' % (self.test_name, id(self.conn)))
-            cur = self.conn.cursor()
-            if args:
-                cur.execute(sql, args)
-            else:
-                cur.execute(sql)
-            rowcount = cur.rowcount
-            # self.conn.commit()
-            cur.close()
-        except BaseException as e:
-            raise
+        info('%s执行execute语句conn id：%s' % (self.test_name, id(self.conn)))
+        cur = self.conn.cursor()
+        if args:
+            cur.execute(sql, args)
+        else:
+            cur.execute(sql)
+        rowcount = cur.rowcount
+        # self.conn.commit()
+        cur.close()
         return rowcount
 
 
