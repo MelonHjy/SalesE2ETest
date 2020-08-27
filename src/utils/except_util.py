@@ -1,6 +1,5 @@
 # -*- encoding: utf-8 -*-
 import codecs
-import os
 import allure
 from jpype import java
 
@@ -8,7 +7,6 @@ from config.global_var import *
 from functools import wraps
 from datetime import datetime
 
-from src.utils.db_util import get_conn
 from src.utils.log import info
 
 
@@ -56,16 +54,3 @@ def save_page():
         allure.attach(file, "", allure.attachment_type.TEXT)
 
 
-def catch_socket_exception(func):
-    @wraps(func)
-    def wrapper(*args, **kwargs):
-        try:
-            return func(*args, **kwargs)
-        except java.net.SocketException as e:
-            info("出现SocketException：%s，重新进行连接" % e)
-            # SocketException 关闭连接，重新获取连接
-            g.db.close_connection()
-            get_conn()
-            return func(*args, **kwargs)
-
-    return wrapper
