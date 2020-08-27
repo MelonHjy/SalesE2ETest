@@ -13,21 +13,15 @@ from config.global_var import g
 from src.page.base_page import info
 from src.utils.common_util import DecoratorType
 from src.utils.csv_util import data_reader
-from src.utils.db_util import DBUtils
+from src.utils.db_util import DBUtils, get_conn
 from src.utils.driver_util import get_config
 
 
 @pytest.fixture(scope='session', autouse=True)
-def db_conn():
-    g.config = get_config()
+def setup():
     # 获取数据库连接
-    db = g.config['DEFAULT']['db']
-    url = g.config[db]['url']
-    user = g.config[db]['user']
-    password = g.config[db]['password']
-    info("获取数据库连接")
-    g.db = DBUtils(url, user, password)
-
+    get_conn()
+    # 调整分辨率
     width = win32api.GetSystemMetrics(0)
     height = win32api.GetSystemMetrics(1)
     print('before-size:%s-%s' % (width, height))
@@ -38,9 +32,9 @@ def db_conn():
         set_windows_resolution(1080, 1920)
     g.db.close_connection()
     info("关闭数据库连接")
-    # task_kill("IEDriverServer.exe")
-    # task_kill("iexplore.exe")
-    # info("关闭ie相关进程")
+    task_kill("IEDriverServer.exe")
+    task_kill("iexplore.exe")
+    info("关闭ie相关进程")
 
 
 def set_windows_resolution(height, width):
