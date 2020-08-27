@@ -1,7 +1,7 @@
 # -*- encoding: utf-8 -*-
 import codecs
-import os
 import allure
+
 from config.global_var import *
 from functools import wraps
 from datetime import datetime
@@ -52,14 +52,4 @@ def save_page():
     with allure.step('报错页面：'):
         allure.attach(file, "", allure.attachment_type.TEXT)
 
-#
-# def catch_except(filename):
-#     def catch_except_func(func):
-#         def wrapper(*s, **y):
-#             try:
-#                 return func(*s, **y)
-#             except Exception as e:
-#                 get_screenshot(filename)
-#                 raise e
-#         return wrapper
-#     return catch_except_func
+

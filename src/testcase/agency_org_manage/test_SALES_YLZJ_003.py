@@ -31,3 +31,4 @@ class Test_SALES_YLZJ_003():
         flag = (not self.MAOM.is_selected("0")) or (not self.MAOM.is_selected("1")) or (not self.MAOM.is_selected("3"))
         self.MAOM.assertResult("验证任务状态清空", flag)
         self.MAOM.switch_to_default_content()
+

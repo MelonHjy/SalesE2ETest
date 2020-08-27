@@ -16,15 +16,15 @@ from src.utils.high_light_element import high_light
 from src.utils.log import *
 
 
-class BasePage():
+class BasePage:
     # ------------------------  菜单 ------------------------#
     frame_id = 'main'
     iframe_page = "page"
     module_menu = "//a[contains(text(), '{}')]/.."  # 模块
     zk_menu = "//div[@id='{0}']/div/div/div/div/table/tbody/tr/td[2]/a[text()='{1}']/../../td[1]"  # 展开菜单
-    # //div[@id='{0}']/div/div/div/div/table/tbody/tr/td[2]/a[text()='{1}']/../../../../../div/div/table/tboby/tr/td[3]
-    menu = "//div[@id='{0}']/div/div/div/div/div/div/table/tbody/tr/td[3]/a[text()='{1}']"
+
     # menu = "//a[text()='{}']"  # 选择菜单名
+    menu = "//div[@id='{0}']/div/div/div/div/div/div/table/tbody/tr/td[3]/a[text()='{1}']"
     menu_list = "//*[@id='{}']"
 
     # ------------------------  日期控件 ------------------------#
@@ -66,12 +66,14 @@ class BasePage():
         hidden_script = script.format(self.frame_id, menu_list_id, 'hidden')
         self.execute_script(visible_script)
         # self.execute_script("arguments[0].style.visibility='visible';", self.wait_until_el_xpath(_menu_list))
-        if not self.is_element_exist(self.menu.format(menu_list_id,menu)):
+
+        if not self.is_element_exist(self.menu.format(menu_list_id, menu)):
             self.click(self.wait_until_el_xpath(self.zk_menu.format(menu_list_id, zk_menu)))
         sleep(2)
         self.execute_script(visible_script)
         # self.execute_script("arguments[0].style.visibility='visible';", self.wait_until_el_xpath(_menu_list))
-        self.click(self.wait_until_el_xpath(self.menu.format(menu_list_id,menu)))
+
+        self.click(self.wait_until_el_xpath(self.menu.format(menu_list_id, menu)))
         self.execute_script(hidden_script)
         # self.execute_script("arguments[0].style.visibility='hidden';", self.wait_until_el_xpath(_menu_list))
         self.select_frame_id(self.iframe_page)
@@ -301,13 +303,14 @@ class BasePage():
         el.clear()
 
     @catch_except
-    def send_keys(self, el, value):
+    def send_keys(self, el, value, clear=True):
         """
         向el元素填写文本
         el:元素
         value：文本值
         """
-        el.clear()
+        if clear:
+            el.clear()
         el.send_keys(value)
 
     @set_wait(1)

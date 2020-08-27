@@ -10,10 +10,41 @@
 @Desc       :   None
 '''
 import random
+import traceback
+from functools import wraps
+
 import jaydebeapi
+from jpype import java
 
 from config.global_var import g
+from src.utils.driver_util import get_config
 from src.utils.log import info
+
+
+def get_conn():
+    g.config = get_config()
+    # 获取数据库连接
+    db = g.config['DEFAULT']['db']
+    url = g.config[db]['url']
+    user = g.config[db]['user']
+    password = g.config[db]['password']
+    info("获取数据库连接")
+    g.db = DBUtils(url, user, password)
+
+
+def catch_socket_exception(func):
+    @wraps(func)
+    def wrapper(*args, **kwargs):
+        try:
+            return func(*args, **kwargs)
+        except java.net.SocketException as e:
+            info("出现SocketException：%s，重新进行连接" % traceback.format_exc())
+            # SocketException 关闭连接，重新获取连接
+            g.db.close_connection()
+            get_conn()
+            return func(*args, **kwargs)
+
+    return wrapper
 
 
 class DBUtils:
@@ -32,7 +63,6 @@ class DBUtils:
             self.conn.close()
         except BaseException as e:
             info('关闭连接错误信息:%s' % e)
-            # raise
 
     @staticmethod
     def random_choice(results, num=1):
@@ -43,6 +73,7 @@ class DBUtils:
             results.remove(choice)
         return data
 
+    @catch_socket_exception
     def select(self, sql, args=None, limit=__limit):
         '''
         查询
@@ -51,12 +82,14 @@ class DBUtils:
         :param limit: 只取limit前的数据，默认为__limit
         :return: 查询的结果
         '''
+        info('%s执行select语句conn id：%s' % (self.test_name, id(self.conn)))
         cur = self.conn.cursor()
         cur.execute(sql, args)
         results = cur.fetchmany(limit) if limit else cur.fetchall()  # fetchmany()获取最多指定数量的记录
         cur.close()
         return results
 
+    @catch_socket_exception
     def execute(self, sql, args=None):
         '''
         增删改
@@ -64,18 +97,15 @@ class DBUtils:
         :param args:参数（数据类型为元组）  ('37010000','haha')
         :return: 影响的行数
         '''
-        try:
-            info('%s执行语句conn id：%s' % (self.test_name, id(self.conn)))
-            cur = self.conn.cursor()
-            if args:
-                cur.execute(sql, args)
-            else:
-                cur.execute(sql)
-            rowcount = cur.rowcount
-            # self.conn.commit()
-            cur.close()
-        except BaseException as e:
-            raise
+        info('%s执行execute语句conn id：%s' % (self.test_name, id(self.conn)))
+        cur = self.conn.cursor()
+        if args:
+            cur.execute(sql, args)
+        else:
+            cur.execute(sql)
+        rowcount = cur.rowcount
+        # self.conn.commit()
+        cur.close()
         return rowcount
 
 

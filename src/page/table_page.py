@@ -87,6 +87,7 @@ class TablePage(BasePage):
         获取指定表头对应列、指定行的按钮元素
         :param row: 第几行
         :param head: 表头文本值
+        :num: 同一个td内第几个元素，从1开始
         :return: 按钮元素
         '''
         return self.get_cell(row, self.get_index_of_heads(head), True)[num]
