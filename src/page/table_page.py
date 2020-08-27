@@ -82,14 +82,14 @@ class TablePage(BasePage):
         '''
         return self.get_cell(row, self.get_index_of_heads(head), True)[1]
 
-    def get_a_by_head(self, row, head):
+    def get_a_by_head(self, row, head, num=1):
         '''
         获取指定表头对应列、指定行的按钮元素
         :param row: 第几行
         :param head: 表头文本值
         :return: 按钮元素
         '''
-        return self.get_cell(row, self.get_index_of_heads(head), True)[1]
+        return self.get_cell(row, self.get_index_of_heads(head), True)[num]
 
     def get_button_by_head(self, row, head):
         '''

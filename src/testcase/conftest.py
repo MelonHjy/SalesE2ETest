@@ -86,21 +86,25 @@ def restore_log(log):
 
 
 def get_sql(csv_path, sql_path):
-    datas = data_reader(csv_path, DecoratorType.fixture)
+
     sql = ""
     with open(sql_path, 'r', encoding='utf-8') as f:
-        for line in f:
-            if line.__contains__('{'):
-                params = re.findall(r"{(.*?)}", line)
-                for data in datas:
-                    format_data = ""
-                    for param in params:
-                        format_data += "{0}='{1}',".format(param, data[param])
-                    format_data = format_data[:-1]
-                    sql += eval("line.format({})".format(format_data))
-                    # yield eval("sql.format({})".format(format_data))
-            # elif not sql.startswith('--') and sql.strip():  # 如果此行不以--开头，或不为空行
-            #     yield sql
-            else:
-                sql += line
+        if os.path.exists(csv_path):
+            datas = data_reader(csv_path, DecoratorType.fixture)
+            for line in f:
+                if line.__contains__('{'):
+                    params = re.findall(r"{(.*?)}", line)
+                    for data in datas:
+                        format_data = ""
+                        for param in params:
+                            format_data += "{0}='{1}',".format(param, data[param])
+                        format_data = format_data[:-1]
+                        sql += eval("line.format({})".format(format_data))
+                        # yield eval("sql.format({})".format(format_data))
+                # elif not sql.startswith('--') and sql.strip():  # 如果此行不以--开头，或不为空行
+                #     yield sql
+                else:
+                    sql += line
+        else:
+            sql = f.read()
     return sql

@@ -34,6 +34,9 @@ class CommonSteps:
     base_page = BasePage()
     cons = Constants()
 
+    def login_h(self):
+        self.login_base(self.cons.HEAD_OFFICE_USERNAME, self.cons.HEAD_OFFICE_PASSWORD)
+
     def login_p(self):
         self.login_base(self.cons.JIANGSU_PROVINCE_USERNAME, self.cons.JIANGSU_PROVINCE_PASSWORD)
 

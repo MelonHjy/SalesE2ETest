@@ -2,15 +2,9 @@
 # @Time : 2020/8/20 17:03
 # @Author: fyl
 # @File : new_agency_contract_approval.py   中介合同新增审批
-from src.page.process_page import ProcessPage
+from src.page.agency_module.agency_module_page.common_page import CommonPage
 
 
-class NewAgencyContractApproval(ProcessPage):
+class NewAgencyContractApproval(CommonPage):
+    pass
 
-    case = "//*[@class='case']"
-    pass_check = "//*[@id='passCheck']"
-    save_success = "//body/table/tbody/tr/td[2]"    # 保存成功
-
-    def get_head_text(self):
-        return self.get_text(
-            self.get_element_xpath(self.case))

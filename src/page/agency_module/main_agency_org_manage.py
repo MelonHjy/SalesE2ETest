@@ -5,11 +5,11 @@
 import allure
 
 from config.global_var import sleep
+from src.page.agency_module.common_main_page import CommonMainPage
 from src.page.table_page import TablePage
 
 
-class MainAgencyOrgManage(TablePage):
-    case = "//*[@class='case']"
+class MainAgencyOrgManage(CommonMainPage):
     contractType = "//*[@id='condition.contractType']"
     status = "//input[@id='state{}']"  # 任务状态
     input_btn = "//input[@value='{}']"  # 按钮
@@ -20,12 +20,6 @@ class MainAgencyOrgManage(TablePage):
 
     def into_page(self, module_menu):
         self.to_main_page(module_menu, "中介机构", "中介机构新增和变更申报")
-        self.assertEqual("验证页面标题", self.get_text(self.wait_until_el_xpath(self.case)), "中介机构新增和变更申报")
-
-    @allure.step("点击{btn_text}")
-    def click_btn(self, btn_text):
-        self.click(self.wait_until_el_xpath(self.input_btn.format(btn_text)))
-        sleep(2)
 
     @allure.step("查询")
     def query(self,contract_no, contractType=None, apartment_type='0', status="100"):
@@ -56,10 +50,7 @@ class MainAgencyOrgManage(TablePage):
                 return False
         return True
 
-    def switch_max_window(self):
-        self.switch_to_window()
-        self.maximize_window()
+    def is_selected(self,status):
+        return self.get_element_xpath(self.status.format(status)).is_selected()
 
-    def get_head_text(self):
-        return self.get_text(
-            self.wait_until_el_xpath(self.case))
+
