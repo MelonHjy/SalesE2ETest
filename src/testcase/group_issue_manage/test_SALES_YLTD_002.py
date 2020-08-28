@@ -11,26 +11,26 @@ from src.page.group_issue_manage.main_group_issue_page.edit_group import EditGro
 from src.page.integrated_management.main_sales_group import MainSalesGroup
 from src.page.integrated_management.sales_group_recheck_page.edit_group_recheck import EditGroupRecheck
 from src.utils import csv_util
+from src.utils.except_util import get_screenshot
 from src.utils.log import info
+
+data = csv_util.data_reader("group_issue_manage/Test_SALES_YLTD_002.csv")
 
 
 @allure.feature("团队出单权管理>>团队信息变更（无效的团队进行复效）")
+@pytest.mark.parametrize("pk_deptdoc, group_name", data)
 class Test_SALES_YLTD_002():
     MGIM = MainGroupIssueManage()
     EG = EditGroup()
     MSG = MainSalesGroup()
     EGR = EditGroupRecheck()
-    msg = None
 
     # data = [("32990092", "ui测试-002x")]
-    data = csv_util.data_reader("group_issue_manage/Test_SALES_YLTD_002.csv")
 
     @allure.story("无效的团队进行复效")
     @pytest.mark.dependency(name='test_001')
-    @pytest.mark.parametrize("pk_deptdoc, group_name", data)
     @pytest.mark.usefixtures("login_jiangsu_p_fun")
     def test_001(self, pk_deptdoc, group_name):
-        Test_SALES_YLTD_002.msg = {"pk_deptdoc": pk_deptdoc, "group_name": group_name}
         info("进入团队出单权管理页")
         self.MGIM.into_page()
         info("查询团队名：{}".format(group_name))
@@ -44,16 +44,14 @@ class Test_SALES_YLTD_002():
         info("保存并提交")
         self.EG.click(self.EG.get_element_xpath(self.EG.submit_btn))
         self.EG.submit_interaction(self.EG.submit_iframe)
+        get_screenshot("团队复效提交")
         self.EG.close_button_ty()
-
-    @allure.story("无效的团队进行复效-审核")
-    @pytest.mark.dependency(name='test_002', depends=['test_001'])
-    @pytest.mark.usefixtures("login_jiangsu_p_fun")
-    def test_002(self):
+        info("无效的团队进行复效-审核")
+        self.MSG.switch_to_window()
         info("团队审核")
         self.MSG.into_page()
-        info("查询团队名称：{}".format(Test_SALES_YLTD_002.msg["group_name"]))
-        self.MSG.query(group_name=Test_SALES_YLTD_002.msg["group_name"])
+        info("查询团队名称：{}".format(group_name))
+        self.MSG.query(group_name=group_name)
         self.MSG.select_data("无效修改审核")
         self.MSG.switch_max_window()
         self.EGR.assertEqual("判断页面标题", self.EGR.get_head_text(), "无效修改团队审核")
@@ -67,24 +65,27 @@ class Test_SALES_YLTD_002():
         sleep(2)
         text = self.EGR.get_alert_text()
         info("提示信息：{}".format(text))
-        self.EGR.assertEqual("判断提示信息", text, "{}:团队信息推送成功！".format(Test_SALES_YLTD_002.msg["group_name"]))
+        self.EGR.assertEqual("判断提示信息", text, "{}:团队信息推送成功！".format(group_name))
+        get_screenshot("团队复效审核")
         self.EGR.choose_ok_on_alert()
 
     @allure.story("模拟Hr推送至销管系统")
-    @pytest.mark.dependency(name='test_send', depends=['test_002'])
-    def test_send(self):
-        self.MGIM.hr_send_recovery(Test_SALES_YLTD_002.msg["group_name"])
+    @pytest.mark.dependency(name='test_send', depends=['test_001'])
+    def test_send(self, pk_deptdoc, group_name):
+        self.MGIM.hr_send_recovery(group_name)
 
     @allure.story("无效的团队进行复效-验证")
-    @pytest.mark.dependency(name='test_003', depends=['test_send'])
+    @pytest.mark.dependency(name='test_002', depends=['test_send'])
     @pytest.mark.usefixtures("login_jiangsu_p_fun")
-    def test_003(self):
+    def test_002(self, pk_deptdoc, group_name):
         info("团队出单权管理页")
         self.MGIM.into_page()
-        info("查询团队名称：{}".format(Test_SALES_YLTD_002.msg["group_name"]))
-        self.MGIM.query(group_name=Test_SALES_YLTD_002.msg["group_name"])
+        info("查询团队名称：{}".format(group_name))
+        self.MGIM.query(group_name=group_name)
         # self.MGIM.query("ui测试-002")
         text = self.MGIM.get_cell_text_by_head("团队状态", 0)
         self.MGIM.assertEqual("判断团队状态是否有效", text, "有效")
         process = self.MGIM.get_cell_text_by_head("终止流程", 0)
         self.MGIM.assertEqual("判断最后一栏没有终止流程按钮", process, "")
+        get_screenshot("团队复效验证")
+        sleep(2)

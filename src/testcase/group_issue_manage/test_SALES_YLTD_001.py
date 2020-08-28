@@ -14,25 +14,23 @@ from src.utils import csv_util
 from src.utils.except_util import get_screenshot
 from src.utils.log import info
 
+data = csv_util.data_reader("group_issue_manage/Test_SALES_YLTD_001.csv")
+
 
 @allure.feature("团队出单权管理>>新增团队")
+@pytest.mark.parametrize("group_name,com_code,group_type,business_name,build_date", data, scope='class')
 class Test_SALES_YLTD_001():
     MGIM = MainGroupIssueManage()
     GD = GroupDeclare()
     MSG = MainSalesGroup()
     SGR = SalesGroupRecheck()
 
-    msg = None
-
     # data = [("ui测试-001", "32000000--中国人民财产保险股份有限公司江苏省分公司", "营销团队", "其它--营销", "2020-09-30")]
-    data = csv_util.data_reader("group_issue_manage/Test_SALES_YLTD_001.csv")
 
     @allure.story("团队申报")
-    @pytest.mark.parametrize("group_name,com_code,group_type,business_name,build_date", data)
     @pytest.mark.usefixtures("login_jiangsu_p_fun")
     @pytest.mark.dependency(name='test_001')
     def test_001(self, group_name, com_code, group_type, business_name, build_date):
-        Test_SALES_YLTD_001.msg = {"group_name": group_name}
         info("进入团队出单权管理页")
         self.MGIM.into_page()
         info("进入新增团队页")
@@ -55,17 +53,14 @@ class Test_SALES_YLTD_001():
         self.GD.submit_interaction(self.GD.submit_iframe)
         text = self.GD.get_text(self.GD.wait_until_el_xpath(self.GD.save_success))
         self.GD.assertResult("验证复核成功", "保存成功!" in text)
-        get_screenshot("提交")
+        get_screenshot("团队申报提交")
         self.GD.close_button_ty()
-
-    @allure.story("团队申报-审核")
-    @pytest.mark.usefixtures("login_jiangsu_p_fun")
-    @pytest.mark.dependency(name='test_002', depends=['test_001'])
-    def test_002(self):
+        info("团队申报-审核")
+        self.MSG.switch_to_window()
         info("团队审核")
         self.MSG.into_page()
-        info("查询团队名称：{}".format(Test_SALES_YLTD_001.msg["group_name"]))
-        self.MSG.query(group_name=Test_SALES_YLTD_001.msg["group_name"])
+        info("查询团队名称：{}".format(group_name))
+        self.MSG.query(group_name=group_name)
         self.MSG.select_data("新增审核")
         self.MSG.switch_max_window()
         info("审核")
@@ -78,24 +73,27 @@ class Test_SALES_YLTD_001():
         sleep(2)
         text = self.SGR.get_alert_text()
         info("提示信息：{}".format(text))
-        self.MSG.assertEqual("判断提示信息", text, "{}:团队信息推送成功！".format(Test_SALES_YLTD_001.msg["group_name"]))
+        self.MSG.assertEqual("判断提示信息", text, "{}:团队信息推送成功！".format(group_name))
+        get_screenshot("团队申报审核")
         self.MSG.choose_ok_on_alert()
 
     @allure.story("模拟Hr推送至销管系统")
-    @pytest.mark.dependency(name='test_send', depends=['test_002'])
-    def test_send(self):
-        self.MGIM.hr_send_create(Test_SALES_YLTD_001.msg["group_name"], '32999999', '1130B810000000UITEST')
+    @pytest.mark.dependency(name='test_send', depends=['test_001'])
+    def test_send(self, group_name, com_code, group_type, business_name, build_date):
+        self.MGIM.hr_send_create(group_name, '32999999', '1130B810000000UITEST')
 
     @allure.story("团队申报-验证")
     @pytest.mark.usefixtures("login_jiangsu_p_fun")
-    @pytest.mark.dependency(name='test_003', depends=['test_send'])
-    def test_003(self):
+    @pytest.mark.dependency(name='test_002', depends=['test_send'])
+    def test_002(self, group_name, com_code, group_type, business_name, build_date):
         info("团队出单权管理页")
         self.MGIM.into_page()
-        info("查询团队名称：{}".format(Test_SALES_YLTD_001.msg["group_name"]))
-        self.MGIM.query(group_name=Test_SALES_YLTD_001.msg["group_name"])
+        info("查询团队名称：{}".format(group_name))
+        self.MGIM.query(group_name=group_name)
         # self.MGIM.query("ui测试-001")
         text = self.MGIM.get_cell_text_by_head("团队状态", 0)
         self.MGIM.assertEqual("判断团队状态是否有效", text, "有效")
         process = self.MGIM.get_cell_text_by_head("终止流程", 0)
         self.MGIM.assertEqual("判断最后一栏没有终止流程按钮", process, "")
+        get_screenshot("团队申报验证")
+        sleep(2)
