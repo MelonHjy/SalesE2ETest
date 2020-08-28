@@ -3,11 +3,10 @@
 # @Author: hjy
 # @File : new_agency_org.py  中介机构合同修改
 from config.global_var import sleep
-from src.page.process_page import ProcessPage
+from src.page.agency_module.agency_module_page.common_page import CommonPage
 
 
-class AgencyContractModify(ProcessPage):
-    case = "//*[@class='case']"
+class AgencyContractModify(CommonPage):
     imgBtn1 = "//*[@id='imgBtn{}']"  # 合同日期控件
     add_account = "//*[@id='addAccount[{}]']"  # 编辑银行账号
     # -----银行账号编辑-----#
@@ -15,15 +14,8 @@ class AgencyContractModify(ProcessPage):
     bank_area = "//*[@id='saDAccount.bankareaname']"  # 银行区域
     bank_Name = "//*[@id='bankName']"  # 联行号
     save_account = "//*[contains(@value,'保 存')]"
-
     contractUpdate_submit = "//*[@id='contractUpdateSubmit']"  # 保存并提交
-    save_success = "//body/table/tbody/tr/td[2]"  # 保存成功
-    submit_iframe = "//iframe[@name='submitFrame']"  # 提交任务的iframe
-
     name = "//*[@id='Name']"  # 账号名
-
-    def get_head_text(self):
-        return self.get_text(self.wait_until_el_xpath(self.case))
 
     def send_keys_(self, xpath, param):
         el = self.get_element_xpath(xpath)

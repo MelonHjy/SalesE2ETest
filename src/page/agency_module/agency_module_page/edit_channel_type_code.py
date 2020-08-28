@@ -17,4 +17,3 @@ class EditChannelTypeCode(CommonPage):
     permit_no = "//*[@id='saAAgentTypeOtherInfo.permitNo']"   # 许可证机构编码
     img_btn1 = "//*[@id='imgBtn1']"
     update_agent_type = "//*[@id='updateAgentType']"
-    save_success = "//body/table/tbody/tr/td[2]"    # 保存成功

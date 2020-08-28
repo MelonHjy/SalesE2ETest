@@ -11,6 +11,7 @@ from src.page.agency_module.agency_module_page.new_agency_org import NewAgencyOr
 from src.page.agency_module.main_agency_org_approval import MainAgencyOrgApproval
 from src.page.agency_module.main_agency_org_manage import MainAgencyOrgManage
 from src.utils import csv_util
+from src.utils.except_util import get_screenshot
 from src.utils.log import info
 
 data = csv_util.data_reader("agency_org_manage/Test_SALES_YLZJ_004.csv")
@@ -47,10 +48,8 @@ class Test_SALES_YLZJ_004():
     @allure.story("中介机构新增")
     @pytest.mark.usefixtures("login_jiangsu_p")
     @pytest.mark.dependency(name='test_001')
-
     def test_001(self, channel, contract_type, com_code, agent_name, contract_start, contract_end, sa_agent_code,
                  sa_comCode, fee_rule_No, his_payee_name, his_account_no, sa_Account_bankName, bank_area, bank_Name):
-
         info("中介机构新增和变更申报页:{}".format(channel))
         self.MAOM.into_page(channel)
         info("中介机构新增页")
@@ -67,7 +66,6 @@ class Test_SALES_YLZJ_004():
         info("合同日期")
         self.NAO.contract_date(contract_start, contract_end)
         self.NAO.click(self.NAO.get_element_xpath(self.NAO.add_agent_contract_button))
-
         info("渠道码{}".format(sa_agent_code.split("--")[0]))
         text = sa_agent_code.split("--")[0]
         self.NAO.send_keys_(self.NAO.sa_agent_code.format("0"), text)
@@ -80,7 +78,6 @@ class Test_SALES_YLZJ_004():
         self.NAO.switch_to_window()
         if self.NAO.get_head_text() == "银行账号编辑":
             info("添加银行账号")
-
             self.NAO.send_keys_(self.NAO.his_payee_name, his_payee_name)
             self.NAO.send_keys_(self.NAO.his_account_no, his_account_no)
             self.NAO.send_keys_(self.NAO.sa_Account_bankName, sa_Account_bankName)
@@ -91,14 +88,13 @@ class Test_SALES_YLZJ_004():
             self.NAO.switch_to_window()
         self.NAO.click(self.NAO.get_element_xpath(self.NAO.contract_submit))
         self.NAO.choose_ok_on_alert()
-        self.NAO.submit_interaction(self.NAO.submit_iframe)
+        self.NAO.submit_interaction(self.NAO.submit_frame)
         text = self.NAO.get_text(self.NAO.get_element_xpath(self.NAO.save_success))
         self.NAO.assertResult("验证提交成功", "保存成功!" in text)
-
+        get_screenshot("中介机构{}新增合同提交".format(channel))
         Test_SALES_YLZJ_004.msg = {"contract_no": text.split("：")[1]}
         # 关闭
         self.NAO.close_button_ty()
-
 
     @allure.story("中介机构新增-审批")
     @pytest.mark.usefixtures("login_jiangsu_p")
@@ -107,7 +103,6 @@ class Test_SALES_YLZJ_004():
                  sa_comCode, fee_rule_No, his_payee_name, his_account_no, sa_Account_bankName, bank_area, bank_Name):
         self.MAOA.switch_to_window()
         info("中介机构审批页")
-
         self.MAOA.into_page(channel)
         info("查询合同号：{}".format(Test_SALES_YLZJ_004.msg["contract_no"]))
         self.MAOA.query(Test_SALES_YLZJ_004.msg["contract_no"])
@@ -122,13 +117,12 @@ class Test_SALES_YLZJ_004():
         info("审批")
         self.NACA.click(self.NACA.get_element_xpath(self.NACA.pass_check))
         self.NACA.choose_ok_on_alert()
-
         info("提交任务")
-        self.NACA.submit_interaction(self.NACA.submit_iframe, "中介机构新增-ui测试")
+        self.NACA.submit_interaction(self.NACA.submit_frame, "中介机构新增{}-ui测试".format(channel))
         text = self.NACA.get_text(self.NACA.get_element_xpath(self.NACA.save_success))
         self.NACA.assertResult("验证提交成功", "保存成功!" in text)
+        get_screenshot("中介机构{}新增合同审核".format(channel))
         self.NACA.close_button_ty()
-
 
     @allure.story("中介机构新增-验证")
     @pytest.mark.usefixtures("login_jiangsu_p")
@@ -136,10 +130,11 @@ class Test_SALES_YLZJ_004():
     def test_003(self, channel, contract_type, com_code, agent_name, contract_start, contract_end, sa_agent_code,
                  sa_comCode, fee_rule_No, his_payee_name, his_account_no, sa_Account_bankName, bank_area, bank_Name):
         self.MAOM.switch_to_window()
-
         info("中介机构新增和变更申报页")
         self.MAOM.into_page(channel)
         info("查询合同号：{}".format(Test_SALES_YLZJ_004.msg["contract_no"]))
         self.MAOM.query(Test_SALES_YLZJ_004.msg["contract_no"], contract_type, "1")
         text = self.MAOM.get_cell_text_by_head("状态", 0)
         self.MAOM.assertEqual("验证机构是否有效", text, "有效")
+        get_screenshot("中介机构{}新增合同验证".format(channel))
+        self.MAOM.switch_to_default_content()

@@ -10,6 +10,7 @@ from src.page.agency_module.agency_module_page.agency_contract_renew import Agen
 from src.page.agency_module.main_agency_org_approval import MainAgencyOrgApproval
 from src.page.agency_module.main_agency_org_manage import MainAgencyOrgManage
 from src.utils import csv_util
+from src.utils.except_util import get_screenshot
 from src.utils.log import info
 
 
@@ -22,12 +23,13 @@ class Test_SALES_YLZJ_002():
     msg = None
 
     data = csv_util.data_reader("agency_org_manage/Test_SALES_YLZJ_002.csv")
+
     # data = [("个代渠道", "交叉销售委托合同", "32993J220082400"), ("经代渠道", "保险专业代理委托合同", "329921120082400"), ("银保渠道", "保险兼业代理委托合同(外部)", "329930020082600"),
     #        ("车商渠道", "保险兼业代理委托合同(外部)", "329930020082500")]
     # data = [("银保渠道", "保险兼业代理委托合同(外部)", "329930020082600")]
 
     @allure.story("续签、审批")
-    @pytest.mark.usefixtures("login_jiangsu_p")
+    @pytest.mark.usefixtures("login_jiangsu_p_fun")
     @pytest.mark.parametrize("channel,contractType,contract_no", data)
     def test_001(self, channel, contractType, contract_no):
         info("中介机构新增和变更申报页:{}".format(channel))
@@ -40,9 +42,10 @@ class Test_SALES_YLZJ_002():
         self.ACR.assertEqual("判断页面标题", self.ACR.get_head_text(), "中介合同续签")
         self.ACR.click(self.ACR.get_element_xpath(self.ACR.renew_submit))
         self.ACR.choose_ok_on_alert()
-        self.ACR.submit_interaction(self.ACR.submit_iframe)
+        self.ACR.submit_interaction(self.ACR.submit_frame)
         text = self.ACR.get_text(self.ACR.get_element_xpath(self.ACR.save_success))
         self.ACR.assertResult("验证提交成功", "保存成功!" in text)
+        get_screenshot("中介机构{}续签提交".format(channel))
         contract_no = text.split("：")[1]
         # 关闭
         self.ACR.close_button_ty()
@@ -61,7 +64,10 @@ class Test_SALES_YLZJ_002():
         self.ACRA.click(self.ACRA.get_element_xpath(self.ACRA.pass_check))
         self.ACRA.choose_ok_on_alert()
         info("提交任务")
-        self.ACRA.submit_interaction(self.ACRA.submit_iframe, "中介机构续签-ui测试")
+        self.ACRA.submit_interaction(iframe_xpath=self.ACRA.submit_frame, textarea="中介机构{}续签-ui测试".format(channel))
         text = self.ACRA.get_text(self.ACRA.get_element_xpath(self.ACRA.save_success))
+        get_screenshot("中介机构{}续签审核".format(channel))
         self.ACRA.assertResult("验证提交成功", "保存成功!" in text)
         self.ACRA.close_button_ty()
+        self.ACRA.switch_to_window()
+

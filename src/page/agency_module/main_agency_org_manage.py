@@ -22,7 +22,7 @@ class MainAgencyOrgManage(CommonMainPage):
         self.to_main_page(module_menu, "中介机构", "中介机构新增和变更申报")
 
     @allure.step("查询")
-    def query(self, contract_no, contractType=None, apartment_type='0', status="100"):
+    def query(self, contract_no=None, contractType=None, apartment_type='0', status="100"):
         """
         contractType:合同/协议类型
         status：任务提交：0->未选定）,1->被选定，未提交，已提交，被打回
@@ -54,9 +54,5 @@ class MainAgencyOrgManage(CommonMainPage):
         return self.get_element_xpath(self.status.format(status)).is_selected()
 
 
-
-
-    def is_selected(self, status):
-        return self.get_element_xpath(self.status.format(status)).is_selected()
 
 
