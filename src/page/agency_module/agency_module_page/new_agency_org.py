@@ -3,10 +3,10 @@
 # @Author: fyl
 # @File : new_agency_org.py  新增中介机构
 from config.global_var import sleep
-from src.page.process_page import ProcessPage
+from src.page.agency_module.agency_module_page.common_page import CommonPage
 
 
-class NewAgencyOrg(ProcessPage):
+class NewAgencyOrg(CommonPage):
     case = "//*[@class='case']"
     contract_type = "//*[@id='saAContract.contractType']"  # 合同/协议类型
     com_code = "//*[@id='comCode']"  # 我司机构代码
@@ -29,13 +29,10 @@ class NewAgencyOrg(ProcessPage):
     save_account = "//*[contains(@value,'保 存')]"
 
     contract_submit = "//*[@id='contractSubmit']"  # 保存并提交
-    save_success = "//body/table/tbody/tr/td[2]"  # 保存成功
-    submit_iframe = "//iframe[@name='submitFrame']"  # 提交任务的iframe
+
 
     name = "//*[@id='Name']"  # 账号名
 
-    def get_head_text(self):
-        return self.get_text(self.wait_until_el_xpath(self.case))
 
     def select_type(self, contract_type):
         """

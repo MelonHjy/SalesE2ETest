@@ -10,6 +10,7 @@ from src.page.agency_module.agency_module_page.new_channel_type_code import NewC
 from src.page.agency_module.main_channel_type_code_approval import MainChannelTypeCodeApproval
 from src.page.agency_module.main_channel_type_code_query import MainChannelTypeCodeQuery
 from src.utils import csv_util
+from src.utils.except_util import get_screenshot
 
 from src.utils.log import info
 
@@ -45,6 +46,7 @@ class Test_SALES_YLZJ_009:
         text = self.NCTC.get_text(self.NCTC.get_element_xpath(self.NCTC.save_success))
         Test_SALES_YLZJ_009.msg = {"agent_type":text.split("：")[1]}
         self.NCTC.assertResult("验证提交成功", "保存成功!" in text)
+        get_screenshot("渠道类型码新增-{}".format(channel))
         # self.NCTC.switch_to_default_content()
 
     @allure.story("渠道类型码新增-审核")
@@ -66,6 +68,7 @@ class Test_SALES_YLZJ_009:
         self.CTCA.click(self.CTCA.wait_until_el_xpath(self.CTCA.pass_check))
         text = self.CTCA.get_text(self.CTCA.get_element_xpath(self.CTCA.save_success))
         self.CTCA.assertResult("验证保存成功", "保存成功!" in text)
+        get_screenshot("渠道类型码新增审核-{}".format(channel))
         self.CTCA.close_button_ty()
         self.CTCA.switch_to_window()
         info("渠道类型码新增-验证")
@@ -78,3 +81,4 @@ class Test_SALES_YLZJ_009:
         text = self.MCTCQ.get_cell_text_by_head("当前状态", 0)
         self.MCTCQ.assertEqual("验证状态是否有效", text, "新增审核通过")
         # self.MCTCQ.switch_to_default_content()
+        get_screenshot("渠道类型码新增验证-{}".format(channel))

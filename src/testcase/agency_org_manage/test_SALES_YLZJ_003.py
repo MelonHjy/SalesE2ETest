@@ -7,6 +7,7 @@ import pytest
 
 from src.page.agency_module.main_agency_org_manage import MainAgencyOrgManage
 from src.utils import csv_util
+from src.utils.except_util import get_screenshot
 from src.utils.log import info
 
 
@@ -30,5 +31,5 @@ class Test_SALES_YLZJ_003():
                               self.MAOM.get_attribute(self.MAOM.get_element_xpath(self.MAOM.contract_no), "value"), "")
         flag = (not self.MAOM.is_selected("0")) or (not self.MAOM.is_selected("1")) or (not self.MAOM.is_selected("3"))
         self.MAOM.assertResult("验证任务状态清空", flag)
+        get_screenshot("中介机构{}查询重置".format(channel))
         self.MAOM.switch_to_default_content()
-

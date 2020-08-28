@@ -12,6 +12,7 @@ from src.page.agency_module.main_channel_type_code_approval import MainChannelTy
 from src.page.agency_module.main_channel_type_code_edit import MainChannelTypeCodeEdit
 from src.page.agency_module.main_channel_type_code_query import MainChannelTypeCodeQuery
 from src.utils import csv_util
+from src.utils.except_util import get_screenshot
 from src.utils.log import info
 
 data = csv_util.data_reader("agency_org_manage/test_SALES_YLZJ_010.csv")
@@ -48,6 +49,7 @@ class Test_SALES_YLZJ_010():
         self.ECTC.click(self.ECTC.wait_until_el_xpath(self.ECTC.update_agent_type))
         text = self.ECTC.get_text(self.ECTC.get_element_xpath(self.ECTC.save_success))
         self.ECTC.assertResult("验证提交成功", "保存成功!" in text)
+        get_screenshot("渠道类型码修改-{}".format(channel))
         self.ECTC.close_button_ty()
 
     @allure.story("渠道类型码修改-审核")
@@ -69,6 +71,7 @@ class Test_SALES_YLZJ_010():
         self.CTCA.click(self.CTCA.wait_until_el_xpath(self.CTCA.pass_check))
         text = self.CTCA.get_text(self.CTCA.get_element_xpath(self.CTCA.save_success))
         self.CTCA.assertResult("验证保存成功", "保存成功!" in text)
+        get_screenshot("渠道类型码修改审核-{}".format(channel))
         self.CTCA.close_button_ty()
         self.CTCA.switch_to_window()
         info("渠道类型码新增-验证")
@@ -79,3 +82,4 @@ class Test_SALES_YLZJ_010():
         info("验证")
         text = self.MCTCQ.get_cell_text_by_head("渠道类型码名称",0)
         self.MCTCQ.assertEqual("验证是否修改有效",text,new_agent_type_name)
+        get_screenshot("渠道类型码修改验证-{}".format(channel))

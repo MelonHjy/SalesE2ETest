@@ -5,17 +5,20 @@
 import allure
 import pytest
 
+from config.global_var import sleep
 from src.page.agency_module.agency_module_page.agency_contract_cancel import AgencyContractCancel
 from src.page.agency_module.agency_module_page.agency_contract_concel_approval import AgencyContractConcelApproval
 from src.page.agency_module.main_agency_org_approval import MainAgencyOrgApproval
 from src.page.agency_module.main_agency_org_manage import MainAgencyOrgManage
 from src.utils import csv_util
+from src.utils.except_util import get_screenshot
 from src.utils.log import info
 
 data = csv_util.data_reader("agency_org_manage/test_SALES_YLZJ_006.csv")
 
+
 @allure.feature("中介机构>>中介机构新增和变更申报>>终止")
-@pytest.mark.parametrize("channel,contract_no,contractType", data,scope="class")
+@pytest.mark.parametrize("channel,contract_no,contractType", data, scope="class")
 class Test_SALES_YLZJ_006():
     MAOM = MainAgencyOrgManage()
     ACC = AgencyContractCancel()
@@ -45,6 +48,7 @@ class Test_SALES_YLZJ_006():
         self.ACC.submit_interaction(self.ACC.submit_frame, textarea="ui测试-中介机构合同终止")
         text = self.ACC.get_text(self.ACC.get_element_xpath(self.ACC.save_success))
         self.ACC.assertResult("验证提交成功", "保存成功!" in text)
+        get_screenshot("中介机构{}终止合同".format(channel))
         self.ACC.close_button_ty()
         info("中介机构合同终止")
         self.MAOA.switch_to_window()
@@ -63,6 +67,7 @@ class Test_SALES_YLZJ_006():
         self.ACCA.submit_interaction(self.ACCA.submit_frame, textarea="ui测试-中介机构合同终止审批")
         text = self.ACCA.get_text(self.ACCA.get_element_xpath(self.ACCA.save_success))
         self.ACCA.assertResult("验证提交成功", "保存成功!" in text)
+        get_screenshot("中介机构{}终止合同".format(channel))
         self.ACCA.close_button_ty()
         info("中介机构合同终止-验证")
         self.MAOM.switch_to_window()
@@ -70,5 +75,14 @@ class Test_SALES_YLZJ_006():
         self.MAOM.into_page(channel)
         info("查询合同号：{}".format(contract_no))
         self.MAOM.query(contract_no, contractType, "1")
-        text = self.MAOM.get_cell_text_by_head("状态", 0)
-        self.MAOM.assertEqual("验证机构是否有效", text, "无效")
+
+        text = self.MAOM.get_text(self.MAOM.get_element_xpath(self.MAOM.query_data))
+        if text not in "无记录.":
+            text = self.MAOM.get_cell_text_by_head("状态", 0)
+            self.MAOM.assertEqual("验证机构是否有效", text, "无效")
+            get_screenshot("中介机构{}终止合同验证".format(channel))
+        else:
+            self.MAOM.assertResult("查询无该条记录", False)
+            get_screenshot("中介机构{}终止合同验证".format(channel))
+        sleep(2)
+        self.MAOM.switch_to_default_content()

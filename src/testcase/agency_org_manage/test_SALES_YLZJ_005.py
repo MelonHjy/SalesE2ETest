@@ -10,6 +10,7 @@ from src.page.agency_module.agency_module_page.agency_contract_modify_approval i
 from src.page.agency_module.main_agency_org_approval import MainAgencyOrgApproval
 from src.page.agency_module.main_agency_org_manage import MainAgencyOrgManage
 from src.utils import csv_util
+from src.utils.except_util import get_screenshot
 from src.utils.log import info
 
 
@@ -53,11 +54,12 @@ class Test_SALES_YLZJ_005():
             self.ACM.switch_to_window()
         self.ACM.click(self.ACM.get_element_xpath(self.ACM.contractUpdate_submit))
         self.ACM.choose_ok_on_alert()
-        self.ACM.submit_interaction(self.ACM.submit_iframe)
+        self.ACM.submit_interaction(self.ACM.submit_frame)
         text = self.ACM.get_text(self.ACM.get_element_xpath(self.ACM.save_success))
         self.ACM.assertResult("验证提交成功", "保存成功!" in text)
+        get_screenshot("中介机构{}修改".format(channel))
         contract_no = text.split("：")[1]
-        # 关闭
+        info("关闭")
         self.ACM.close_button_ty()
         info("中介机构修改-审批")
         self.MAOA.switch_to_window()
@@ -74,7 +76,9 @@ class Test_SALES_YLZJ_005():
         self.ACMA.click(self.ACMA.get_element_xpath(self.ACMA.pass_check))
         self.ACMA.choose_ok_on_alert()
         info("提交任务")
-        self.ACMA.submit_interaction(self.ACMA.submit_iframe, "中介机构修改-ui测试")
+        self.ACMA.submit_interaction(self.ACMA.submit_frame, "中介机构修改-ui测试")
         text = self.ACMA.get_text(self.ACMA.get_element_xpath(self.ACMA.save_success))
         self.ACMA.assertResult("验证提交成功", "保存成功!" in text)
+        get_screenshot("中介机构{}修改审核".format(channel))
         self.ACMA.close_button_ty()
+        self.ACMA.switch_to_window()

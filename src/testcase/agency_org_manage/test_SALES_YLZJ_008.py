@@ -7,6 +7,7 @@ import pytest
 
 from src.page.agency_module.main_channel_type_code_query import MainChannelTypeCodeQuery
 from src.utils import csv_util
+from src.utils.except_util import get_screenshot
 from src.utils.log import info
 
 
@@ -29,4 +30,5 @@ class Test_SALES_YLZJ_008():
         info(text)
         flag = self.MCTCQ.table_cell_text("操作", "查看")
         self.MCTCQ.assertResult("判断查询数据是无记录或者有记录列表", text in "无记录." or flag)
+        get_screenshot("渠道类型码查询-{}".format(channel))
         self.MCTCQ.switch_to_default_content()
