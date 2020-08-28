@@ -15,6 +15,7 @@ from src.utils.log import info
 
 data = csv_util.data_reader("agency_org_manage/test_SALES_YLZJ_011.csv")
 
+
 @allure.feature("中介模块>>渠道类型码作废")
 @pytest.mark.parametrize("channel,agent_type,agent_type_name", data, scope="class")
 class Test_SALES_YLZJ_011():
@@ -22,8 +23,6 @@ class Test_SALES_YLZJ_011():
     MCTCA = MainChannelTypeCodeApproval()
     CTCA = ChannelTypeCodeApproval()
     MCTCQ = MainChannelTypeCodeQuery()
-
-    msg = None
 
     @allure.story("渠道类型码作废")
     @pytest.mark.dependency(name='test_001')
@@ -77,4 +76,3 @@ class Test_SALES_YLZJ_011():
             info(text)
             self.CTC.assertResult("判断提示信息", "不允许作废" in text)
             get_screenshot("渠道类型码作废提示-{}".format(channel))
-

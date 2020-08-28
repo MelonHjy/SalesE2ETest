@@ -24,7 +24,6 @@ class Test_SALES_YLZJ_006():
     ACC = AgencyContractCancel()
     MAOA = MainAgencyOrgApproval()  # 审批
     ACCA = AgencyContractConcelApproval()
-    msg = None
 
     @allure.story("中介机构合同终止")
     @pytest.mark.dependency(name='test_001')
@@ -75,7 +74,6 @@ class Test_SALES_YLZJ_006():
         self.MAOM.into_page(channel)
         info("查询合同号：{}".format(contract_no))
         self.MAOM.query(contract_no, contractType, "1")
-
         text = self.MAOM.get_text(self.MAOM.get_element_xpath(self.MAOM.query_data))
         if text not in "无记录.":
             text = self.MAOM.get_cell_text_by_head("状态", 0)

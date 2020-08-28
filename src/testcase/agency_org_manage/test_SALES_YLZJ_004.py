@@ -126,7 +126,7 @@ class Test_SALES_YLZJ_004():
 
     @allure.story("中介机构新增-验证")
     @pytest.mark.usefixtures("login_jiangsu_p")
-    @pytest.mark.dependency(name='test_003', depend='test_001')
+    @pytest.mark.dependency(name='test_003', depend='test_002')
     def test_003(self, channel, contract_type, com_code, agent_name, contract_start, contract_end, sa_agent_code,
                  sa_comCode, fee_rule_No, his_payee_name, his_account_no, sa_Account_bankName, bank_area, bank_Name):
         self.MAOM.switch_to_window()
