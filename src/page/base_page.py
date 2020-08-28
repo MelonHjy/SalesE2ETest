@@ -95,12 +95,15 @@ class BasePage:
     handles = []
 
     def switch_to_window(self, num=-1):
+        info('000000')
         time.sleep(4)
         # if not self.handles:
         # current = g.driver.current_window_handle
         new = []
         for i in range(5):
+            info('33333')
             new = self.get_handles()
+            info('4444444')
             print(new)
         self.handles = self.update_handles(self.handles, new)
         self.switch_to_win(self.handles[num])
