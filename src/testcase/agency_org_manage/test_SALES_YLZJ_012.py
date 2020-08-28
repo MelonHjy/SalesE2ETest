@@ -24,8 +24,6 @@ class Test_SALES_YLZJ_012():
     MCA = MainCommissionApproval()
     CA = CommissionApproval()
 
-    msg = None
-
     @allure.story("佣金比例上限标准查询修改")
     @pytest.mark.dependency(name='test_001')
     @pytest.mark.usefixtures("login_jiangsu_p_fun")
@@ -67,5 +65,5 @@ class Test_SALES_YLZJ_012():
         self.MCE.into_page(channel)
         info("查询")
         self.MCE.query(rule_no)
-        self.MCE.assertEqual("验证修改的信息",self.MCE.get_cell_text_by_head("佣金配置名称")[0],new_rule_name)
+        self.MCE.assertEqual("验证修改的信息", self.MCE.get_cell_text_by_head("佣金配置名称")[0], new_rule_name)
         get_screenshot("佣金配置修改验证-{}".format(channel))

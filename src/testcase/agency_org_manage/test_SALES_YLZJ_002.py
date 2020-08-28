@@ -20,7 +20,6 @@ class Test_SALES_YLZJ_002():
     ACR = AgencyContractRenew()
     MAOA = MainAgencyOrgApproval()  # 审批
     ACRA = AgencyContractRenewApproval()
-    msg = None
 
     data = csv_util.data_reader("agency_org_manage/Test_SALES_YLZJ_002.csv")
 
@@ -70,4 +69,3 @@ class Test_SALES_YLZJ_002():
         self.ACRA.assertResult("验证提交成功", "保存成功!" in text)
         self.ACRA.close_button_ty()
         self.ACRA.switch_to_window()
-

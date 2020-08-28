@@ -16,7 +16,6 @@ from src.utils.log import info
 class Test_SALES_YLZJ_001():
     MAOM = MainAgencyOrgManage()
 
-
     data = csv_util.data_reader("agency_org_manage/test_SALES_YLZJ_001.csv")
 
     @allure.story("查询")

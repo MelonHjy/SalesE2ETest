@@ -24,8 +24,6 @@ class Test_SALES_YLZJ_013():
     MCA = MainCommissionApproval()
     CA = CommissionApproval()
 
-    msg = None
-
     @allure.story("佣金比例上限标准查询修改")
     @pytest.mark.dependency(name='test_001')
     @pytest.mark.usefixtures("login_jiangsu_p_fun")
@@ -49,11 +47,11 @@ class Test_SALES_YLZJ_013():
         info("佣金比例上限标准查询修改-审核")
         self.MCA.into_page(channel)
         info("查询")
-        self.MCA.query(rule_no=rule_no,status="01")
+        self.MCA.query(rule_no=rule_no, status="01")
         info("选择数据")
         self.MCA.select_data("配置单号", rule_no, "操作")
         self.MCA.switch_max_window()
-        self.CA.send_keys(self.CA.get_element_xpath(self.CA.reason),"ui测试-佣金配置删除")
+        self.CA.send_keys(self.CA.get_element_xpath(self.CA.reason), "ui测试-佣金配置删除")
         self.CA.click(self.CA.wait_until_el_xpath(self.CA.check_pass))
         text = self.CA.get_text(self.CA.get_element_xpath(self.CA.save_success))
         self.CA.assertResult("验证提交成功", "保存成功!" in text)
