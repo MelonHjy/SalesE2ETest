@@ -19,6 +19,7 @@ data = csv_util.data_reader("group_issue_manage/Test_SALES_YLTD_004.csv")
 
 
 @allure.feature("团队出单权管理>>团队信息变更（变更团队非重要信息）")
+@pytest.mark.usefixtures("login_jiangsu_p")
 @pytest.mark.parametrize("pk_deptdoc, group_name, business_focus, business_desc,build_date", data)
 class Test_SALES_YLTD_004():
     MGIM = MainGroupIssueManage()
@@ -31,7 +32,7 @@ class Test_SALES_YLTD_004():
 
     @allure.story("变更团队非重要信息")
     @pytest.mark.dependency(name='test_001')
-    @pytest.mark.usefixtures("login_jiangsu_p_fun")
+    @pytest.mark.usefixtures("restore_data")
     def test_001(self, pk_deptdoc, group_name, business_focus, business_desc, build_date):
         info("进入团队出单权管理页")
         self.MGIM.into_page()
@@ -69,9 +70,9 @@ class Test_SALES_YLTD_004():
         sleep(2)
 
     @allure.story("变更团队非重要信息-验证")
-    @pytest.mark.dependency(name='test_002', depends=['test_001', 'test_001'])
-    @pytest.mark.usefixtures("login_jiangsu_p_fun")
+    @pytest.mark.dependency(name='test_002', depends=['test_001'])
     def test_002(self, pk_deptdoc, group_name, business_focus, business_desc, build_date):
+        self.MGIM.switch_to_window()
         info("团队出单权管理页")
         self.MGIM.into_page()
         info("查询团队名称：{}".format(group_name))

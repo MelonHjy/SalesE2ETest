@@ -19,6 +19,7 @@ class MainGroupIssueManage(TablePage):
     group_name = "//*[@id='groupName']"  # 团队名称
     status = "//input[@id='state1{}']"  # 任务状态
     pk_deptdoc = "//*[@id='pk_deptdoc']"  # 团队代码
+    query_data = "//*[@id='yui-dt-table0']/tbody[1]/tr/td"
 
     xml = '''<?xml version="1.0" encoding="GBK"?>
         <requestXml>
