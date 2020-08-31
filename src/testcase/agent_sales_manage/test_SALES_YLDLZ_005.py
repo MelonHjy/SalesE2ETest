@@ -15,7 +15,11 @@ from src.utils import csv_util
 from src.utils.except_util import get_screenshot
 from src.utils.log import *
 
+data = csv_util.data_reader("agent_sales_manage/test_SALES_YLDLZ_005.csv")
 
+
+@pytest.mark.parametrize("user_code", data)
+@pytest.mark.usefixtures("login_jiangsu_p")
 @allure.feature("代理制人员代码管理>>营销团队经理聘任与解聘（有效的经理解聘该人员经理职务）")
 class Test_YLDLZ_005():
     MOAS = ManagementOfAgentSalesmen()
@@ -23,17 +27,14 @@ class Test_YLDLZ_005():
     ASR = AgentSalesRecheck()
     DMR = DismissalManagerRecheck()
     SQ = SalesQuery()
-    msg = None
 
     # data = [("83258554")]
-    data = csv_util.data_reader("agent_sales_manage/test_SALES_YLDLZ_005.csv")
+
 
     @allure.story("有效的经理解聘该人员经理职务")
     @pytest.mark.dependency(name='test_001')
-    @pytest.mark.parametrize("user_code", data)
-    @pytest.mark.usefixtures("login_jiangsu_p_fun")
+    @pytest.mark.usefixtures("restore_data")
     def test_YLDLZ_005(self, user_code):
-        Test_YLDLZ_005.msg = {"user_code": user_code}
         info("进入代理制销售人员代码管理页面")
         self.MOAS.into_page()
         info("查询该人员代码是否存在数据")
@@ -62,12 +63,12 @@ class Test_YLDLZ_005():
     # @pytest.mark.skip
     @allure.story("有效的经理解聘该人员经理职务-复核")
     @pytest.mark.dependency(name='test_002', depends=["test_001"])
-    @pytest.mark.usefixtures("login_jiangsu_p_fun")
-    def test_YLDLZ_005_recheck(self):
+    def test_YLDLZ_005_recheck(self, user_code):
+        self.ASR.switch_to_window()
         info("综合管理->销售人员->代理制销售人员代码复核")
         self.ASR.into_page()
-        info("查询人员代码{}".format(Test_YLDLZ_005.msg["user_code"]))
-        self.ASR.query(Test_YLDLZ_005.msg["user_code"])
+        info("查询人员代码{}".format(user_code))
+        self.ASR.query(user_code)
         info("进入复核界面")
         self.ASR.select_data("经理解聘复核")
         self.ASR.switch_to_window()
@@ -80,14 +81,16 @@ class Test_YLDLZ_005():
         text = self.DMR.get_text(self.DMR.get_element_xpath(self.DMR.save_success))
         self.DMR.assertEqual("验证复核成功", text, "保存成功!")
         get_screenshot("提交")
+        self.DMR.close_button_ty()
 
-    # @pytest.mark.skip
     @allure.story("验证审核通过后核对人员信息")
     @pytest.mark.dependency(name='test_003', depends=["test_001", "test_002"])
-    @pytest.mark.usefixtures("login_jiangsu_p_fun")
-    def test_003_sales_query(self):
+    def test_003_sales_query(self, user_code):
+        self.SQ.switch_to_window()
+        info("验证")
         self.SQ.into_page()
-        self.SQ.query(Test_YLDLZ_005.msg["user_code"])
+        info("查询人员的代码{}".format(user_code))
+        self.SQ.query(user_code)
         text = self.SQ.get_cell_text_by_head("职级", row=0)
         get_screenshot("验证")
         # self.SQ.assertEqual("判断该销售人员职级是否营销团队经理", text, "营销团队经理")

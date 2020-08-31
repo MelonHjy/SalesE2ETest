@@ -27,7 +27,7 @@ class Test_YLDLZ_014():
     # data = ["83258551"]   # 83258551  83258572  83258562
 
     @allure.story("合同续签（有效人员进行合同续签）")
-    @pytest.mark.usefixtures("login_jiangsu_p_fun")
+    @pytest.mark.usefixtures("login_jiangsu_p_fun","restore_data")
     @pytest.mark.parametrize("user_code", data)
     def test_001(self, user_code):
         Test_YLDLZ_014.msg = {"usercode": user_code}

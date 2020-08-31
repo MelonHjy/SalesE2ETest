@@ -35,7 +35,7 @@ class Test_YLDLZ_013():
 
     @allure.step("代理制销售人员出单权查询并注销")
     @pytest.mark.dependency(name='test_001')
-    @pytest.mark.usefixtures("login_jiangsu_p_fun")
+    @pytest.mark.usefixtures("login_jiangsu_p_fun","restore_data")
     @pytest.mark.parametrize("user_code", data)
     def test_001(self, user_code):
         Test_YLDLZ_013.msg = {"user_code": user_code}

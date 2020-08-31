@@ -31,7 +31,7 @@ class Test_YLDLZ_001():
     msg = None
 
     @allure.story("新增人员聘任为经理--填写信息")
-    @pytest.mark.usefixtures("login_jiangsu_p_fun")
+    @pytest.mark.usefixtures("login_jiangsu_p_fun","restore_data")
     @pytest.mark.dependency(name='test_001')
     @pytest.mark.parametrize(
         "userName, idCard, mobile, group, groupcodehold, rolecode, nation, visage, culture, qualifytype, qualifyno,"

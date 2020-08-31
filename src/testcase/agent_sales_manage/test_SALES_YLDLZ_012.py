@@ -24,7 +24,7 @@ class Test_YLDLZ_012():
     data = csv_util.data_reader("agent_sales_manage/test_SALES_YLDLZ_012.csv")
 
     @allure.story("无效人员进行信息变更")
-    @pytest.mark.usefixtures("login_jiangsu_p_fun")
+    @pytest.mark.usefixtures("login_jiangsu_p_fun","restore_data")
     @pytest.mark.parametrize("user_code, accountno, cardtype, saDAccount_bankName, saDAccount_bankareaname, bankName",
                              data)
     def test_001(self, user_code, accountno, cardtype, saDAccount_bankName, saDAccount_bankareaname, bankName):
