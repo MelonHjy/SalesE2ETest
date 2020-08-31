@@ -278,6 +278,14 @@ class BasePage:
         g.driver.quit()
 
     @catch_except
+    def close_tab(self):
+        """
+        关闭浏览器
+        """
+        sleep(0.5)
+        g.driver.close()
+
+    @catch_except
     def choose_ok_on_alert(self):
         """
         获取alert弹框并点击确定

@@ -26,7 +26,7 @@ class Test_SALES_YLTD_006():
 
     @allure.story("综拓团队申请")
     @pytest.mark.dependency(name='test_001')
-    @pytest.mark.usefixtures("login_jiangsu_c_fun")
+    @pytest.mark.usefixtures("login_jiangsu_c_fun","restore_data")
     def test_001(self, pk_deptdoc, group_name):
         info("进入团队出单权管理页")
         self.MZGA.into_page()
@@ -42,8 +42,11 @@ class Test_SALES_YLTD_006():
         self.MZGA.assertEqual("判断提示语句是否申请成功", alert, "提交申请成功")
         get_screenshot("综拓团队申请")
         self.MZGA.choose_ok_on_alert()
-        info("综拓团队申请-审批")
-        self.ZGA.switch_to_window()
+
+    @allure.story("综拓团队申请-审批")
+    @pytest.mark.dependency(name='test_002', depends=["test_001"])
+    @pytest.mark.usefixtures("login_jiangsu_p_fun")
+    def test_002(self, pk_deptdoc, group_name):
         info("进入团队出单权管理页")
         self.ZGA.into_page()
         info("查询申请团队")
@@ -57,16 +60,14 @@ class Test_SALES_YLTD_006():
         self.ZTP.submit_interaction(self.ZTP.submit_iframe, textarea="综拓团队申请-ui测试")
         get_screenshot("综拓团队申请审核")
         self.ZTP.close_button_ty()
-
-    @allure.story("综拓团队申请-验证")
-    @pytest.mark.dependency(name='test_003', depends=["test_001", "test_002"])
-    @pytest.mark.usefixtures("login_jiangsu_c_fun")
-    def test_003(self, pk_deptdoc, group_name):
+        info("综拓团队申请-验证")
+        self.MZGA.switch_to_window()
         info("进入团队出单权管理页")
         self.MZGA.into_page()
         info("查询团队名：{}".format(group_name))
         self.MZGA.query(group_name=group_name)
-        index = self.MZGA.get_cell_text_by_head("团队代码").index(pk_deptdoc)
-        text = self.MZGA.get_cell_text_by_head("团队主营业务分类", index)
-        self.MZGA.assertEqual("验证团队主营业务分类", text.strip(), "综拓")
+        # index = self.MZGA.get_cell_text_by_head("团队代码").index(pk_deptdoc)
+        # text = self.MZGA.get_cell_text_by_head("团队主营业务分类", index)
+        get_screenshot("综拓团队申请验证")
+        # self.MZGA.assertEqual("验证团队主营业务分类", text.strip(), "综拓")
         sleep(2)

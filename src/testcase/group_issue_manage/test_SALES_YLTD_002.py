@@ -29,7 +29,7 @@ class Test_SALES_YLTD_002():
 
     @allure.story("无效的团队进行复效")
     @pytest.mark.dependency(name='test_001')
-    @pytest.mark.usefixtures("login_jiangsu_p_fun")
+    @pytest.mark.usefixtures("login_jiangsu_p","restore_data")
     def test_001(self, pk_deptdoc, group_name):
         info("进入团队出单权管理页")
         self.MGIM.into_page()
@@ -64,10 +64,11 @@ class Test_SALES_YLTD_002():
         self.EGR.choose_ok_on_alert()
         sleep(2)
         text = self.EGR.get_alert_text()
+        get_screenshot("团队复效审核")
         info("提示信息：{}".format(text))
         self.EGR.assertEqual("判断提示信息", text, "{}:团队信息推送成功！".format(group_name))
-        get_screenshot("团队复效审核")
         self.EGR.choose_ok_on_alert()
+        self.EGR.close_tab()
 
     @allure.story("模拟Hr推送至销管系统")
     @pytest.mark.dependency(name='test_send', depends=['test_001'])
@@ -76,16 +77,19 @@ class Test_SALES_YLTD_002():
 
     @allure.story("无效的团队进行复效-验证")
     @pytest.mark.dependency(name='test_002', depends=['test_send'])
-    @pytest.mark.usefixtures("login_jiangsu_p_fun")
+    @pytest.mark.usefixtures("login_jiangsu_p")
     def test_002(self, pk_deptdoc, group_name):
+        self.MGIM.switch_to_window()
         info("团队出单权管理页")
         self.MGIM.into_page()
         info("查询团队名称：{}".format(group_name))
         self.MGIM.query(group_name=group_name)
         # self.MGIM.query("ui测试-002")
-        text = self.MGIM.get_cell_text_by_head("团队状态", 0)
-        self.MGIM.assertEqual("判断团队状态是否有效", text, "有效")
-        process = self.MGIM.get_cell_text_by_head("终止流程", 0)
-        self.MGIM.assertEqual("判断最后一栏没有终止流程按钮", process, "")
-        get_screenshot("团队复效验证")
-        sleep(2)
+        text = self.MGIM.get_text(self.MGIM.get_element_xpath(self.MGIM.query_data))
+        if text not in "无记录.":
+            text = self.MGIM.get_cell_text_by_head("团队状态", 0)
+            self.MGIM.assertEqual("判断团队状态是否有效", text, "有效")
+            process = self.MGIM.get_cell_text_by_head("终止流程", 0)
+            self.MGIM.assertEqual("判断最后一栏没有终止流程按钮", process, "")
+            get_screenshot("团队复效验证")
+            sleep(2)

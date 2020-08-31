@@ -21,6 +21,15 @@ def login_jiangsu_p_fun():
     BasePage().close_browser()
 
 
+@pytest.fixture(scope="class", autouse=False)
+@allure.severity('blocker')
+def login_jiangsu_p():
+    get_config_content()
+    CommonSteps().login_p()
+    yield
+    BasePage().close_browser()
+
+
 @pytest.fixture(scope="function", autouse=False)
 @allure.severity('blocker')
 def login_jiangsu_c_fun():
