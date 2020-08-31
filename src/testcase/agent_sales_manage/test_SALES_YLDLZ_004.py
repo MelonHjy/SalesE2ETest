@@ -14,7 +14,9 @@ from src.utils import csv_util
 from src.utils.except_util import get_screenshot
 from src.utils.log import info
 
-
+data = csv_util.data_reader("agent_sales_manage/test_SALES_YLDLZ_004.csv")
+@pytest.mark.usefixtures("login_jiangsu_p")
+@pytest.mark.parametrize("user_code, contractstartdate0, contractenddate0, ruleNo", data)
 @allure.feature("代理制人员代码管理>>营销团队经理聘任与解聘（无效人员复效并任命为经理）")
 class Test_YLDLZ_004():
     MOAS = ManagementOfAgentSalesmen()
@@ -22,17 +24,13 @@ class Test_YLDLZ_004():
     ASR = AgentSalesRecheck()
     AMR = AppointmentManagerRecheck()
     SQ = SalesQuery()
-    user_code = None
-
-    data = csv_util.data_reader("agent_sales_manage/test_SALES_YLDLZ_004.csv")
 
     @allure.story("无效人员复效并任命为经理")
-    @pytest.mark.usefixtures("login_jiangsu_p_fun")
     @pytest.mark.dependency(name='test_001')
-    @pytest.mark.parametrize("user_code, contractstartdate0, contractenddate0, ruleNo", data)
+    @pytest.mark.usefixtures("restore_data")
     def test_001_appointment(self, user_code, contractstartdate0, contractenddate0, ruleNo):
-        Test_YLDLZ_004.user_code = user_code
         info("经营机构->销售人员->代理制销售人员代码管理")
+        self.MOAS.switch_to_default_content()
         self.MOAS.into_page()
         info("查询无效人员{}".format(user_code))
         self.MOAS.query(user_code)
@@ -63,15 +61,16 @@ class Test_YLDLZ_004():
         text = self.AM.get_text(self.AM.get_element_xpath(self.AM.save_success))
         self.AM.assertResult("验证提交成功", "保存成功!" in text)
         get_screenshot("提交")
+        self.AM.close_button_ty()
 
     @allure.story("无效人员复效并任命为经理--复核")
     @pytest.mark.dependency(name='test_002', depends=["test_001"])
-    @pytest.mark.usefixtures("login_jiangsu_p_fun")
-    def test_002_rechect(self):
+    def test_002_rechect(self, user_code, contractstartdate0, contractenddate0, ruleNo):
+        self.ASR.switch_to_window()
         info("综合管理->销售人员->代理制销售人员代码复核")
         self.ASR.into_page()
-        info("查询{}".format(Test_YLDLZ_004.user_code))
-        self.ASR.query(Test_YLDLZ_004.user_code)
+        info("查询{}".format(user_code))
+        self.ASR.query(user_code)
         self.ASR.select_data("经理聘任复核")
         self.ASR.switch_to_window()
         self.ASR.maximize_window()
@@ -80,14 +79,15 @@ class Test_YLDLZ_004():
         self.AMR.assertEqual("判断页面标题", self.AMR.get_head_text(), "经理聘任复核")
         self.AMR.recheck_ope(textarea="无效团队成员任命为经理--ui测试")
         get_screenshot("提交")
+        self.AMR.close_button_ty()
 
     @allure.story("验证审核通过后核对人员信息")
     @pytest.mark.dependency(name='test_003', depends=["test_001", "test_002"])
-    @pytest.mark.usefixtures("login_jiangsu_p_fun")
-    def test_003_sales_query(self):
+    def test_003_sales_query(self, user_code, contractstartdate0, contractenddate0, ruleNo):
+        self.SQ.switch_to_window()
         info("个代渠道->销售人员->销售人员查询")
         self.SQ.into_page()
-        self.SQ.query(Test_YLDLZ_004.user_code)
+        self.SQ.query(user_code)
         text = self.SQ.get_cell_text_by_head("职级", row=0)
         self.SQ.assertEqual("判断该销售人员职级是否营销团队经理", text, "营销团队经理")
         get_screenshot("验证")

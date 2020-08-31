@@ -26,7 +26,7 @@ class Test_YLDLZ_009():
     data = csv_util.data_reader("agent_sales_manage/test_SALES_YLDLZ_009.csv")
 
     @allure.story("无效人员复效为团队成员")
-    @pytest.mark.usefixtures("login_jiangsu_p_fun")
+    @pytest.mark.usefixtures("login_jiangsu_p_fun","restore_data")
     @pytest.mark.dependency(name='test_001')
     @pytest.mark.parametrize("user_code, contractstartdate1, contractenddate1, ruleNo", data)
     def test_001(self, user_code, contractstartdate1, contractenddate1, ruleNo):

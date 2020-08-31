@@ -29,7 +29,7 @@ class Test_YLDLZ_011():
 
     @allure.story("有效人员进行信息变更")
     @pytest.mark.dependency(name='test_001')
-    @pytest.mark.usefixtures("login_jiangsu_p_fun")
+    @pytest.mark.usefixtures("login_jiangsu_p_fun","restore_data")
     @pytest.mark.parametrize("user_code, mobile, nation, visage, culture, qualifytype,  qualifyno,"
                              "qualifystartdate, agentType, qualifytype1, qualifyno1, qualifystartdate1, contractstartdate0,"
                              "contractenddate0", data)
