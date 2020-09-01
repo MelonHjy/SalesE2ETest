@@ -17,7 +17,7 @@ from src.utils.log import info
 data = csv_util.data_reader("group_issue_manage/Test_SALES_YLTD_002.csv")
 
 
-@allure.feature("团队出单权管理>>团队信息变更（无效的团队进行复效）")
+@allure.feature("团队出单权管理>>团队信息变更（无效的团队进行复效）-002")
 @pytest.mark.parametrize("pk_deptdoc, group_name", data)
 class Test_SALES_YLTD_002():
     MGIM = MainGroupIssueManage()
@@ -31,6 +31,7 @@ class Test_SALES_YLTD_002():
     @pytest.mark.dependency(name='test_001')
     @pytest.mark.usefixtures("login_jiangsu_p","restore_data")
     def test_001(self, pk_deptdoc, group_name):
+        self.MGIM.switch_to_default_content()
         info("进入团队出单权管理页")
         self.MGIM.into_page()
         info("查询团队名：{}".format(group_name))
