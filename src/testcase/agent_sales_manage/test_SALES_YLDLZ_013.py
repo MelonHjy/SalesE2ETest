@@ -158,5 +158,5 @@ class Test_YLDLZ_013():
         self.MOAS.query(user_code)
         text = self.MOAS.get_cell_text_by_head("状态", 0)
         self.MOAS.assertEqual("判断是否结束复核状态", text, "手动注销")
-        get_screenshot("验证")
+        #get_screenshot("验证")
         sleep(2)

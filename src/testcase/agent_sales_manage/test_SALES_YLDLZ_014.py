@@ -71,5 +71,5 @@ class Test_YLDLZ_014():
         info("复核")
         self.CRR.click(self.CRR.get_element_xpath(self.CRR.success))
         self.CRR.submit_interaction(self.CRR.submit_iframe, textarea="合同续签（有效人员进行合同续签）--ui测试")
-        get_screenshot("提交")
+        #get_screenshot("提交")
         sleep(2)

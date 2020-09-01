@@ -123,4 +123,4 @@ class Test_YLDLZ_007():
         self.MOAS.assertEqual("验证团队成员状态为‘有效’", status, "有效")
         process = self.MOAS.get_cell_text_by_head("终止流程", 0)
         self.MOAS.assertEqual("判断最后一栏没有终止流程按钮", process, "")
-        get_screenshot("验证")
+        #get_screenshot("验证")

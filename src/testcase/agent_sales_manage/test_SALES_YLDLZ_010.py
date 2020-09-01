@@ -88,5 +88,5 @@ class Test_YLDLZ_010():
         group_code_text = self.GI.get_text(self.GI.wait_until_el_xpath(self.GI.group_code))
         info("团队代码：{}".format(group_code))
         self.GI.assertResult("验证团队代码是否修改成功", group_code_text in group_code)
-        get_screenshot("验证")
+        #get_screenshot("验证")
         sleep(2)

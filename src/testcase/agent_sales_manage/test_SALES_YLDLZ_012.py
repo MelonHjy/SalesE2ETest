@@ -82,4 +82,4 @@ class Test_YLDLZ_012():
         self.EASM.assertEqual("验证联行号",
                               self.EASM.get_attribute(self.EASM.get_element_xpath(self.EASM.bankName), 'value'),
                               bankName)
-        get_screenshot("验证")
+        #get_screenshot("验证")

@@ -107,5 +107,5 @@ class Test_YLDLZ_011():
         self.MOAS.query(user_code)
         text = self.MOAS.get_cell_text_by_head("状态", 0)
         self.MOAS.assertEqual("判断是否结束复核状态", text, "有效")
-        get_screenshot("验证")
+        #get_screenshot("验证")
         sleep(2)
