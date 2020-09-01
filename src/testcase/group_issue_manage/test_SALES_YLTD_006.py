@@ -28,7 +28,7 @@ class Test_SALES_YLTD_006():
     @pytest.mark.dependency(name='test_001')
     @pytest.mark.usefixtures("login_jiangsu_c_fun","restore_data")
     def test_001(self, pk_deptdoc, group_name):
-        self.MGIM.switch_to_default_content()
+        self.MZGA.switch_to_default_content()
         info("进入团队出单权管理页")
         self.MZGA.into_page()
         # 验证页面

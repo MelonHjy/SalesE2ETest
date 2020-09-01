@@ -79,13 +79,14 @@ class Test_SALES_YLTD_005():
 
     @allure.story("团队申报-验证")
     @pytest.mark.dependency(name='test_002', depends=["test_send"])
-    @pytest.mark.usefixtures("login_jiangsu_p_fun")
+    @pytest.mark.usefixtures("login_jiangsu_p")
     def test_002(self, pk_deptdoc, group_name):
         self.MGIM.switch_to_window()
         info("团队出单权管理页")
         self.MGIM.into_page()
         info("查询团队名称：{}".format(group_name))
         self.MGIM.query(group_name=group_name)
+        get_screenshot("团队注销验证")
         text = self.MGIM.get_text(self.MGIM.get_element_xpath(self.MGIM.query_data))
         if text not in "无记录.":
             text = self.MGIM.get_cell_text_by_head("团队状态", 0)

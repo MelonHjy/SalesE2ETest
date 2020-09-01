@@ -14,23 +14,23 @@ from src.utils import csv_util
 from src.utils.except_util import get_screenshot
 from src.utils.log import info
 
+data = csv_util.data_reader("agent_sales_manage/test_SALES_YLDLZ_009.csv")
 
-@allure.feature("代理制销售人员代码管理>>团队成员出单权赋予与变更（无效人员复效为团队成员）")
+
+@pytest.mark.parametrize("user_code, contractstartdate1, contractenddate1, ruleNo", data, scope='class')
+@pytest.mark.usefixtures("login_jiangsu_p")
+@allure.feature("代理制销售人员代码管理>>团队成员出单权赋予与变更（无效人员复效为团队成员）-009")
 class Test_YLDLZ_009():
     MOAS = ManagementOfAgentSalesmen()
     GI = GroupIssue()
     ASR = AgentSalesRecheck()
     GIR = GroupIssueRecheck()
-    msg = None
-
-    data = csv_util.data_reader("agent_sales_manage/test_SALES_YLDLZ_009.csv")
 
     @allure.story("无效人员复效为团队成员")
-    @pytest.mark.usefixtures("login_jiangsu_p_fun","restore_data")
+    @pytest.mark.usefixtures("restore_data")
     @pytest.mark.dependency(name='test_001')
-    @pytest.mark.parametrize("user_code, contractstartdate1, contractenddate1, ruleNo", data)
     def test_001(self, user_code, contractstartdate1, contractenddate1, ruleNo):
-        Test_YLDLZ_009.msg = user_code
+        self.MOAS.switch_to_default_content()
         info("经营机构->销售人员->代理制销售人员代码管理")
         self.MOAS.into_page()
         info("查询无效人员代码{}->选择".format(user_code))
@@ -58,15 +58,14 @@ class Test_YLDLZ_009():
         get_screenshot("提交")
         self.GI.close_button_ty()
 
-    # @pytest.mark.skip
     @allure.story("无效人员复效为团队成员-复核")
     @pytest.mark.dependency(name='test_002', depends=["test_001"])
-    @pytest.mark.usefixtures("login_jiangsu_p_fun")
-    def test_002(self):
+    def test_002(self, user_code, contractstartdate1, contractenddate1, ruleNo):
+        self.ASR.switch_to_window()
         info("综合管理->销售人员->代理制销售人员代码复核")
         self.ASR.into_page()
-        info("查询无效人员代码{}->选择".format(Test_YLDLZ_009.msg))
-        self.ASR.query(user_code1=Test_YLDLZ_009.msg)
+        info("查询无效人员代码{}->选择".format(user_code))
+        self.ASR.query(user_code1=user_code)
         self.ASR.select_data("出单权赋予复核")
         self.ASR.switch_to_window()
         self.ASR.maximize_window()
@@ -79,17 +78,17 @@ class Test_YLDLZ_009():
         get_screenshot("提交")
         self.GIR.close_button_ty()
 
-    # @pytest.mark.skip
     @allure.story("代理制销售人员代码查询验证")
     @pytest.mark.dependency(name='test_003', depends=["test_001", "test_002"])
-    @pytest.mark.usefixtures("login_jiangsu_p")
-    def test_003(self):
+    def test_003(self, user_code, contractstartdate1, contractenddate1, ruleNo):
+        self.MOAS.switch_to_window()
         info("经营机构->销售人员->代理制销售人员代码管理")
         self.MOAS.into_page()
-        info("查询人员代码{}".format(Test_YLDLZ_009.msg))
-        self.MOAS.query(user_code1=Test_YLDLZ_009.msg)
+        info("查询人员代码{}".format(user_code))
+        self.MOAS.query(user_code1=user_code)
         status = self.MOAS.get_cell_text_by_head("状态", 0)
         self.MOAS.assertEqual("验证团队成员状态为‘有效’", status, "有效")
         process = self.MOAS.get_cell_text_by_head("终止流程", 0)
         self.MOAS.assertEqual("判断最后一栏没有终止流程按钮", process, "")
-        get_screenshot("验证")
+        # get_screenshot("验证")
+        sleep(2)

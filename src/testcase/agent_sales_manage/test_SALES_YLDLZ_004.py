@@ -5,6 +5,7 @@
 import allure
 import pytest
 
+from config.global_var import sleep
 from src.page.Personal_agency_channel.sales_query import SalesQuery
 from src.page.agent_sales_manage.appointment_manager import AppointmentManager
 from src.page.agent_sales_manage.main_management_agent_salesmen import ManagementOfAgentSalesmen
@@ -15,9 +16,11 @@ from src.utils.except_util import get_screenshot
 from src.utils.log import info
 
 data = csv_util.data_reader("agent_sales_manage/test_SALES_YLDLZ_004.csv")
+
+
 @pytest.mark.usefixtures("login_jiangsu_p")
-@pytest.mark.parametrize("user_code, contractstartdate0, contractenddate0, ruleNo", data)
-@allure.feature("代理制人员代码管理>>营销团队经理聘任与解聘（无效人员复效并任命为经理）")
+@pytest.mark.parametrize("user_code, contractstartdate0, contractenddate0, ruleNo", data, scope='class')
+@allure.feature("代理制人员代码管理>>营销团队经理聘任与解聘（无效人员复效并任命为经理）-004")
 class Test_YLDLZ_004():
     MOAS = ManagementOfAgentSalesmen()
     AM = AppointmentManager()
@@ -29,8 +32,8 @@ class Test_YLDLZ_004():
     @pytest.mark.dependency(name='test_001')
     @pytest.mark.usefixtures("restore_data")
     def test_001_appointment(self, user_code, contractstartdate0, contractenddate0, ruleNo):
-        info("经营机构->销售人员->代理制销售人员代码管理")
         self.MOAS.switch_to_default_content()
+        info("经营机构->销售人员->代理制销售人员代码管理")
         self.MOAS.into_page()
         info("查询无效人员{}".format(user_code))
         self.MOAS.query(user_code)
@@ -90,4 +93,5 @@ class Test_YLDLZ_004():
         self.SQ.query(user_code)
         text = self.SQ.get_cell_text_by_head("职级", row=0)
         self.SQ.assertEqual("判断该销售人员职级是否营销团队经理", text, "营销团队经理")
-        get_screenshot("验证")
+        # get_screenshot("验证")
+        sleep(2)
