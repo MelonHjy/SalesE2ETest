@@ -18,6 +18,11 @@ data = csv_util.data_reader("agent_sales_manage/test_SALES_YLDLZ_001.csv")
 
 @pytest.mark.usefixtures("login_jiangsu_p")
 @allure.feature("代理制人员代码管理>>营销团队经理聘任与解聘(新增人员聘任为经理)-001")
+@pytest.mark.parametrize(
+    "userName, idCard, mobile, group, groupcodehold, rolecode, nation, visage, culture, qualifytype, qualifyno,"
+    "qualifystartdate, agentType, qualifytype1, qualifyno1, qualifystartdate1, contractstartdate0,"
+    "contractenddate0, ruleNo, accountno, cardtype, saDAccount_bankName, saDAccount_bankareaname,"
+    "bankName", data, scope='class')
 class Test_YLDLZ_001():
     AM = AppointmentManager()
     MOAS = ManagementOfAgentSalesmen()
@@ -36,11 +41,6 @@ class Test_YLDLZ_001():
     @allure.story("新增人员聘任为经理--填写信息")
     @pytest.mark.usefixtures("restore_data")
     @pytest.mark.dependency(name='test_001')
-    @pytest.mark.parametrize(
-        "userName, idCard, mobile, group, groupcodehold, rolecode, nation, visage, culture, qualifytype, qualifyno,"
-        "qualifystartdate, agentType, qualifytype1, qualifyno1, qualifystartdate1, contractstartdate0,"
-        "contractenddate0, ruleNo, accountno, cardtype, saDAccount_bankName, saDAccount_bankareaname,"
-        "bankName", data)
     def test_001_basemag(self, userName, idCard, mobile, group, groupcodehold, rolecode, nation, visage, culture,
                          qualifytype, qualifyno,
                          qualifystartdate, agentType, qualifytype1, qualifyno1, qualifystartdate1,
