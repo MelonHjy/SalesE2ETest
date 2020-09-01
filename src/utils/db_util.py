@@ -14,6 +14,7 @@ import traceback
 from functools import wraps
 
 import jaydebeapi
+import jpype
 from jpype import java
 
 from config.global_var import g
@@ -37,13 +38,15 @@ def catch_socket_exception(func):
     def wrapper(*args, **kwargs):
         try:
             return func(*args, **kwargs)
-        except java.net.SocketException as e:
-            info("出现SocketException：%s，重新进行连接" % traceback.format_exc())
-            # SocketException 关闭连接，重新获取连接
-            g.db.close_connection()
+        except jpype.java.sql.SQLException as e:
+            info("出现异常，详细信息：%s，重新进行连接" % traceback.format_exc())
             get_conn()
             return func(*args, **kwargs)
-
+        except Exception as e:
+            info("出现异常，详细信息：%s，重新进行连接" % traceback.format_exc())
+            # SocketException 重新获取连接
+            get_conn()
+            raise e
     return wrapper
 
 

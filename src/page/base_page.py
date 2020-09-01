@@ -95,17 +95,16 @@ class BasePage:
     handles = []
 
     def switch_to_window(self, num=-1):
-        info('000000')
         time.sleep(4)
         # if not self.handles:
         # current = g.driver.current_window_handle
         new = []
         for i in range(5):
-            info('33333')
             new = self.get_handles()
-            info('4444444')
-            info(new)
+            print(new)
+        info('3333333333333')
         self.handles = self.update_handles(self.handles, new)
+        info('4444444444444')
         self.switch_to_win(self.handles[num])
 
     def update_handles(self, old, new):
@@ -127,7 +126,7 @@ class BasePage:
 
         self.double_click(self.wait_until_el_xpath(xpath))
         sleep(2)
-        info('aaaaaaaaaaaaa')
+        info('aaaaaaaaaaaaa0')
         self.switch_to_window()
         info('aaaaaaaaaaaaa1')
         # 取消选择页面的onbeforeunload
