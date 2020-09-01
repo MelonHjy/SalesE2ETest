@@ -30,10 +30,11 @@ class Test_SALES_YLTD_004():
 
     # data = [("32990090", "ui测试-004", "重点行业", "ui测试指定重点行业", "2021-01-01")]
 
-    @allure.story("变更团队非重要信息")
+    @allure.story("变更团队非重要信息-004")
     @pytest.mark.dependency(name='test_001')
     @pytest.mark.usefixtures("restore_data")
     def test_001(self, pk_deptdoc, group_name, business_focus, business_desc, build_date):
+        self.MGIM.switch_to_default_content()
         info("进入团队出单权管理页")
         self.MGIM.into_page()
         info("查询团队名：{}".format(group_name))

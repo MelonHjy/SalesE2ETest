@@ -13,8 +13,11 @@ from src.utils import csv_util
 from src.utils.driver_util import *
 from src.utils.except_util import get_screenshot
 
+data = csv_util.data_reader("agent_sales_manage/test_SALES_YLDLZ_001.csv")
 
-@allure.feature("代理制人员代码管理>>营销团队经理聘任与解聘(新增人员聘任为经理)")
+
+@pytest.mark.usefixtures("login_jiangsu_p")
+@allure.feature("代理制人员代码管理>>营销团队经理聘任与解聘(新增人员聘任为经理)-001")
 class Test_YLDLZ_001():
     AM = AppointmentManager()
     MOAS = ManagementOfAgentSalesmen()
@@ -27,11 +30,11 @@ class Test_YLDLZ_001():
     #           "新疆维吾尔自治区_巴音郭楞蒙古自治州", "中国工商银行股份有限公司库尔勒人民东路支行")]
     # data2 = [("杨闰圣ui测试", "61011519990217147x", "32000000", "测试0506营销")]
 
-    data = csv_util.data_reader("agent_sales_manage/test_SALES_YLDLZ_001.csv")
+
     msg = None
 
     @allure.story("新增人员聘任为经理--填写信息")
-    @pytest.mark.usefixtures("login_jiangsu_p_fun","restore_data")
+    @pytest.mark.usefixtures("restore_data")
     @pytest.mark.dependency(name='test_001')
     @pytest.mark.parametrize(
         "userName, idCard, mobile, group, groupcodehold, rolecode, nation, visage, culture, qualifytype, qualifyno,"
@@ -45,6 +48,7 @@ class Test_YLDLZ_001():
                          contractenddate0, ruleNo, accountno, cardtype, saDAccount_bankName,
                          saDAccount_bankareaname,
                          bankName):
+        self.MOAS.switch_to_default_content()
         info("经营机构->销售人员->代理制销售人员代码管理->营销团队经理聘任与解聘")
         self.MOAS.into_page()
         self.MOAS.click_btn('营销团队经理聘任与解聘')
@@ -91,8 +95,14 @@ class Test_YLDLZ_001():
 
     @allure.story("新增人员聘任为经理--复核")
     @pytest.mark.dependency(name='test_002', depends=['test_001'])
-    @pytest.mark.usefixtures("login_jiangsu_p_fun")
-    def test_002_recheck(self):
+    def test_002_recheck(self, userName, idCard, mobile, group, groupcodehold, rolecode, nation, visage, culture,
+                         qualifytype, qualifyno,
+                         qualifystartdate, agentType, qualifytype1, qualifyno1, qualifystartdate1,
+                         contractstartdate0,
+                         contractenddate0, ruleNo, accountno, cardtype, saDAccount_bankName,
+                         saDAccount_bankareaname,
+                         bankName):
+        self.ASR.switch_to_window()
         info("综合管理->销售人员->代理制销售人员代码复核")
         self.ASR.into_page()
         info("查询人员代码{}".format(Test_YLDLZ_001.msg['usercode']))
@@ -112,8 +122,14 @@ class Test_YLDLZ_001():
 
     @allure.story("新增人员聘任为经理--验证人员状态")
     @pytest.mark.dependency(name='test_003', depends=['test_001', 'test_002'])
-    @pytest.mark.usefixtures("login_jiangsu_p_fun")
-    def test_003(self):
+    def test_003(self, userName, idCard, mobile, group, groupcodehold, rolecode, nation, visage, culture,
+                         qualifytype, qualifyno,
+                         qualifystartdate, agentType, qualifytype1, qualifyno1, qualifystartdate1,
+                         contractstartdate0,
+                         contractenddate0, ruleNo, accountno, cardtype, saDAccount_bankName,
+                         saDAccount_bankareaname,
+                         bankName):
+        self.MOAS.switch_to_window()
         info("经营机构->销售人员->代理制销售人员代码管理")
         self.MOAS.into_page()
         info("查询人员代码：{}，未提交状态".format(Test_YLDLZ_001.msg["usercode"]))

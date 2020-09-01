@@ -15,7 +15,7 @@ from src.utils.log import info
 data = csv_util.data_reader("group_issue_manage/Test_SALES_YLTD_006.csv")
 
 
-@allure.feature("经营机构>>团队模块>>综拓团队申请")
+@allure.feature("经营机构>>团队模块>>综拓团队申请-006")
 @pytest.mark.parametrize("pk_deptdoc, group_name", data)
 class Test_SALES_YLTD_006():
     MZGA = MainZtGroupApply()
@@ -28,6 +28,7 @@ class Test_SALES_YLTD_006():
     @pytest.mark.dependency(name='test_001')
     @pytest.mark.usefixtures("login_jiangsu_c_fun","restore_data")
     def test_001(self, pk_deptdoc, group_name):
+        self.MGIM.switch_to_default_content()
         info("进入团队出单权管理页")
         self.MZGA.into_page()
         # 验证页面

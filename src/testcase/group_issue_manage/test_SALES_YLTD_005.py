@@ -17,14 +17,13 @@ from src.utils.log import info
 data = csv_util.data_reader("group_issue_manage/Test_SALES_YLTD_005.csv")
 
 
-@allure.feature("团队出单权管理>>团队注销")
+@allure.feature("团队出单权管理>>团队注销-005")
 @pytest.mark.parametrize("pk_deptdoc, group_name", data)
 class Test_SALES_YLTD_005():
     MGIM = MainGroupIssueManage()
     DG = DismissGroup()
     MSG = MainSalesGroup()
     DGR = DismissGroupRecheck()
-    msg = None
 
     # data = [("32990087", "ui测试-005")]
 
@@ -33,7 +32,7 @@ class Test_SALES_YLTD_005():
     @pytest.mark.dependency(name='test_001')
     @pytest.mark.usefixtures("login_jiangsu_p","restore_data")
     def test_001(self, pk_deptdoc, group_name):
-        Test_SALES_YLTD_005.msg = {"pk_deptdoc": pk_deptdoc, "group_name": group_name}
+        self.MGIM.switch_to_default_content()
         info("进入团队出单权管理页")
         self.MGIM.into_page()
         info("查询团队名：{}".format(group_name))
