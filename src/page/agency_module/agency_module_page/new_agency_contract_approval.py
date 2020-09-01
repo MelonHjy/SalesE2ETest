@@ -7,14 +7,3 @@ from src.page.agency_module.agency_module_page.common_page import CommonPage
 
 class NewAgencyContractApproval(CommonPage):
     pass
-
-
-
-
-    pass_check = "//*[@id='passCheck']"
-    save_success = "//body/table/tbody/tr/td[2]"    # 保存成功
-    submit_iframe = "//iframe[@name='submitFrame']"  # 提交任务的iframe
-
-    def get_head_text(self):
-        return self.get_text(
-            self.get_element_xpath(self.case))

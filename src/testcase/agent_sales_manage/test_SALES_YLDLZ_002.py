@@ -15,7 +15,11 @@ from src.utils import csv_util
 from src.utils.driver_util import *
 from src.utils.except_util import get_screenshot
 
+data = csv_util.data_reader("agent_sales_manage/test_SALES_YLDLZ_002.csv")
 
+
+@pytest.mark.parametrize("user_code", data, scope='class')
+@pytest.mark.usefixtures("login_jiangsu_p")
 @allure.feature("代理制人员代码管理>>营销团队经理聘任与解聘（有效团队成员任命为经理）")
 class Test_YLDLZ_002():
     AM = AppointmentManager()
@@ -24,14 +28,13 @@ class Test_YLDLZ_002():
     SQ = SalesQuery()
     AMR = AppointmentManagerRecheck()
 
-    data = csv_util.data_reader("agent_sales_manage/test_SALES_YLDLZ_002.csv")
     msg = None
 
     @allure.story("提交有效团队成员任命为经理")
-    @pytest.mark.usefixtures("login_jiangsu_p_fun")
+    @pytest.mark.usefixtures("restore_data")
     @pytest.mark.dependency(name='test_001')
-    @pytest.mark.parametrize("user_code", data)
     def test_001(self, user_code):
+        self.MOAS.switch_to_default_content()
         info("经营机构->销售人员->代理制销售人员代码管理")
         self.MOAS.into_page()
         self.MOAS.query(user_code)
@@ -55,19 +58,12 @@ class Test_YLDLZ_002():
         text = self.AM.get_text(self.AM.get_element_xpath(self.AM.save_success))
         self.AM.assertResult("验证提交成功", "保存成功!" in text)
         get_screenshot("提交")
-        # 关闭
-        # 切换
-        # self.MOAS.back_to_page()
-        # self.MOAS.query(user_code, status="010")
-        # self.MOAS.set_table_num(3)
-        # 根据状态选择查看信息    状态:经理聘任复核
-        # self.MOAS.select_data("状态", "经理聘任复核", "操作")
+        self.AM.close_button_ty()
 
     @allure.story("有效团队成员任命为经理--复核流程")
-    @pytest.mark.parametrize("user_code", data)
     @pytest.mark.dependency(name='test_002', depends=["test_001"])
-    @pytest.mark.usefixtures("login_jiangsu_p_fun")
     def test_002(self, user_code):
+        self.ASR.switch_to_window()
         info("综合管理->销售人员->代理制销售人员代码复核")
         self.ASR.into_page()
         info("查询人员代码{}->选择".format(user_code))
@@ -81,13 +77,11 @@ class Test_YLDLZ_002():
         self.AMR.recheck_ope(textarea="有效团队成员任命为经理--ui测试")
         get_screenshot("提交")
         self.AMR.close_button_ty()
-        # 关闭
 
     @pytest.mark.dependency(name='test_003', depends=["test_001", "test_002"])
     @allure.story("验证审核通过后核对人员信息")
-    @pytest.mark.parametrize("user_code", data)
-    @pytest.mark.usefixtures("login_jiangsu_p_fun")
     def test_003(self, user_code):
+        self.SQ.switch_to_window()
         self.SQ.into_page()
         self.SQ.query(user_code)
         text = self.SQ.get_cell_text_by_head("职级", row=0)

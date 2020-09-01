@@ -28,7 +28,7 @@ class Test_YLDLZ_010():
 
     @allure.story("变更有效团队成员的团队")
     @pytest.mark.dependency(name='test_001')
-    @pytest.mark.usefixtures("login_jiangsu_p_fun")
+    @pytest.mark.usefixtures("login_jiangsu_p_fun","restore_data")
     @pytest.mark.parametrize("user_code, group_code", data)
     def test_001(self, user_code, group_code):
         Test_YLDLZ_010.msg = {"usercode": user_code, "group_com": group_code}

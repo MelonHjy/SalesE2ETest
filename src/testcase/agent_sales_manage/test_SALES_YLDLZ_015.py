@@ -27,7 +27,7 @@ class Test_YLDLZ_015():
     # data1 = csv_util.data_reader("agent_sales_manage/015_data1.csv")
 
     @allure.story("人员转制-（团队成员出单权赋予）")
-    @pytest.mark.usefixtures("login_jiangsu_p_fun")
+    @pytest.mark.usefixtures("login_jiangsu_p_fun","restore_data")
     @pytest.mark.dependency(name='test_001')
     @pytest.mark.parametrize(
         "id_cards,com_group,group,qualifytype,qualifyno,qualifystartdate,agentType,qualifytype1,qualifyno1,qualifystartdate1,contractstartdate0,contractenddate0,ruleNo,accountno,cardtype,saDAccount_bankName,saDAccount_bankareaname,bankName",

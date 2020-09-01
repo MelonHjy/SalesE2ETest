@@ -8,6 +8,7 @@ import pytest
 from config.global_var import sleep
 from src.page.agency_module.main_agency_org_query import MainAgencyOrgQuery
 from src.utils import csv_util
+from src.utils.except_util import get_screenshot
 from src.utils.log import info
 
 
@@ -31,4 +32,5 @@ class Test_SALES_YLZJ_007:
         sleep(3)
         info("验证")
         self.MAOQ.assertEqual("验证查询到的数据合同号是否一致", self.MAOQ.get_cell_text_by_head("合同编号", 0), contract_no)
+        get_screenshot("中介机构{}查询".format(channel))
         self.MAOQ.switch_to_default_content()

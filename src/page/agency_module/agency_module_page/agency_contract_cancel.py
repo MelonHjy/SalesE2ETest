@@ -2,14 +2,8 @@
 # @Time : 2020/8/24 15:58
 # @Author: fyl
 # @File : agency_contract_cancel.py
-from src.page.process_page import ProcessPage
+from src.page.agency_module.agency_module_page.common_page import CommonPage
 
 
-class AgencyContractCancel(ProcessPage):
-    case = "//*[@class='case']"
+class AgencyContractCancel(CommonPage):
     contract_cancel = "//*[@id='contractcancel']"
-    submit_frame = "//iframe[@name='submitFrame']"  # 提示聘任的提示框iframe
-    save_success = "//body/table/tbody/tr/td[2]"    # 保存成功
-
-    def get_head_text(self):
-        return self.get_text(self.wait_until_el_xpath(self.case))

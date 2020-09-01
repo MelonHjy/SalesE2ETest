@@ -51,7 +51,7 @@ def task_kill(name):
         os.system("taskkill /f /im {}".format(name))
 
 
-@pytest.fixture(scope='class', autouse=True)
+@pytest.fixture(scope='function')
 def restore_data():
     current = os.environ.get('PYTEST_CURRENT_TEST').split('/')
     test_dir = current[2]
