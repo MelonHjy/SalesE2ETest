@@ -102,7 +102,9 @@ class BasePage:
         for i in range(5):
             new = self.get_handles()
             print(new)
+        info('3333333333333')
         self.handles = self.update_handles(self.handles, new)
+        info('4444444444444')
         self.switch_to_win(self.handles[num])
 
     def update_handles(self, old, new):
@@ -121,13 +123,19 @@ class BasePage:
         xpath:要双击组件的xpath
         text:要选择的文本值
         '''
+
         self.double_click(self.wait_until_el_xpath(xpath))
         sleep(2)
+        info('aaaaaaaaaaaaa0')
         self.switch_to_window()
+        info('aaaaaaaaaaaaa1')
         # 取消选择页面的onbeforeunload
         self.execute_script("window.onbeforeunload = null;")
+        info('aaaaaaaaaaaaa2')
         option = self.wait_until_el_xpath("//select/option[contains(@value,'{0}')]".format(text.split('--')[0]))
+        info('aaaaaaaaaaaaa3')
         self.click(option)
+        info('aaaaaaaaaaaaa4')
         confirm = self.wait_until_el_xpath("//input[@value='确定']")
         self.click(confirm)
         sleep(2)
