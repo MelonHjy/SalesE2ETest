@@ -5,6 +5,7 @@
 import allure
 import pytest
 
+from config.global_var import sleep
 from src.page.agent_sales_manage.main_management_agent_salesmen import ManagementOfAgentSalesmen
 from src.page.agent_sales_manage.deputy_check import DeputyCheck
 from src.page.base_page import BasePage
@@ -19,8 +20,11 @@ from src.utils.except_util import get_screenshot
 import os
 import jaydebeapi
 
+data = csv_util.data_reader("agent_sales_manage/test_SALES_YLDLZ_013.csv")
 
-@allure.feature("代理制销售人员代码管理>>代理制销售人员出单权注销（有效人员进行注销）")
+
+@allure.feature("代理制销售人员代码管理>>代理制销售人员出单权注销（有效人员进行注销）-013")
+@pytest.mark.parametrize("user_code", data, scope='class')
 class Test_YLDLZ_013():
     MOAS = ManagementOfAgentSalesmen()
     DC = DeputyCheck()
@@ -29,16 +33,12 @@ class Test_YLDLZ_013():
     ASR = AgentSalesRecheck()
     DR = DeputyRecheck()
     TP = TablePage()
-    msg = None
-
-    data = csv_util.data_reader("agent_sales_manage/test_SALES_YLDLZ_013.csv")
 
     @allure.step("代理制销售人员出单权查询并注销")
     @pytest.mark.dependency(name='test_001')
-    @pytest.mark.usefixtures("login_jiangsu_p_fun","restore_data")
-    @pytest.mark.parametrize("user_code", data)
+    @pytest.mark.usefixtures("login_jiangsu_p", "restore_data")
     def test_001(self, user_code):
-        Test_YLDLZ_013.msg = {"user_code": user_code}
+        self.MOAS.switch_to_default_content()
         info("经营机构->销售人员->代理制销售人员代码管理->营销团队经理聘任与解聘")
         self.MOAS.into_page()
         info("查询人员代码{}并选择".format(user_code))
@@ -127,11 +127,12 @@ class Test_YLDLZ_013():
     @pytest.mark.dependency(name='test_002', depends=['test_001'])
     @pytest.mark.usefixtures("login_jiangsu_p_fun")
     @allure.step("代理制销售人员出单权注销复核成功")
-    def test_004(self):
+    def test_004(self, user_code):
+        self.ASR.switch_to_window()
         info("综合管理->销售人员->代理制销售人员代码复核")
         self.ASR.into_page()
-        info("查询人员代码{}".format(Test_YLDLZ_013.msg['user_code']))
-        self.ASR.query(Test_YLDLZ_013.msg["user_code"])
+        info("查询人员代码{}".format(user_code))
+        self.ASR.query(user_code)
         info("进入注销复核页")
         self.ASR.select_data("注销复核")
         self.BP.switch_to_window()
@@ -149,11 +150,13 @@ class Test_YLDLZ_013():
     @allure.story("有效人员进行信息变更-查询验证")
     @pytest.mark.dependency(name='test_003', depends=["test_001", "test_002"])
     @pytest.mark.usefixtures("login_jiangsu_p")
-    def test_003(self):
+    def test_003(self, user_code):
+        self.MOAS.switch_to_window()
         info("经营机构->销售人员->代理制销售人员代码管理")
         self.MOAS.into_page()
-        info("查询人员代码{}->选择".format(Test_YLDLZ_013.msg["user_code"]))
-        self.MOAS.query(Test_YLDLZ_013.msg["user_code"])
+        info("查询人员代码{}->选择".format(user_code))
+        self.MOAS.query(user_code)
         text = self.MOAS.get_cell_text_by_head("状态", 0)
         self.MOAS.assertEqual("判断是否结束复核状态", text, "手动注销")
-        get_screenshot("验证")
+        #get_screenshot("验证")
+        sleep(2)

@@ -18,9 +18,9 @@ from src.utils.log import *
 data = csv_util.data_reader("agent_sales_manage/test_SALES_YLDLZ_005.csv")
 
 
-@pytest.mark.parametrize("user_code", data)
+@pytest.mark.parametrize("user_code", data, scope='class')
 @pytest.mark.usefixtures("login_jiangsu_p")
-@allure.feature("代理制人员代码管理>>营销团队经理聘任与解聘（有效的经理解聘该人员经理职务）")
+@allure.feature("代理制人员代码管理>>营销团队经理聘任与解聘（有效的经理解聘该人员经理职务）-005")
 class Test_YLDLZ_005():
     MOAS = ManagementOfAgentSalesmen()
     DM = DismissalManager()
@@ -30,11 +30,11 @@ class Test_YLDLZ_005():
 
     # data = [("83258554")]
 
-
     @allure.story("有效的经理解聘该人员经理职务")
     @pytest.mark.dependency(name='test_001')
     @pytest.mark.usefixtures("restore_data")
     def test_YLDLZ_005(self, user_code):
+        self.MOAS.switch_to_default_content()
         info("进入代理制销售人员代码管理页面")
         self.MOAS.into_page()
         info("查询该人员代码是否存在数据")
@@ -92,5 +92,6 @@ class Test_YLDLZ_005():
         info("查询人员的代码{}".format(user_code))
         self.SQ.query(user_code)
         text = self.SQ.get_cell_text_by_head("职级", row=0)
-        get_screenshot("验证")
+        # get_screenshot("验证")
         # self.SQ.assertEqual("判断该销售人员职级是否营销团队经理", text, "营销团队经理")
+        sleep(2)

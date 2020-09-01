@@ -5,6 +5,7 @@
 import allure
 import pytest
 
+from config.global_var import sleep
 from src.page.Personal_agency_channel.main_management_agent_sales_approve import ManagementAgentSalesApprove
 from src.page.Personal_agency_channel.sales_query import SalesQuery
 from src.page.agent_sales_manage.appointment_manager import AppointmentManager
@@ -20,7 +21,7 @@ data = csv_util.data_reader("agent_sales_manage/test_SALES_YLDLZ_002.csv")
 
 @pytest.mark.parametrize("user_code", data, scope='class')
 @pytest.mark.usefixtures("login_jiangsu_p")
-@allure.feature("代理制人员代码管理>>营销团队经理聘任与解聘（有效团队成员任命为经理）")
+@allure.feature("代理制人员代码管理>>营销团队经理聘任与解聘（有效团队成员任命为经理）-002")
 class Test_YLDLZ_002():
     AM = AppointmentManager()
     MOAS = ManagementOfAgentSalesmen()
@@ -85,5 +86,6 @@ class Test_YLDLZ_002():
         self.SQ.into_page()
         self.SQ.query(user_code)
         text = self.SQ.get_cell_text_by_head("职级", row=0)
-        get_screenshot("验证")
+        # get_screenshot("验证")
         self.SQ.assertEqual("判断该销售人员职级是否营销团队经理", text, "营销团队经理")
+        sleep(2)

@@ -14,8 +14,12 @@ from src.utils import csv_util
 from src.utils.except_util import get_screenshot
 from src.utils.log import info
 
-
-@allure.feature("代理制销售人员代码管理>>团队成员出单权赋予与变更（新增普通代理制成员）")
+data = csv_util.data_reader("agent_sales_manage/test_SALES_YLDLZ_007.csv")
+@pytest.mark.parametrize("username, id_cards, mobile, group_com, nation, visage, culture,qualifytype, qualifyno,"
+                             "qualifystartdate, agentType, qualifytype1, qualifyno1, qualifystartdate1, contractstartdate0,"
+                             "contractenddate0, ruleNo, accountno, cardtype, saDAccount_bankName, saDAccount_bankareaname,"
+                             "bankName", data,scope='class')
+@allure.feature("代理制销售人员代码管理>>团队成员出单权赋予与变更（新增普通代理制成员）-007")
 class Test_YLDLZ_007():
     MOAS = ManagementOfAgentSalesmen()
     GI = GroupIssue()
@@ -27,17 +31,13 @@ class Test_YLDLZ_007():
     # data1 = [("资格证", "123456", "2019-01-01", "B", "执业证", "654321", "2019-02-02", "2020-07-08", '2022-07-08',
     #           "RULE20120000000000001--保险经纪公司", "121222333529", "折", "中国工商银行股份有限公司",
     #           "新疆维吾尔自治区_巴音郭楞蒙古自治州", "中国工商银行股份有限公司库尔勒人民东路支行")]
-    data = csv_util.data_reader("agent_sales_manage/test_SALES_YLDLZ_007.csv")
+
     # data1 = csv_util.data_reader("agent_sales_manage/007_data1.csv")
 
     @allure.story("新增普通代理制成员-填写信息")
     @pytest.mark.usefixtures("login_jiangsu_p_fun","restore_data")
     @pytest.mark.dependency(name='test_001')
-    @pytest.mark.parametrize("username, id_cards, mobile, group_com, nation, visage, culture,qualifytype, qualifyno,"
-                             "qualifystartdate, agentType, qualifytype1, qualifyno1, qualifystartdate1, contractstartdate0,"
-                             "contractenddate0, ruleNo, accountno, cardtype, saDAccount_bankName, saDAccount_bankareaname,"
-                             "bankName", data)
-    def test_01_base_msg(self, username, id_cards, mobile, group_com, nation, visage, culture, qualifytype, qualifyno, qualifystartdate, agentType, qualifytype1, qualifyno1,
+    def test_001_base_msg(self, username, id_cards, mobile, group_com, nation, visage, culture, qualifytype, qualifyno, qualifystartdate, agentType, qualifytype1, qualifyno1,
                              qualifystartdate1, contractstartdate0, contractenddate0, ruleNo, accountno, cardtype,
                              saDAccount_bankName, saDAccount_bankareaname, bankName):
         info("经营机构->销售人员->代理制销售人员代码管理")
@@ -85,8 +85,11 @@ class Test_YLDLZ_007():
 
     @allure.story("新增普通代理制成员-复核")
     @pytest.mark.dependency(name='test_002', depends=["test_001"])
-    @pytest.mark.usefixtures("login_jiangsu_p_fun")
-    def test_03_issue_recheck(self):
+    @pytest.mark.usefixtures("login_jiangsu_p")
+    def test_002_issue_recheck(self, username, id_cards, mobile, group_com, nation, visage, culture, qualifytype, qualifyno, qualifystartdate, agentType, qualifytype1, qualifyno1,
+                             qualifystartdate1, contractstartdate0, contractenddate0, ruleNo, accountno, cardtype,
+                             saDAccount_bankName, saDAccount_bankareaname, bankName):
+        self.ASR.switch_to_default_content()
         info("综合管理->销售人员->代理制销售人员代码复核")
         self.ASR.into_page()
         info("查询人员代码{}".format(Test_YLDLZ_007.msg['usercode']))
@@ -107,8 +110,11 @@ class Test_YLDLZ_007():
 
     @allure.story("新增普通代理制成员查询验证")
     @pytest.mark.dependency(name='test_003', depends=["test_001", "test_002"])
-    @pytest.mark.usefixtures("login_jiangsu_p_fun")
-    def test_004(self):
+    @pytest.mark.usefixtures("login_jiangsu_p")
+    def test_003(self, username, id_cards, mobile, group_com, nation, visage, culture, qualifytype, qualifyno, qualifystartdate, agentType, qualifytype1, qualifyno1,
+                             qualifystartdate1, contractstartdate0, contractenddate0, ruleNo, accountno, cardtype,
+                             saDAccount_bankName, saDAccount_bankareaname, bankName):
+        self.MOAS.switch_to_window()
         info("经营机构->销售人员->代理制销售人员代码管理")
         self.MOAS.into_page()
         info("查询无效人员代码{}->选择".format(Test_YLDLZ_007.msg['usercode']))
@@ -117,4 +123,4 @@ class Test_YLDLZ_007():
         self.MOAS.assertEqual("验证团队成员状态为‘有效’", status, "有效")
         process = self.MOAS.get_cell_text_by_head("终止流程", 0)
         self.MOAS.assertEqual("判断最后一栏没有终止流程按钮", process, "")
-        get_screenshot("验证")
+        #get_screenshot("验证")

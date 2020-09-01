@@ -15,8 +15,14 @@ from src.utils import csv_util
 from src.utils.except_util import get_screenshot
 from src.utils.log import info
 
+data = csv_util.data_reader("agent_sales_manage/test_SALES_YLDLZ_016.csv")
 
-@allure.feature("营销团队经理聘任与解聘(人员转制-无效的合同制销售/合同制非销售转制为代理制人员)-(经理聘任）")
+
+@pytest.mark.parametrize("id_cards,com_group,group,qualifytype, qualifyno,"
+                         "qualifystartdate, agentType, qualifytype1, qualifyno1, qualifystartdate1, contractstartdate0,"
+                         "contractenddate0, ruleNo, accountno, cardtype, saDAccount_bankName, saDAccount_bankareaname,"
+                         "bankName", data, scope='class')
+@allure.feature("营销团队经理聘任与解聘(人员转制-无效的合同制销售/合同制非销售转制为代理制人员)-(经理聘任）-016")
 class Test_YLDLZ_016():
     MOAS = ManagementOfAgentSalesmen()
     AM = AppointmentManager()
@@ -30,17 +36,13 @@ class Test_YLDLZ_016():
     #           "RULE20120000000000001--保险经纪公司", "123222333529", "折", "中国工商银行股份有限公司",
     #           "新疆维吾尔自治区_巴音郭楞蒙古自治州", "中国工商银行股份有限公司库尔勒人民东路支行")]
 
-    data = csv_util.data_reader("agent_sales_manage/test_SALES_YLDLZ_016.csv")
     # data1 = csv_util.data_reader("agent_sales_manage/015_data1.csv")
 
     @allure.story("人员转制-（营销团队经理聘任与解聘）")
-    @pytest.mark.usefixtures("login_jiangsu_p_fun","restore_data")
+    @pytest.mark.usefixtures("login_jiangsu_p_fun", "restore_data")
     @pytest.mark.dependency(name='test_001')
-    @pytest.mark.parametrize("id_cards,com_group,group,qualifytype, qualifyno,"
-                             "qualifystartdate, agentType, qualifytype1, qualifyno1, qualifystartdate1, contractstartdate0,"
-                             "contractenddate0, ruleNo, accountno, cardtype, saDAccount_bankName, saDAccount_bankareaname,"
-                             "bankName", data)
-    def test_001(self, id_cards,com_group,group,qualifytype, qualifyno, qualifystartdate, agentType, qualifytype1, qualifyno1,
+    def test_001(self, id_cards, com_group, group, qualifytype, qualifyno, qualifystartdate, agentType, qualifytype1,
+                 qualifyno1,
                  qualifystartdate1, contractstartdate0, contractenddate0, ruleNo, accountno, cardtype,
                  saDAccount_bankName, saDAccount_bankareaname, bankName):
         info("经营机构->销售人员->代理制销售人员代码管理")
@@ -92,8 +94,12 @@ class Test_YLDLZ_016():
 
     @allure.story("人员转制-（营销团队经理聘任与解聘）--复核")
     @pytest.mark.dependency(name='test_002', depends=['test_001'])
-    @pytest.mark.usefixtures("login_jiangsu_p_fun")
-    def test_003(self):
+    @pytest.mark.usefixtures("login_jiangsu_p")
+    def test_002(self, id_cards, com_group, group, qualifytype, qualifyno, qualifystartdate, agentType, qualifytype1,
+                 qualifyno1,
+                 qualifystartdate1, contractstartdate0, contractenddate0, ruleNo, accountno, cardtype,
+                 saDAccount_bankName, saDAccount_bankareaname, bankName):
+        self.ASR.switch_to_default_content()
         info("综合管理->销售人员->代理制销售人员代码复核")
         self.ASR.into_page()
         info("查询人员代码{}->选择".format(Test_YLDLZ_016.msg["user_code"]))
@@ -113,13 +119,17 @@ class Test_YLDLZ_016():
         self.AMR.close_button_ty()
 
     @allure.story("人员转制-（营销团队经理聘任与解聘）--验证人员状态")
-    @pytest.mark.dependency(name='test_003', depends=['test_001', 'test_002'])
-    @pytest.mark.usefixtures("login_jiangsu_p_fun")
-    def test_004(self):
+    @pytest.mark.dependency(name='test_003', depends=['test_002'])
+    @pytest.mark.usefixtures("login_jiangsu_p")
+    def test_003(self, id_cards, com_group, group, qualifytype, qualifyno, qualifystartdate, agentType, qualifytype1,
+                 qualifyno1,
+                 qualifystartdate1, contractstartdate0, contractenddate0, ruleNo, accountno, cardtype,
+                 saDAccount_bankName, saDAccount_bankareaname, bankName):
+        self.SQ.switch_to_window()
         info("个代渠道->销售人员->销售人员查询")
         self.SQ.into_page()
         info("查询人员代码：{}，未提交状态".format(Test_YLDLZ_016.msg["user_code"]))
         self.SQ.query(Test_YLDLZ_016.msg["user_code"])
         text = self.SQ.get_cell_text_by_head("职级", row=0)
         self.SQ.assertEqual("判断该销售人员职级是否营销团队经理", text, "营销团队经理")
-        get_screenshot("验证")
+        #get_screenshot("验证")
