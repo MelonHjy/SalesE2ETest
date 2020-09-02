@@ -119,5 +119,5 @@ class Test_YLDLZ_015():
         info("查询人员代码：{}，未提交状态".format(Test_YLDLZ_015.msg["user_code"]))
         self.MOAS.query(Test_YLDLZ_015.msg["user_code"])
         self.MOAS.assertEqual("判断该人员状态为‘有效’", self.MOAS.get_cell_text_by_head("状态", 0), "有效")
-        #get_screenshot("验证")
+        get_screenshot("验证")
         sleep(2)

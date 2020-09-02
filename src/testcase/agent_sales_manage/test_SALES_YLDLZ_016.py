@@ -132,4 +132,5 @@ class Test_YLDLZ_016():
         self.SQ.query(Test_YLDLZ_016.msg["user_code"])
         text = self.SQ.get_cell_text_by_head("职级", row=0)
         self.SQ.assertEqual("判断该销售人员职级是否营销团队经理", text, "营销团队经理")
-        #get_screenshot("验证")
+        get_screenshot("验证")
+        sleep(2)
