@@ -1,7 +1,7 @@
 #  -*- coding:utf-8 -*-
 # @Time : 2020/7/27 10:39
 # @Author: fyl
-# @File : test_SALES_YLDLZ_007.py   代理制人员代码管理>>团队成员出单权赋予与变更（新增普通代理制成员）  待测
+# @File : test_SALES_YLDLZ_007_.py   代理制人员代码管理>>团队成员出单权赋予与变更（新增普通代理制成员）  待测
 import allure
 import pytest
 
