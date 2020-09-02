@@ -1,7 +1,9 @@
 # -*- coding:utf-8 -*-
 # @Time : 2020/6/28 17:22
 # @Author: fyl
-# @File : _test_SALES_YLDLZ_001.py   代理制人员代码管理>>营销团队经理聘任与解聘(新增人员聘任为经理)
+# @File : test_SALES_YLDLZ_001.py   代理制人员代码管理>>营销团队经理聘任与解聘(新增人员聘任为经理)
+import random
+
 import allure
 import pytest
 
@@ -11,6 +13,7 @@ from src.page.agent_sales_manage.main_management_agent_salesmen import Managemen
 from src.page.integrated_management.appointment_manager_recheck import AppointmentManagerRecheck
 from src.page.integrated_management.main_agent_sales_recheck import AgentSalesRecheck
 from src.utils import csv_util
+from src.utils.create_identity import IdNumber
 from src.utils.driver_util import *
 from src.utils.except_util import get_screenshot
 
@@ -19,9 +22,9 @@ data = csv_util.data_reader("agent_sales_manage/test_SALES_YLDLZ_001.csv")
 
 @allure.feature("代理制人员代码管理>>营销团队经理聘任与解聘(新增人员聘任为经理)-001")
 @pytest.mark.parametrize(
-    "userName, idCard, mobile, group, groupcodehold, rolecode, nation, visage, culture, qualifytype, qualifyno,"
+    "userName, mobile, group, rolecode, nation, visage, culture, qualifytype, qualifyno,"
     "qualifystartdate, agentType, qualifytype1, qualifyno1, qualifystartdate1, contractstartdate0,"
-    "contractenddate0, ruleNo, accountno, cardtype, saDAccount_bankName, saDAccount_bankareaname,"
+    "contractenddate0, ruleNo, cardtype, saDAccount_bankName, saDAccount_bankareaname,"
     "bankName", data, scope='class')
 @pytest.mark.usefixtures("login_jiangsu_p_fun")
 class Test_YLDLZ_001():
@@ -40,15 +43,13 @@ class Test_YLDLZ_001():
 
     @allure.story("新增人员聘任为经理--填写信息")
     @pytest.mark.dependency(name='test_001')
-    @pytest.mark.usefixtures("restore_data")
-    
-    def test_001(self, userName, idCard, mobile, group, groupcodehold, rolecode, nation, visage, culture,
-                         qualifytype, qualifyno,
-                         qualifystartdate, agentType, qualifytype1, qualifyno1, qualifystartdate1,
-                         contractstartdate0,
-                         contractenddate0, ruleNo, accountno, cardtype, saDAccount_bankName,
-                         saDAccount_bankareaname,
-                         bankName):
+    # @pytest.mark.usefixtures("flash_idcard")
+    def test_001(self, userName, mobile, group, rolecode, nation, visage, culture, qualifytype, qualifyno,
+                 qualifystartdate, agentType, qualifytype1, qualifyno1, qualifystartdate1, contractstartdate0,
+                 contractenddate0, ruleNo, cardtype, saDAccount_bankName, saDAccount_bankareaname, bankName):
+        random_sex = random.randint(0, 1)  # 随机生成男(1)或女(0)
+        idCard = IdNumber.generate_id(random_sex)  # 随机生成身份证号
+        accountno = idCard[0:13]
         info("经营机构->销售人员->代理制销售人员代码管理->营销团队经理聘任与解聘")
         self.MOAS.into_page()
         self.MOAS.click_btn('营销团队经理聘任与解聘')
@@ -96,14 +97,9 @@ class Test_YLDLZ_001():
     @allure.story("新增人员聘任为经理--复核")
     # @pytest.mark.usefixtures("login_jiangsu_p_fun")
     @pytest.mark.dependency(name='test_002', depends=['test_001'])
-
-    def test_002(self, userName, idCard, mobile, group, groupcodehold, rolecode, nation, visage, culture,
-                         qualifytype, qualifyno,
-                         qualifystartdate, agentType, qualifytype1, qualifyno1, qualifystartdate1,
-                         contractstartdate0,
-                         contractenddate0, ruleNo, accountno, cardtype, saDAccount_bankName,
-                         saDAccount_bankareaname,
-                         bankName):
+    def test_002(self, userName, mobile, group, rolecode, nation, visage, culture, qualifytype, qualifyno,
+                 qualifystartdate, agentType, qualifytype1, qualifyno1, qualifystartdate1, contractstartdate0,
+                 contractenddate0, ruleNo, cardtype, saDAccount_bankName, saDAccount_bankareaname, bankName):
         # self.ASR.switch_to_default_content()
         info("综合管理->销售人员->代理制销售人员代码复核")
         self.ASR.into_page()
@@ -123,17 +119,11 @@ class Test_YLDLZ_001():
         self.AMR.close_button_ty()
 
     @allure.story("新增人员聘任为经理--验证人员状态")
-
     # @pytest.mark.usefixtures("login_jiangsu_p_fun")
     @pytest.mark.dependency(name='test_003', depends=['test_002'])
-    def test_003(self, userName, idCard, mobile, group, groupcodehold, rolecode, nation, visage, culture,
-
-                 qualifytype, qualifyno,
-                 qualifystartdate, agentType, qualifytype1, qualifyno1, qualifystartdate1,
-                 contractstartdate0,
-                 contractenddate0, ruleNo, accountno, cardtype, saDAccount_bankName,
-                 saDAccount_bankareaname,
-                 bankName):
+    def test_003(self, userName, mobile, group, rolecode, nation, visage, culture, qualifytype, qualifyno,
+                 qualifystartdate, agentType, qualifytype1, qualifyno1, qualifystartdate1, contractstartdate0,
+                 contractenddate0, ruleNo, cardtype, saDAccount_bankName, saDAccount_bankareaname, bankName):
         # self.MOAS.switch_to_window()
         info("经营机构->销售人员->代理制销售人员代码管理")
         self.MOAS.into_page()

@@ -5,6 +5,7 @@
 import allure
 import pytest
 
+from config.global_var import sleep
 from src.page.agency_module.agency_module_page.commission_approval import CommissionApproval
 from src.page.agency_module.agency_module_page.commission_edit import CommissionEdit
 from src.page.agency_module.main_commission_approval import MainCommissionApproval
@@ -16,7 +17,7 @@ from src.utils.log import info
 data = csv_util.data_reader("agency_org_manage/test_SALES_YLZJ_012.csv")
 
 
-@allure.feature("中介模块>>佣金比例上限标准查询修改>>修改")
+@allure.feature("中介模块>>佣金比例上限标准查询修改>>修改-012")
 @pytest.mark.parametrize("channel,rule_no,rule_name, new_rule_name", data, scope="class")
 class Test_SALES_YLZJ_012():
     MCE = MainCommisson_edit()
@@ -26,7 +27,7 @@ class Test_SALES_YLZJ_012():
 
     @allure.story("佣金比例上限标准查询修改")
     @pytest.mark.dependency(name='test_001')
-    @pytest.mark.usefixtures("login_jiangsu_p_fun")
+    @pytest.mark.usefixtures("login_jiangsu_p_fun", "restore_data")
     def test_001(self, channel, rule_no, rule_name, new_rule_name):
         info("中介模块>>佣金比例上限标准查询修改>>修改:{}".format(channel))
         self.MCE.into_page(channel)
@@ -67,3 +68,4 @@ class Test_SALES_YLZJ_012():
         self.MCE.query(rule_no)
         self.MCE.assertEqual("验证修改的信息", self.MCE.get_cell_text_by_head("佣金配置名称")[0], new_rule_name)
         get_screenshot("佣金配置修改验证-{}".format(channel))
+        sleep(2)

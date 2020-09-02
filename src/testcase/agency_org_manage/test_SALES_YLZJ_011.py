@@ -5,6 +5,7 @@
 import allure
 import pytest
 
+from config.global_var import sleep
 from src.page.agency_module.agency_module_page.channel_type_cancel import ChannelTypeCancel
 from src.page.agency_module.agency_module_page.channel_type_code_approval import ChannelTypeCodeApproval
 from src.page.agency_module.main_channel_type_code_approval import MainChannelTypeCodeApproval
@@ -16,7 +17,7 @@ from src.utils.log import info
 data = csv_util.data_reader("agency_org_manage/test_SALES_YLZJ_011.csv")
 
 
-@allure.feature("中介模块>>渠道类型码作废")
+@allure.feature("中介模块>>渠道类型码作废-011")
 @pytest.mark.parametrize("channel,agent_type,agent_type_name", data, scope="class")
 class Test_SALES_YLZJ_011():
     CTC = ChannelTypeCancel()
@@ -26,8 +27,9 @@ class Test_SALES_YLZJ_011():
 
     @allure.story("渠道类型码作废")
     @pytest.mark.dependency(name='test_001')
-    @pytest.mark.usefixtures("login_jiangsu_h_fun")
+    @pytest.mark.usefixtures("login_jiangsu_h_fun", "restore_data")
     def test_001(self, channel, agent_type, agent_type_name):
+        self.CTC.switch_to_default_content()
         info("中介模块>>渠道类型码作废:{}".format(channel))
         info("渠道类型码作废页")
         self.CTC.into_page(channel)
@@ -76,3 +78,4 @@ class Test_SALES_YLZJ_011():
             info(text)
             self.CTC.assertResult("判断提示信息", "不允许作废" in text)
             get_screenshot("渠道类型码作废提示-{}".format(channel))
+        sleep(2)

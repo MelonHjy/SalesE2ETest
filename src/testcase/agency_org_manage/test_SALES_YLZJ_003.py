@@ -5,13 +5,14 @@
 import allure
 import pytest
 
+from config.global_var import sleep
 from src.page.agency_module.main_agency_org_manage import MainAgencyOrgManage
 from src.utils import csv_util
 from src.utils.except_util import get_screenshot
 from src.utils.log import info
 
 
-@allure.feature("中介机构>>中介机构新增和变更申报>>重置")
+@allure.feature("中介机构>>中介机构新增和变更申报>>重置-003")
 class Test_SALES_YLZJ_003():
     MAOM = MainAgencyOrgManage()
     data = csv_util.data_reader("agency_org_manage/test_SALES_YLZJ_003.csv")
@@ -20,6 +21,7 @@ class Test_SALES_YLZJ_003():
     @pytest.mark.usefixtures("login_jiangsu_p")
     @pytest.mark.parametrize("channel,contractType,contract_no", data)
     def test_001(self, channel, contractType, contract_no):
+        self.MAOM.switch_to_default_content()
         info("中介机构新增和变更申报页:{}".format(channel))
         self.MAOM.into_page(channel)
         self.MAOM.assertEqual("验证页面标题", self.MAOM.get_head_text(), "中介机构新增和变更申报")
@@ -32,4 +34,4 @@ class Test_SALES_YLZJ_003():
         flag = (not self.MAOM.is_selected("0")) or (not self.MAOM.is_selected("1")) or (not self.MAOM.is_selected("3"))
         self.MAOM.assertResult("验证任务状态清空", flag)
         get_screenshot("中介机构{}查询重置".format(channel))
-        self.MAOM.switch_to_default_content()
+        sleep(2)

@@ -14,7 +14,7 @@ from src.utils.except_util import get_screenshot
 from src.utils.log import info
 
 
-@allure.feature("中介机构>>中介机构新增和变更申报>>修改")
+@allure.feature("中介机构>>中介机构新增和变更申报>>修改-005")
 class Test_SALES_YLZJ_005():
     MAOM = MainAgencyOrgManage()
     ACM = AgencyContractModify()
@@ -29,10 +29,11 @@ class Test_SALES_YLZJ_005():
     #          "中国工商银行股份有限公司库尔勒人民东路支行")]
 
     @allure.story("修改、审批")
-    @pytest.mark.usefixtures("login_jiangsu_p")
+    @pytest.mark.usefixtures("login_jiangsu_p_fun","restore_data")
     @pytest.mark.parametrize("channel,contractType,contract_no,start_date,sa_Account_bankName,bank_area,bank_Name",
                              data)
     def test_001(self, channel, contractType, contract_no, start_date, sa_Account_bankName, bank_area, bank_Name):
+        self.MAOM.switch_to_default_content()
         info("中介机构新增和变更申报页:{}".format(channel))
         self.MAOM.into_page(channel)
         info("查询")
@@ -81,4 +82,3 @@ class Test_SALES_YLZJ_005():
         self.ACMA.assertResult("验证提交成功", "保存成功!" in text)
         get_screenshot("中介机构{}修改审核".format(channel))
         self.ACMA.close_button_ty()
-        self.ACMA.switch_to_window()

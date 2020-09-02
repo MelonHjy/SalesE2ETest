@@ -6,6 +6,7 @@
 import allure
 import pytest
 
+from config.global_var import sleep
 from src.page.agency_module.agency_module_page.new_agency_contract_approval import NewAgencyContractApproval
 from src.page.agency_module.agency_module_page.new_agency_org import NewAgencyOrg
 from src.page.agency_module.main_agency_org_approval import MainAgencyOrgApproval
@@ -17,7 +18,7 @@ from src.utils.log import info
 data = csv_util.data_reader("agency_org_manage/Test_SALES_YLZJ_004.csv")
 
 
-@allure.feature("中介机构>>中介机构新增和变更申报>>新增")
+@allure.feature("中介机构>>中介机构新增和变更申报>>新增-004")
 @pytest.mark.parametrize(
     "channel,contract_type,com_code,agent_name,contract_start,contract_end,sa_agent_code,sa_comCode,fee_rule_No,"
     "his_payee_name,his_account_no,sa_Account_bankName,bank_area,bank_Name", data, scope="class")
@@ -46,10 +47,11 @@ class Test_SALES_YLZJ_004():
     #  "ui测试-中介车商004", "1111116", "交通银行", "新疆维吾尔自治区_伊犁哈萨克自治州", "交通银行股份有限公司伊宁辽宁路支行")
     # @pytest.mark.skip
     @allure.story("中介机构新增")
-    @pytest.mark.usefixtures("login_jiangsu_p")
+    @pytest.mark.usefixtures("login_jiangsu_p_fun","restore_data")
     @pytest.mark.dependency(name='test_001')
     def test_001(self, channel, contract_type, com_code, agent_name, contract_start, contract_end, sa_agent_code,
                  sa_comCode, fee_rule_No, his_payee_name, his_account_no, sa_Account_bankName, bank_area, bank_Name):
+        self.MAOM.switch_to_default_content()
         info("中介机构新增和变更申报页:{}".format(channel))
         self.MAOM.into_page(channel)
         info("中介机构新增页")
@@ -97,7 +99,7 @@ class Test_SALES_YLZJ_004():
         self.NAO.close_button_ty()
 
     @allure.story("中介机构新增-审批")
-    @pytest.mark.usefixtures("login_jiangsu_p")
+    @pytest.mark.usefixtures("login_jiangsu_p_fun")
     @pytest.mark.dependency(name='test_002', depend='test_001')
     def test_002(self, channel, contract_type, com_code, agent_name, contract_start, contract_end, sa_agent_code,
                  sa_comCode, fee_rule_No, his_payee_name, his_account_no, sa_Account_bankName, bank_area, bank_Name):
@@ -125,7 +127,7 @@ class Test_SALES_YLZJ_004():
         self.NACA.close_button_ty()
 
     @allure.story("中介机构新增-验证")
-    @pytest.mark.usefixtures("login_jiangsu_p")
+    @pytest.mark.usefixtures("login_jiangsu_p_fun")
     @pytest.mark.dependency(name='test_003', depend='test_002')
     def test_003(self, channel, contract_type, com_code, agent_name, contract_start, contract_end, sa_agent_code,
                  sa_comCode, fee_rule_No, his_payee_name, his_account_no, sa_Account_bankName, bank_area, bank_Name):
@@ -137,4 +139,4 @@ class Test_SALES_YLZJ_004():
         text = self.MAOM.get_cell_text_by_head("状态", 0)
         self.MAOM.assertEqual("验证机构是否有效", text, "有效")
         get_screenshot("中介机构{}新增合同验证".format(channel))
-        self.MAOM.switch_to_default_content()
+        sleep(2)
