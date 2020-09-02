@@ -12,7 +12,7 @@ import win32api
 
 from config.global_var import g
 from src.page.base_page import info
-from src.utils.common_util import DecoratorType, write_properties
+from src.utils.common_util import DecoratorType, task_kill, set_windows_resolution, close_ie, write_properties
 from src.utils.csv_util import data_reader
 from src.utils.db_util import get_conn
 
@@ -32,24 +32,7 @@ def setup():
     if width == 1536 and height == 864:
         set_windows_resolution(1080, 1920)
     g.db.close_connection()
-    info("关闭数据库连接")
-    task_kill("IEDriverServer.exe")
-    task_kill("iexplore.exe")
-    info("关闭ie相关进程")
-
-
-def set_windows_resolution(height, width):
-    dm = win32api.EnumDisplaySettings(None, 0)
-    dm.PelsHeight = height
-    dm.PelsWidth = width
-    dm.BitsPerPel = 32
-    dm.DisplayFixedOutput = 0
-    win32api.ChangeDisplaySettings(dm, 0)
-
-
-def task_kill(name):
-    if os.system("tasklist |findstr {}".format(name)) == 0:
-        os.system("taskkill /f /im {}".format(name))
+    close_ie()
 
 
 @pytest.fixture(scope='function')
@@ -64,7 +47,6 @@ def restore_data():
     if os.path.exists(sql_path):
         restore_log('CURRENT_TEST:%s/%s 正在准备数据' % (test_dir, test_name))
         sql = get_sql(csv_path, sql_path)
-        # info("sql:"+sql)
         data = g.db.execute(sql)
         restore_log('CURRENT_TEST:%s/%s 准备数据成功' % (test_dir, test_name))
         # success = True

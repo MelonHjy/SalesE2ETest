@@ -11,7 +11,7 @@ from selenium.webdriver.support.select import Select
 
 from config.global_var import *
 from src.utils.driver_util import set_wait
-from src.utils.except_util import catch_except
+from src.utils.except_util import catch_except, close
 from src.utils.high_light_element import high_light
 from src.utils.log import *
 
@@ -102,9 +102,7 @@ class BasePage:
         for i in range(5):
             new = self.get_handles()
             print(new)
-        info('3333333333333')
         self.handles = self.update_handles(self.handles, new)
-        info('4444444444444')
         self.switch_to_win(self.handles[num])
 
     def update_handles(self, old, new):
@@ -123,19 +121,11 @@ class BasePage:
         xpath:要双击组件的xpath
         text:要选择的文本值
         '''
-
         self.double_click(self.wait_until_el_xpath(xpath))
         sleep(2)
-        info('aaaaaaaaaaaaa0')
         self.switch_to_window()
-        info('aaaaaaaaaaaaa1')
-        # 取消选择页面的onbeforeunload
-        self.execute_script("window.onbeforeunload = null;")
-        info('aaaaaaaaaaaaa2')
         option = self.wait_until_el_xpath("//select/option[contains(@value,'{0}')]".format(text.split('--')[0]))
-        info('aaaaaaaaaaaaa3')
         self.click(option)
-        info('aaaaaaaaaaaaa4')
         confirm = self.wait_until_el_xpath("//input[@value='确定']")
         self.click(confirm)
         sleep(2)
@@ -278,15 +268,17 @@ class BasePage:
         return g.wait.until(
             expected_conditions.presence_of_all_elements_located((By.XPATH, xpath)))
 
+    from wrapt_timeout_decorator import timeout
+
+    @close
+    @timeout(120)
     def close_browser(self):
         """
         关闭浏览器
         """
         sleep(0.5)
-        g.driver.quit()
         try:
-            if self.alert_is_present():
-                self.choose_ok_on_alert()
+            g.driver.quit()
         except Exception as e:
             pass
 

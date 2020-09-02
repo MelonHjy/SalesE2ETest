@@ -14,6 +14,7 @@ def data_reader(filename, decorator_type=DecoratorType.parametrize, ignore_heads
     with open(filename, encoding='utf-8') as file:
         # csv.reader返回一个迭代器，因其惰性计算没法获取长度，使用next()获取下一个值
         table = csv.reader(file)
+
         # 获取第一行的值，csv表头
         if ignore_heads:
             heads = next(table)
@@ -58,7 +59,9 @@ def by_col_get_calue(data, file_name, col_name, row=None):
 
 
 if __name__ == '__main__':
-    data = data_reader("D:/env/pycharm/PycharmProjects/SalesE2ETest/data/agent_sales_manage/test_001.csv",ignore_heads=False)
+    # data = data_reader("agent_sales_manage/014_data.csv")
+    data = data_reader("C:/Users/Sino-PC201911/Desktop/SalesE2ETest/data/group_issue_manage/test_SALES_YLTD_001.csv",
+                       ignore_heads=False)
     # data = data_reader("agent_sales_manage/004_data.csv", DecoratorType.fixture)
     # print(data)
     old_id = by_col_get_calue(data,"D:/env/pycharm/PycharmProjects/SalesE2ETest/data/agent_sales_manage/test_001.csv","idCard",1)

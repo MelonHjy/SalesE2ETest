@@ -10,12 +10,12 @@
 @Desc       :   None
 '''
 import random
+import threading
 import traceback
 from functools import wraps
 
 import jaydebeapi
 import jpype
-from jpype import java
 
 from config.global_var import g
 from src.utils.driver_util import get_config
@@ -30,7 +30,8 @@ def get_conn():
     user = g.config[db]['user']
     password = g.config[db]['password']
     info("获取数据库连接")
-    g.db = DBUtils(url, user, password)
+    g.db = DBUtils()
+    g.db.set_conn(url, user, password)
 
 
 def catch_socket_exception(func):
@@ -39,24 +40,37 @@ def catch_socket_exception(func):
         try:
             return func(*args, **kwargs)
         except jpype.java.sql.SQLException as e:
-            info("出现异常，详细信息：%s，重新进行连接" % traceback.format_exc())
+            info("出现SQLException异常，详细信息：%s，重新进行连接" % traceback.format_exc())
             get_conn()
             return func(*args, **kwargs)
         except Exception as e:
             info("出现异常，详细信息：%s，重新进行连接" % traceback.format_exc())
-            # SocketException 重新获取连接
             get_conn()
             raise e
+
     return wrapper
 
 
 class DBUtils:
     __limit = 100
     test_name = None
+    jar_path = g.root_path + '/config/ifxjdbc.jar'
+    _instance_lock = threading.Lock()
+    conn = None
 
-    def __init__(self, url, user, password):
-        jar_path = g.root_path + '/config/ifxjdbc.jar'
-        self.conn = jaydebeapi.connect('com.informix.jdbc.IfxDriver', url, [user, password], jar_path)
+    # 单例
+    def __new__(cls, *args, **kwargs):
+        if not hasattr(DBUtils, "_instance"):
+            with DBUtils._instance_lock:
+                if not hasattr(DBUtils, '_instance'):
+                    DBUtils._instance = object.__new__(cls)
+        return DBUtils._instance
+
+    def __init__(self):
+        pass
+
+    def set_conn(self, url, user, password):
+        self.conn = jaydebeapi.connect('com.informix.jdbc.IfxDriver', url, [user, password], self.jar_path)
         info('连接conn id：%s' % (id(self.conn)))
         self.execute("SET LOCK MODE TO WAIT 30")
 
@@ -112,26 +126,26 @@ class DBUtils:
         return rowcount
 
 
-if __name__ == '__main__':
-    url = 'jdbc:informix-sqli://10.10.68.24:10001/salesdbcs:informixserver=test1;NEWLOCALE=zh_CN,zh_CN;NEWCODESET=gb18030,8859-1,819;'
-    user = 'xsglifx1'
-    password = 'u^6m.8LA0'
-    db = DBUtils(url, user, password)
-    try:
-        #         # 增删改示例
-        #         sql = '''
-        # delete from saucontract where usercode = '83258551';
-        # /*插入合同信息*/
-        # insert into saucontract (agentarea, agentenddate, agentid, agentno, agentstartdate, batchno, checkstatus, comfeedate, contractno, contractaddress, contractcount, contractenddate, contractstartdate, creator, credentialenddate, credentialid, credentialno, credentstartdate, effecttime, effectivedate, failuretime, flag, guarantoraddress, guarantorcardnum, guarantorname, guarantorphone, inputtime, lastcontractid, remark, ruleno, updatetime, updator, usercode, userid, validstatus, ucontractid) values ('', '', 1000000002071305, '123456', '2019-01-01', '', 'a', 0, '320000110200146', '', 1, '2022-08-03', '2020-08-06', 'A320000135', '', 1000000002071436, '654321', '2019-01-01', '', '', '', '', '', '', '', '', '2020-08-06 09:44:30', '', '', 'RULE20120000000000001', '', '', '83258551', 1000000002297783, '1', 1000000001904324);
-        # '''
-        #         data = db.execute(sql)
-        #         print(data)
-
-        # 查示例
-        sql2 = "select msgid,groupCode,groupName,groupType,comCode,optUser from saugroupbackmsg where groupid in (select groupid from saugroup where groupname='ui测试-001');"
-        data2 = db.select(sql2)
-        # data2 = db.random_choice(data2, 3)
-        for d in data2:
-            print(d)
-    finally:
-        db.close_connection()
+# if __name__ == '__main__':
+#     url = 'jdbc:informix-sqli://10.10.68.24:10001/salesdbcs:informixserver=test1;NEWLOCALE=zh_CN,zh_CN;NEWCODESET=gb18030,8859-1,819;'
+#     user = 'xsglifx1'
+#     password = 'u^6m.8LA0'
+#     db = DBUtils(url, user, password)
+#     try:
+#         #         # 增删改示例
+#         #         sql = '''
+#         # delete from saucontract where usercode = '83258551';
+#         # /*插入合同信息*/
+#         # insert into saucontract (agentarea, agentenddate, agentid, agentno, agentstartdate, batchno, checkstatus, comfeedate, contractno, contractaddress, contractcount, contractenddate, contractstartdate, creator, credentialenddate, credentialid, credentialno, credentstartdate, effecttime, effectivedate, failuretime, flag, guarantoraddress, guarantorcardnum, guarantorname, guarantorphone, inputtime, lastcontractid, remark, ruleno, updatetime, updator, usercode, userid, validstatus, ucontractid) values ('', '', 1000000002071305, '123456', '2019-01-01', '', 'a', 0, '320000110200146', '', 1, '2022-08-03', '2020-08-06', 'A320000135', '', 1000000002071436, '654321', '2019-01-01', '', '', '', '', '', '', '', '', '2020-08-06 09:44:30', '', '', 'RULE20120000000000001', '', '', '83258551', 1000000002297783, '1', 1000000001904324);
+#         # '''
+#         #         data = db.execute(sql)
+#         #         print(data)
+#
+#         # 查示例
+#         sql2 = "select msgid,groupCode,groupName,groupType,comCode,optUser from saugroupbackmsg where groupid in (select groupid from saugroup where groupname='ui测试-001');"
+#         data2 = db.select(sql2)
+#         # data2 = db.random_choice(data2, 3)
+#         for d in data2:
+#             print(d)
+#     finally:
+#         db.close_connection()
