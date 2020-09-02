@@ -63,7 +63,6 @@ def restore_data():
     if os.path.exists(sql_path):
         restore_log('CURRENT_TEST:%s/%s 正在准备数据' % (test_dir, test_name))
         sql = get_sql(csv_path, sql_path)
-        # info("sql:"+sql)
         data = g.db.execute(sql)
         restore_log('CURRENT_TEST:%s/%s 准备数据成功' % (test_dir, test_name))
         # success = True
