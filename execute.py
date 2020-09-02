@@ -6,7 +6,7 @@ import pytest
 
 if __name__ == '__main__':
     # pytest.main(['-s', 'src/testcase/agent_sales_manage/test_SALES_validate.PY','-m','verify'])
-    # pytest.main(['-s', 'src/testcase/agent_sales_manage/test_SALES_YLDLZ_200.PY'])
-    pytest.main(['-s', 'src/testcase/group_issue_manage/test_01.PY'])
+    # pytest.main(['-s', 'src/testcase/agent_sales_manage/test_SALES_YLDLZ_001.PY'])
+    pytest.main(['-s', 'src/testcase/agent_sales_manage/test_001.PY'])
     # pytest.main(['-s', 'src/testcase/agen_org_manage/test_SALES_YLZJ_004.PY'])
     # pytest.main(['-s'])
