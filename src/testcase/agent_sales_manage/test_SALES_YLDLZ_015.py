@@ -14,8 +14,13 @@ from src.utils import csv_util
 from src.utils.except_util import get_screenshot
 from src.utils.log import info
 
+data = csv_util.data_reader("agent_sales_manage/test_SALES_YLDLZ_015.csv")
 
-@allure.feature("团队成员出单权赋予与变更（人员转制-无效的合同制销售/合同制非销售转制为代理制人员)-（团队成员出单权赋予）")
+
+@allure.feature("团队成员出单权赋予与变更（人员转制-无效的合同制销售/合同制非销售转制为代理制人员)-（团队成员出单权赋予）-015")
+@pytest.mark.parametrize(
+    "id_cards,com_group,group,qualifytype,qualifyno,qualifystartdate,agentType,qualifytype1,qualifyno1,qualifystartdate1,contractstartdate0,contractenddate0,ruleNo,accountno,cardtype,saDAccount_bankName,saDAccount_bankareaname,bankName",
+    data, scope='class')
 class Test_YLDLZ_015():
     MOAS = ManagementOfAgentSalesmen()
     GI = GroupIssue()
@@ -23,15 +28,11 @@ class Test_YLDLZ_015():
     GIR = GroupIssueRecheck()
     msg = None
 
-    data = csv_util.data_reader("agent_sales_manage/test_SALES_YLDLZ_015.csv")
     # data1 = csv_util.data_reader("agent_sales_manage/015_data1.csv")
 
     @allure.story("人员转制-（团队成员出单权赋予）")
-    @pytest.mark.usefixtures("login_jiangsu_p_fun","restore_data")
+    @pytest.mark.usefixtures("login_jiangsu_p_fun", "restore_data")
     @pytest.mark.dependency(name='test_001')
-    @pytest.mark.parametrize(
-        "id_cards,com_group,group,qualifytype,qualifyno,qualifystartdate,agentType,qualifytype1,qualifyno1,qualifystartdate1,contractstartdate0,contractenddate0,ruleNo,accountno,cardtype,saDAccount_bankName,saDAccount_bankareaname,bankName",
-        data)
     def test_001(self, id_cards, com_group, group, qualifytype, qualifyno, qualifystartdate, agentType, qualifytype1,
                  qualifyno1, qualifystartdate1, contractstartdate0, contractenddate0, ruleNo, accountno, cardtype,
                  saDAccount_bankName, saDAccount_bankareaname, bankName):
@@ -83,8 +84,11 @@ class Test_YLDLZ_015():
 
     @allure.story("人员转制-（团队成员出单权赋予）-复核")
     @pytest.mark.dependency(name='test_002', depends=['test_001'])
-    @pytest.mark.usefixtures("login_jiangsu_p_fun")
-    def test_002(self):
+    @pytest.mark.usefixtures("login_jiangsu_p")
+    def test_002(self, id_cards, com_group, group, qualifytype, qualifyno, qualifystartdate, agentType, qualifytype1,
+                 qualifyno1, qualifystartdate1, contractstartdate0, contractenddate0, ruleNo, accountno, cardtype,
+                 saDAccount_bankName, saDAccount_bankareaname, bankName):
+        self.MOAS.switch_to_default_content()
         info("综合管理->销售人员->代理制销售人员代码复核")
         self.ASR.into_page()
         info("查询人员代码{}->选择".format(Test_YLDLZ_015.msg["user_code"]))
@@ -106,10 +110,14 @@ class Test_YLDLZ_015():
     @allure.story("人员转制-（团队成员出单权赋予）-验证人员状态")
     @pytest.mark.dependency(name='test_003', depends=['test_001', 'test_002'])
     @pytest.mark.usefixtures("login_jiangsu_p_fun")
-    def test_003(self):
+    def test_003(self, id_cards, com_group, group, qualifytype, qualifyno, qualifystartdate, agentType, qualifytype1,
+                 qualifyno1, qualifystartdate1, contractstartdate0, contractenddate0, ruleNo, accountno, cardtype,
+                 saDAccount_bankName, saDAccount_bankareaname, bankName):
+        self.MOAS.switch_to_window()
         info("经营机构->销售人员->代理制销售人员代码管理")
         self.MOAS.into_page()
         info("查询人员代码：{}，未提交状态".format(Test_YLDLZ_015.msg["user_code"]))
         self.MOAS.query(Test_YLDLZ_015.msg["user_code"])
         self.MOAS.assertEqual("判断该人员状态为‘有效’", self.MOAS.get_cell_text_by_head("状态", 0), "有效")
-        get_screenshot("验证")
+        #get_screenshot("验证")
+        sleep(2)

@@ -103,6 +103,7 @@ class Test_SALES_YLTD_003():
         self.MGIM.query(group_name=group_name)
         # self.MGIM.query("ui测试-003")
         text = self.MGIM.get_text(self.MGIM.get_element_xpath(self.MGIM.query_data))
+        get_screenshot("团队信息变更验证")
         if text not in "无记录.":
             text = self.MGIM.get_cell_text_by_head("团队状态", 0)
             self.MGIM.assertEqual("判断团队状态是否有效", text, "有效")

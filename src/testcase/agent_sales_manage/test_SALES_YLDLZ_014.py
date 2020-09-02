@@ -5,6 +5,7 @@
 import allure
 import pytest
 
+from config.global_var import sleep
 from src.page.agent_sales_manage.contract_renewal import ContractRenewal
 from src.page.agent_sales_manage.main_management_agent_salesmen import ManagementOfAgentSalesmen
 from src.page.integrated_management.contract_renewal_recheck import ContractRenewalRecheck
@@ -13,8 +14,11 @@ from src.utils import csv_util
 from src.utils.except_util import get_screenshot
 from src.utils.log import info
 
+data = csv_util.data_reader("agent_sales_manage/test_SALES_YLDLZ_014.csv")
 
-@allure.feature("代理制销售人员代码管理>>合同续签（有效人员进行合同续签）")
+
+@pytest.mark.parametrize("user_code", data, scope='class')
+@allure.feature("代理制销售人员代码管理>>合同续签（有效人员进行合同续签）-014")
 class Test_YLDLZ_014():
     MOAS = ManagementOfAgentSalesmen()
     CR = ContractRenewal()
@@ -22,15 +26,12 @@ class Test_YLDLZ_014():
     CRR = ContractRenewalRecheck()
     msg = None
 
-    data = csv_util.data_reader("agent_sales_manage/test_SALES_YLDLZ_014.csv")
-
     # data = ["83258551"]   # 83258551  83258572  83258562
 
     @allure.story("合同续签（有效人员进行合同续签）")
-    @pytest.mark.usefixtures("login_jiangsu_p_fun","restore_data")
-    @pytest.mark.parametrize("user_code", data)
+    @pytest.mark.usefixtures("login_jiangsu_p", "restore_data")
     def test_001(self, user_code):
-        Test_YLDLZ_014.msg = {"usercode": user_code}
+        self.MOAS.switch_to_default_content()
         info("经营机构->销售人员->代理制销售人员代码管理")
         self.MOAS.into_page()
         info("查询人员代码{}->选择".format(user_code))
@@ -50,11 +51,10 @@ class Test_YLDLZ_014():
         get_screenshot("提交")
         self.CR.close_button_ty()
 
-
     @allure.story("有效人员进行合同续签-复核")
     @pytest.mark.usefixtures("login_jiangsu_p_fun")
-    @pytest.mark.parametrize("user_code", data)
     def test_002(self, user_code):
+        self.MOAS.switch_to_window()
         info("综合管理->销售人员->代理制销售人员代码复核")
         self.ASR.into_page()
         info("查询人员代码{}->选择".format(user_code))
@@ -71,4 +71,5 @@ class Test_YLDLZ_014():
         info("复核")
         self.CRR.click(self.CRR.get_element_xpath(self.CRR.success))
         self.CRR.submit_interaction(self.CRR.submit_iframe, textarea="合同续签（有效人员进行合同续签）--ui测试")
-        get_screenshot("提交")
+        #get_screenshot("提交")
+        sleep(2)

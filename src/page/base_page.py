@@ -132,6 +132,7 @@ class BasePage:
         sleep(2)
         self.switch_to_window()
 
+
     def code_select_input(self, xpath, text):
         '''
         双击选择框，使用输出实现
@@ -268,13 +269,14 @@ class BasePage:
         return g.wait.until(
             expected_conditions.presence_of_all_elements_located((By.XPATH, xpath)))
 
-    @catch_except
     def close_browser(self):
         """
         关闭浏览器
         """
         sleep(0.5)
         g.driver.quit()
+        if self.alert_is_present():
+            self.choose_ok_on_alert()
 
     @catch_except
     def close_tab(self):
