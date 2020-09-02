@@ -284,8 +284,11 @@ class BasePage:
         """
         sleep(0.5)
         g.driver.quit()
-        if self.alert_is_present():
-            self.choose_ok_on_alert()
+        try:
+            if self.alert_is_present():
+                self.choose_ok_on_alert()
+        except Exception as e:
+            pass
 
     @catch_except
     def close_tab(self):
