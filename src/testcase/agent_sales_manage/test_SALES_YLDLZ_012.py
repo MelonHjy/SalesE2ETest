@@ -5,6 +5,7 @@
 import allure
 import pytest
 
+from config.global_var import sleep
 from src.page.agent_sales_manage.edit_agent_sales_msg import EditAgentSaleMsg
 from src.page.agent_sales_manage.main_management_agent_salesmen import ManagementOfAgentSalesmen
 from src.page.integrated_management.main_agent_sales_recheck import AgentSalesRecheck
@@ -15,6 +16,7 @@ from src.utils.log import info
 data = csv_util.data_reader("agent_sales_manage/test_SALES_YLDLZ_012.csv")
 
 
+@pytest.mark.usefixtures("login_jiangsu_p")
 @pytest.mark.parametrize("user_code, accountno, cardtype, saDAccount_bankName, saDAccount_bankareaname, bankName",
                          data,scope='class')
 @allure.feature("代理制销售人员代码管理>>代理制销售人员信息变更(无效人员进行信息变更)")
@@ -28,8 +30,7 @@ class Test_YLDLZ_012():
 
 
     @allure.story("无效人员进行信息变更")
-    @pytest.mark.usefixtures("login_jiangsu_p","restore_data")
-
+    @pytest.mark.usefixtures("restore_data")
     def test_001(self, user_code, accountno, cardtype, saDAccount_bankName, saDAccount_bankareaname, bankName):
         self.MOAS.switch_to_default_content()
         info("经营机构->销售人员->代理制销售人员代码管理")
@@ -51,7 +52,6 @@ class Test_YLDLZ_012():
         # self.EASM.click(self.EASM.wait_until_el_xpath(self.EASM.close_btn))
 
     @allure.story("无效人员进行信息变更-验证修改信息")
-    @pytest.mark.usefixtures("login_jiangsu_p")
     def test_002(self, user_code, accountno, cardtype, saDAccount_bankName, saDAccount_bankareaname, bankName):
         self.MOAS.switch_to_window()
         info("经营机构->销售人员->代理制销售人员代码管理")
@@ -82,4 +82,5 @@ class Test_YLDLZ_012():
         self.EASM.assertEqual("验证联行号",
                               self.EASM.get_attribute(self.EASM.get_element_xpath(self.EASM.bankName), 'value'),
                               bankName)
-        #get_screenshot("验证")
+        get_screenshot("验证")
+        sleep(2)
