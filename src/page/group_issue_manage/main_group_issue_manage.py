@@ -25,7 +25,7 @@ class MainGroupIssueManage(TablePage):
         <requestXml>
             <requesthead>
                 <uuid>f55b5c5f-bda4-4b63-b5a4-415d2aa7b47e</uuid>
-                <flowintime>2020-08-14 14:47:00</flowintime>
+                <flowintime>%s</flowintime>
                 <user>0306</user>
                 <request_type>05220020</request_type>
                 <password>9b5ef3d5-64d0-4dad-a754-bc4930db3913</password>
@@ -42,17 +42,17 @@ class MainGroupIssueManage(TablePage):
                     <groupType>%s</groupType>
                     <comCode>%s</comCode>
                     <licenseFlag>N</licenseFlag>
-                    <optTime>2020-07-27 17:13:38</optTime>
+                    <optTime>%s</optTime>
                     <optUser>%s</optUser>
                     <state>2</state>
                     <reaSon>批准！</reaSon>
-                    <auditTime>2020-08-14 14:47:00</auditTime>
+                    <auditTime>%s</auditTime>
                     <auditUser>销管系统测试账号</auditUser>
                 </hrGroupInFo>
             </requestbody>
         </requestXml>'''
 
-    base_sql = "select msgid,%s,%s,groupName,groupType,comCode,optUser from saugroupbackmsg where groupid in " \
+    base_sql = "select inserttimeforhis,msgid,%s,%s,groupName,groupType,comCode,inserttimeforhis,optUser,inserttimeforhis from saugroupbackmsg where groupid in " \
                "(select groupid from saugroup where groupname='%s') and businessType='%s' and state='1';"
 
     def into_page(self):
