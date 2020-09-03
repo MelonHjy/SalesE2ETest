@@ -17,7 +17,7 @@ from src.utils.log import info
 data = csv_util.data_reader("agency_org_manage/test_SALES_YLZJ_006.csv")
 
 
-@allure.feature("中介机构>>中介机构新增和变更申报>>终止")
+@allure.feature("中介机构>>中介机构新增和变更申报>>终止-006")
 @pytest.mark.parametrize("channel,contract_no,contractType", data, scope="class")
 class Test_SALES_YLZJ_006():
     MAOM = MainAgencyOrgManage()
@@ -25,10 +25,12 @@ class Test_SALES_YLZJ_006():
     MAOA = MainAgencyOrgApproval()  # 审批
     ACCA = AgencyContractConcelApproval()
 
+
     @allure.story("中介机构合同终止")
     @pytest.mark.dependency(name='test_001')
-    @pytest.mark.usefixtures("login_jiangsu_p_fun")
+    @pytest.mark.usefixtures("login_jiangsu_p_fun","restore_data")
     def test_001(self, channel, contract_no, contractType):
+        self.MAOM.switch_to_default_content()
         info("中介机构>>中介机构新增和变更申报>>终止")
         info("中介机构新增和变更申报页:{}".format(channel))
         self.MAOM.into_page(channel)
@@ -83,4 +85,4 @@ class Test_SALES_YLZJ_006():
             self.MAOM.assertResult("查询无该条记录", False)
             get_screenshot("中介机构{}终止合同验证".format(channel))
         sleep(2)
-        self.MAOM.switch_to_default_content()
+

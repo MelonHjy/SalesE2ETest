@@ -16,7 +16,7 @@ from src.utils.log import info
 data = csv_util.data_reader("agency_org_manage/test_SALES_YLZJ_013.csv")
 
 
-@allure.feature("中介模块>>佣金比例上限标准查询修改>>删除")
+@allure.feature("中介模块>>佣金比例上限标准查询修改>>删除-013")
 @pytest.mark.parametrize("channel,rule_no,rule_name", data, scope="class")
 class Test_SALES_YLZJ_013():
     MCE = MainCommisson_edit()
@@ -26,7 +26,7 @@ class Test_SALES_YLZJ_013():
 
     @allure.story("佣金比例上限标准查询修改")
     @pytest.mark.dependency(name='test_001')
-    @pytest.mark.usefixtures("login_jiangsu_p_fun")
+    @pytest.mark.usefixtures("login_jiangsu_p_fun", "restore_data")
     def test_001(self, channel, rule_no, rule_name):
         info("中介模块>>佣金比例上限标准查询修改>>修改:{}".format(channel))
         self.MCE.into_page(channel)

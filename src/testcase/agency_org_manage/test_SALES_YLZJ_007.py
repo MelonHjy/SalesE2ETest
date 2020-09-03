@@ -12,16 +12,18 @@ from src.utils.except_util import get_screenshot
 from src.utils.log import info
 
 
-@allure.feature("中介机构>>中介机构查询")
+@allure.feature("中介机构>>中介机构查询-007")
 class Test_SALES_YLZJ_007:
     MAOQ = MainAgencyOrgQuery()
 
     data = csv_util.data_reader("agency_org_manage/test_SALES_YLZJ_007.csv")
 
+
     @allure.story("中介机构查询")
     @pytest.mark.usefixtures("login_jiangsu_p")
     @pytest.mark.parametrize("channel,contract_no", data)
     def test_001(self, channel, contract_no):
+        self.MAOQ.switch_to_default_content()
         info("中介机构查询页")
         self.MAOQ.into_page(channel)
         self.MAOQ.assertEqual("验证页面标题", self.MAOQ.get_head_text(), "中介机构查询")
@@ -33,4 +35,4 @@ class Test_SALES_YLZJ_007:
         info("验证")
         self.MAOQ.assertEqual("验证查询到的数据合同号是否一致", self.MAOQ.get_cell_text_by_head("合同编号", 0), contract_no)
         get_screenshot("中介机构{}查询".format(channel))
-        self.MAOQ.switch_to_default_content()
+        sleep(2)

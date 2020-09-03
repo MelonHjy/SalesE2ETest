@@ -5,6 +5,7 @@
 import allure
 import pytest
 
+from config.global_var import sleep
 from src.page.agency_module.agency_module_page.agency_contract_renew_approval import AgencyContractRenewApproval
 from src.page.agency_module.agency_module_page.agency_contract_renew import AgencyContractRenew
 from src.page.agency_module.main_agency_org_approval import MainAgencyOrgApproval
@@ -14,7 +15,7 @@ from src.utils.except_util import get_screenshot
 from src.utils.log import info
 
 
-@allure.feature("中介机构>>中介机构新增和变更申报>>续签")
+@allure.feature("中介机构>>中介机构新增和变更申报>>续签-002")
 class Test_SALES_YLZJ_002():
     MAOM = MainAgencyOrgManage()
     ACR = AgencyContractRenew()
@@ -28,9 +29,10 @@ class Test_SALES_YLZJ_002():
     # data = [("银保渠道", "保险兼业代理委托合同(外部)", "329930020082600")]
 
     @allure.story("续签、审批")
-    @pytest.mark.usefixtures("login_jiangsu_p_fun")
+    @pytest.mark.usefixtures("login_jiangsu_p_fun","restore_data")
     @pytest.mark.parametrize("channel,contractType,contract_no", data)
     def test_001(self, channel, contractType, contract_no):
+        self.MAOM.switch_to_default_content()
         info("中介机构新增和变更申报页:{}".format(channel))
         self.MAOM.into_page(channel)
         info("查询")
@@ -46,7 +48,6 @@ class Test_SALES_YLZJ_002():
         self.ACR.assertResult("验证提交成功", "保存成功!" in text)
         get_screenshot("中介机构{}续签提交".format(channel))
         contract_no = text.split("：")[1]
-        # 关闭
         self.ACR.close_button_ty()
         info("中介机构续签-审批")
         self.MAOA.switch_to_window()
@@ -68,4 +69,4 @@ class Test_SALES_YLZJ_002():
         get_screenshot("中介机构{}续签审核".format(channel))
         self.ACRA.assertResult("验证提交成功", "保存成功!" in text)
         self.ACRA.close_button_ty()
-        self.ACRA.switch_to_window()
+        sleep(2)

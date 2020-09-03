@@ -12,7 +12,7 @@ import win32api
 
 from config.global_var import g
 from src.page.base_page import info
-from src.utils.common_util import DecoratorType, task_kill, set_windows_resolution, close_ie
+from src.utils.common_util import DecoratorType, task_kill, set_windows_resolution, close_ie, write_properties
 from src.utils.csv_util import data_reader
 from src.utils.db_util import get_conn
 
@@ -27,6 +27,7 @@ def setup():
     print('before-size:%s-%s' % (width, height))
     if width == 1536 and height == 864:
         set_windows_resolution(768, 1366)
+    write_properties(g.root_path + '/report/allure-results/environment.properties')
     yield
     if width == 1536 and height == 864:
         set_windows_resolution(1080, 1920)

@@ -9,12 +9,16 @@
 @Contact    :   huangjiayi@sinosoft.com.cn
 @Desc       :   None
 '''
+import platform
 import os
 from enum import Enum
 from functools import wraps
 
 import win32api
-
+import pytest
+import selenium
+from config.global_var import g
+from src.utils.driver_util import get_config
 from src.utils.log import info
 
 
@@ -77,3 +81,16 @@ def return_dict(func):
         # return list(map(tuple_to_dict_by_keys, data, [('code', 'name')] * data.__len__()))
 
     return wapper
+
+
+def write_properties(file_name):
+    systemVersion = "systemVersion={}".format(platform.platform())
+    pythonVersion = "pythonVersion={}".format(platform.python_version())
+    seleniumVersion = "seleniumVersion={}".format(selenium.__version__)
+    pytestVersion = ("pytestVersion={}".format(pytest.__version__))
+    g.config = get_config()
+    testEnv = "testEnv={}".format(g.config['DEFAULT']['url'])
+    browser = "browser={}".format(g.config['DEFAULT']['browser'])
+    str = systemVersion + "\n" + pythonVersion+"\n"+seleniumVersion+"\n"+pytestVersion+"\n"+testEnv+"\n"+browser
+    with open(file_name, 'w') as f:
+        f.write(str)

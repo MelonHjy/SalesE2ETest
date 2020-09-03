@@ -18,7 +18,7 @@ from src.utils.except_util import get_screenshot
 
 from src.utils.log import info
 
-data = csv_util.data_reader("group_issue_manage/Test_SALES_YLTD_003.csv")
+data = csv_util.data_reader("group_issue_manage/test_SALES_YLTD_003.csv")
 
 
 @allure.feature("团队出单权管理>>团队信息变更（变更团队重要信息）-003")

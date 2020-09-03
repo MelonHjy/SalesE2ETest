@@ -5,6 +5,7 @@
 import allure
 import pytest
 
+from config.global_var import sleep
 from src.page.agency_module.agency_module_page.channel_type_code_approval import ChannelTypeCodeApproval
 from src.page.agency_module.agency_module_page.new_channel_type_code import NewChannelTypeCode
 from src.page.agency_module.main_channel_type_code_approval import MainChannelTypeCodeApproval
@@ -16,7 +17,8 @@ from src.utils.log import info
 
 data = csv_util.data_reader("agency_org_manage/test_SALES_YLZJ_009.csv")
 
-@allure.feature("中介模块>>渠道类型码新增")
+
+@allure.feature("中介模块>>渠道类型码新增-009")
 @pytest.mark.parametrize("channel,agent_type_code,sap_agent_type_name,permit_no,date", data, scope="class")
 class Test_SALES_YLZJ_009:
     NCTC = NewChannelTypeCode()
@@ -27,7 +29,7 @@ class Test_SALES_YLZJ_009:
 
     @allure.story("渠道类型码新增")
     @pytest.mark.dependency(name='test_001')
-    @pytest.mark.usefixtures("login_jiangsu_p_fun")
+    @pytest.mark.usefixtures("login_jiangsu_p_fun", "restore_data")
     def test_001(self, channel, agent_type_code, sap_agent_type_name, permit_no, date):
         info("中介模块>>渠道类型码新增:{}".format(channel))
         info("渠道类型码新增页")
@@ -44,9 +46,10 @@ class Test_SALES_YLZJ_009:
         info("保存")
         self.NCTC.click(self.NCTC.wait_until_el_xpath(self.NCTC.save_agent_type))
         text = self.NCTC.get_text(self.NCTC.get_element_xpath(self.NCTC.save_success))
-        Test_SALES_YLZJ_009.msg = {"agent_type":text.split("：")[1]}
+        Test_SALES_YLZJ_009.msg = {"agent_type": text.split("：")[1]}
         self.NCTC.assertResult("验证提交成功", "保存成功!" in text)
         get_screenshot("渠道类型码新增-{}".format(channel))
+        sleep(2)
         # self.NCTC.switch_to_default_content()
 
     @allure.story("渠道类型码新增-审核")
@@ -75,10 +78,12 @@ class Test_SALES_YLZJ_009:
         info("渠道类型码查询页")
         self.MCTCQ.into_page(channel)
         info("查询")
-        self.MCTCQ.send_keys(self.MCTCQ.wait_until_el_xpath(self.MCTCQ.agent_type), Test_SALES_YLZJ_009.msg["agent_type"])
+        self.MCTCQ.send_keys(self.MCTCQ.wait_until_el_xpath(self.MCTCQ.agent_type),
+                             Test_SALES_YLZJ_009.msg["agent_type"])
         self.MCTCQ.click_btn("查询")
         info("验证")
         text = self.MCTCQ.get_cell_text_by_head("当前状态", 0)
         self.MCTCQ.assertEqual("验证状态是否有效", text, "新增审核通过")
         # self.MCTCQ.switch_to_default_content()
         get_screenshot("渠道类型码新增验证-{}".format(channel))
+        sleep(2)

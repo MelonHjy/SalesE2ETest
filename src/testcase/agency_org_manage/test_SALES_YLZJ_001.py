@@ -12,16 +12,16 @@ from src.utils.except_util import get_screenshot
 from src.utils.log import info
 
 
-@allure.feature("中介机构>>中介机构新增和变更申报>>查询")
+@allure.feature("中介机构>>中介机构新增和变更申报>>查询-001")
 class Test_SALES_YLZJ_001():
     MAOM = MainAgencyOrgManage()
-
     data = csv_util.data_reader("agency_org_manage/test_SALES_YLZJ_001.csv")
 
     @allure.story("查询")
     @pytest.mark.usefixtures("login_jiangsu_c")
     @pytest.mark.parametrize("channel,contractType,apartment_type", data)
     def test_001(self, channel, contractType, apartment_type):
+        self.MAOM.switch_to_default_content()
         info("中介机构新增和变更申报页:{}".format(channel))
         self.MAOM.into_page(channel)
         self.MAOM.assertEqual("验证页面标题", self.MAOM.get_head_text(), "中介机构新增和变更申报")
@@ -38,4 +38,3 @@ class Test_SALES_YLZJ_001():
         self.MAOM.assertResult("判断查询数据是无记录或者有记录列表", text in "无记录." or flag)
         get_screenshot("中介机构{}查询结果".format(channel))
         sleep(2)
-        self.MAOM.switch_to_default_content()

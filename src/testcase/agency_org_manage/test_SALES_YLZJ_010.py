@@ -5,6 +5,7 @@
 import allure
 import pytest
 
+from config.global_var import sleep
 from src.page.agency_module.agency_module_page.channel_type_code_approval import ChannelTypeCodeApproval
 from src.page.agency_module.agency_module_page.edit_channel_type_code import EditChannelTypeCode
 from src.page.agency_module.agency_module_page.new_channel_type_code import NewChannelTypeCode
@@ -18,7 +19,7 @@ from src.utils.log import info
 data = csv_util.data_reader("agency_org_manage/test_SALES_YLZJ_010.csv")
 
 
-@allure.feature("中介模块>>渠道类型码修改")
+@allure.feature("中介模块>>渠道类型码修改-010")
 @pytest.mark.parametrize("channel,agent_type,agent_type_name,new_agent_type_name", data, scope="class")
 class Test_SALES_YLZJ_010():
     MCTCE = MainChannelTypeCodeEdit()
@@ -32,7 +33,7 @@ class Test_SALES_YLZJ_010():
     #             ("车商渠道", "211", "车商ui测试","555555555555555", "2025-12-12") 数据未准备
     @allure.story("渠道类型码修改")
     @pytest.mark.dependency(name='test_001')
-    @pytest.mark.usefixtures("login_jiangsu_p_fun")
+    @pytest.mark.usefixtures("login_jiangsu_p_fun","restore_data")
     def test_001(self, channel, agent_type, agent_type_name, new_agent_type_name):
         info("中介模块>>渠道类型码修改")
         info("渠道类型码修改页")
@@ -83,3 +84,4 @@ class Test_SALES_YLZJ_010():
         text = self.MCTCQ.get_cell_text_by_head("渠道类型码名称", 0)
         self.MCTCQ.assertEqual("验证是否修改有效", text, new_agent_type_name)
         get_screenshot("渠道类型码修改验证-{}".format(channel))
+        sleep(2)
