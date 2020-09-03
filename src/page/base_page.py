@@ -11,7 +11,7 @@ from selenium.webdriver.support.select import Select
 
 from config.global_var import *
 from src.utils.driver_util import set_wait
-from src.utils.except_util import catch_except
+from src.utils.except_util import catch_except, close
 from src.utils.high_light_element import high_light
 from src.utils.log import *
 
@@ -121,7 +121,6 @@ class BasePage:
         xpath:要双击组件的xpath
         text:要选择的文本值
         '''
-
         self.double_click(self.wait_until_el_xpath(xpath))
         sleep(2)
         self.switch_to_window()
@@ -269,14 +268,19 @@ class BasePage:
         return g.wait.until(
             expected_conditions.presence_of_all_elements_located((By.XPATH, xpath)))
 
+    from wrapt_timeout_decorator import timeout
+
+    @close
+    @timeout(120)
     def close_browser(self):
         """
         关闭浏览器
         """
         sleep(0.5)
-        g.driver.quit()
-        if self.alert_is_present():
-            self.choose_ok_on_alert()
+        try:
+            g.driver.quit()
+        except Exception as e:
+            pass
 
     @catch_except
     def close_tab(self):
