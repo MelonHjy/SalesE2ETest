@@ -1,12 +1,11 @@
 # -*- coding:utf-8 -*-
 # @Time : 2020/6/28 17:22
 # @Author: fyl
-# @File : test_SALES_YLDLZ_001.py   代理制人员代码管理>>营销团队经理聘任与解聘（有效团队成员任命为经理）
+# @File : _test_SALES_YLDLZ_001.py   代理制人员代码管理>>营销团队经理聘任与解聘（有效团队成员任命为经理）
 import allure
 import pytest
 
 from config.global_var import sleep
-from src.page.Personal_agency_channel.main_management_agent_sales_approve import ManagementAgentSalesApprove
 from src.page.Personal_agency_channel.sales_query import SalesQuery
 from src.page.agent_sales_manage.appointment_manager import AppointmentManager
 from src.page.agent_sales_manage.main_management_agent_salesmen import ManagementOfAgentSalesmen
@@ -76,6 +75,8 @@ class Test_YLDLZ_002():
         info("复核")
         self.AMR.assertEqual("判断页面标题", self.AMR.get_head_text(), "经理聘任复核")
         self.AMR.recheck_ope(textarea="有效团队成员任命为经理--ui测试")
+        text = self.AMR.get_text(self.AMR.get_element_xpath(self.AMR.save_success))
+        self.AMR.assertResult("验证提交成功", "保存成功!" in text)
         get_screenshot("提交")
         self.AMR.close_button_ty()
 
@@ -86,6 +87,6 @@ class Test_YLDLZ_002():
         self.SQ.into_page()
         self.SQ.query(user_code)
         text = self.SQ.get_cell_text_by_head("职级", row=0)
-        # get_screenshot("验证")
+        get_screenshot("验证")
         self.SQ.assertEqual("判断该销售人员职级是否营销团队经理", text, "营销团队经理")
         sleep(2)

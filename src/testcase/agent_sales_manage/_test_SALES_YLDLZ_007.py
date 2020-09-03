@@ -1,7 +1,7 @@
 #  -*- coding:utf-8 -*-
 # @Time : 2020/7/27 10:39
 # @Author: fyl
-# @File : test_SALES_YLDLZ_007.py   代理制人员代码管理>>团队成员出单权赋予与变更（新增普通代理制成员）  待测
+# @File : _test_SALES_YLDLZ_007.py   代理制人员代码管理>>团队成员出单权赋予与变更（新增普通代理制成员）  待测
 import allure
 import pytest
 
@@ -103,8 +103,8 @@ class Test_YLDLZ_007():
         get_screenshot("复核")
         info("复核")
         self.GIR.recheck_ope(textarea="新增普通代理制成员-ui测试")
-        # text = self.GIR.get_text(self.GIR.get_element_xpath(self.GIR.save_success))
-        # self.GIR.assertEqual("验证复核成功", text, "保存成功!")
+        text = self.GIR.get_text(self.GIR.get_element_xpath(self.GIR.save_success))
+        self.GIR.assertEqual("验证复核成功", text, "保存成功!")
         get_screenshot("提交")
         self.GIR.close_button_ty()
 
@@ -123,4 +123,4 @@ class Test_YLDLZ_007():
         self.MOAS.assertEqual("验证团队成员状态为‘有效’", status, "有效")
         process = self.MOAS.get_cell_text_by_head("终止流程", 0)
         self.MOAS.assertEqual("判断最后一栏没有终止流程按钮", process, "")
-        #get_screenshot("验证")
+        get_screenshot("验证")

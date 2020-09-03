@@ -24,6 +24,7 @@ data = csv_util.data_reader("agent_sales_manage/test_SALES_YLDLZ_013.csv")
 
 
 @allure.feature("代理制销售人员代码管理>>代理制销售人员出单权注销（有效人员进行注销）-013")
+@pytest.mark.usefixtures("login_jiangsu_p")
 @pytest.mark.parametrize("user_code", data, scope='class')
 class Test_YLDLZ_013():
     MOAS = ManagementOfAgentSalesmen()
@@ -125,7 +126,6 @@ class Test_YLDLZ_013():
 
     @allure.step("有效人员进行注销--复核")
     @pytest.mark.dependency(name='test_002', depends=['test_001'])
-    @pytest.mark.usefixtures("login_jiangsu_p_fun")
     @allure.step("代理制销售人员出单权注销复核成功")
     def test_004(self, user_code):
         self.ASR.switch_to_window()
@@ -149,7 +149,6 @@ class Test_YLDLZ_013():
 
     @allure.story("有效人员进行信息变更-查询验证")
     @pytest.mark.dependency(name='test_003', depends=["test_001", "test_002"])
-    @pytest.mark.usefixtures("login_jiangsu_p")
     def test_003(self, user_code):
         self.MOAS.switch_to_window()
         info("经营机构->销售人员->代理制销售人员代码管理")
@@ -158,5 +157,5 @@ class Test_YLDLZ_013():
         self.MOAS.query(user_code)
         text = self.MOAS.get_cell_text_by_head("状态", 0)
         self.MOAS.assertEqual("判断是否结束复核状态", text, "手动注销")
-        #get_screenshot("验证")
+        get_screenshot("验证")
         sleep(2)

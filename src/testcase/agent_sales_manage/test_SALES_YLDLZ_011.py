@@ -33,10 +33,11 @@ class Test_YLDLZ_011():
 
     @allure.story("有效人员进行信息变更")
     @pytest.mark.dependency(name='test_001')
-    @pytest.mark.usefixtures("login_jiangsu_p_fun","restore_data")
+    @pytest.mark.usefixtures("login_jiangsu_p","restore_data")
     def test_001(self, user_code, mobile, nation, visage, culture, qualifytype, qualifyno,
                  qualifystartdate, agentType, qualifytype1, qualifyno1, qualifystartdate1, contractstartdate0,
                  contractenddate0):
+        self.MOAS.switch_to_default_content()
         info("经营机构->销售人员->代理制销售人员代码管理")
         self.MOAS.into_page()
         info("查询人员代码{}->选择".format(user_code))
@@ -70,6 +71,7 @@ class Test_YLDLZ_011():
         text = self.EASM.get_text(self.EASM.get_element_xpath(self.EASM.save_success))
         self.EASM.assertResult("验证提交成功", "保存成功!" in text)
         get_screenshot("提交")
+        self.EASM.close_button_ty()
 
     @allure.story("有效人员进行信息变更-复核")
     @pytest.mark.dependency(name='test_002', depends=["test_001"])
@@ -77,7 +79,7 @@ class Test_YLDLZ_011():
     def test_002(self, user_code, mobile, nation, visage, culture, qualifytype, qualifyno,
                  qualifystartdate, agentType, qualifytype1, qualifyno1, qualifystartdate1, contractstartdate0,
                  contractenddate0):
-        self.ASR.switch_to_default_content()
+        self.ASR.switch_to_window()
         info("综合管理->销售人员->代理制销售人员代码复核")
         self.ASR.into_page()
         info("查询人员代码{}->选择".format(user_code))
@@ -101,11 +103,12 @@ class Test_YLDLZ_011():
     def test_003(self, user_code, mobile, nation, visage, culture, qualifytype, qualifyno,
                  qualifystartdate, agentType, qualifytype1, qualifyno1, qualifystartdate1, contractstartdate0,
                  contractenddate0):
+        self.MOAS.switch_to_window()
         info("经营机构->销售人员->代理制销售人员代码管理")
         self.MOAS.into_page()
         info("查询人员代码{}->选择".format(user_code))
         self.MOAS.query(user_code)
         text = self.MOAS.get_cell_text_by_head("状态", 0)
         self.MOAS.assertEqual("判断是否结束复核状态", text, "有效")
-        #get_screenshot("验证")
+        get_screenshot("验证")
         sleep(2)

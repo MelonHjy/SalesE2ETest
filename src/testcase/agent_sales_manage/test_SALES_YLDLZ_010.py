@@ -28,8 +28,9 @@ class Test_YLDLZ_010():
 
     @allure.story("变更有效团队成员的团队")
     @pytest.mark.dependency(name='test_001')
-    @pytest.mark.usefixtures("login_jiangsu_p_fun", "restore_data")
+    @pytest.mark.usefixtures("login_jiangsu_p", "restore_data")
     def test_001(self, user_code, group_code):
+        self.MOAS.switch_to_default_content()
         info("经营机构->销售人员->代理制销售人员代码管理")
         self.MOAS.into_page()
         info("查询人员代码{}->选择".format(user_code))
@@ -54,7 +55,8 @@ class Test_YLDLZ_010():
     @pytest.mark.dependency(name='test_002', depends=["test_001"])
     @pytest.mark.usefixtures("login_jiangsu_p")
     def test_002(self, user_code, group_code):
-        self.ASR.switch_to_default_content()
+        # self.ASR.switch_to_default_content()
+        self.ASR.switch_to_window()
         info("综合管理->销售人员->代理制销售人员代码复核")
         self.ASR.into_page()
         info("查询人员代码{}->选择".format(user_code))
@@ -88,5 +90,5 @@ class Test_YLDLZ_010():
         group_code_text = self.GI.get_text(self.GI.wait_until_el_xpath(self.GI.group_code))
         info("团队代码：{}".format(group_code))
         self.GI.assertResult("验证团队代码是否修改成功", group_code_text in group_code)
-        #get_screenshot("验证")
+        get_screenshot("验证")
         sleep(2)
