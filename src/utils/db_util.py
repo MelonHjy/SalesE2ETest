@@ -40,7 +40,7 @@ def catch_socket_exception(func):
         try:
             return func(*args, **kwargs)
         except jpype.java.sql.SQLException as e:
-            info("出现异常，详细信息：%s，重新进行连接" % traceback.format_exc())
+            info("出现SQLException异常，详细信息：%s，重新进行连接" % traceback.format_exc())
             get_conn()
             return func(*args, **kwargs)
         except Exception as e:

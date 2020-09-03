@@ -9,8 +9,33 @@
 @Contact    :   huangjiayi@sinosoft.com.cn
 @Desc       :   None
 '''
+import os
 from enum import Enum
 from functools import wraps
+
+import win32api
+
+from src.utils.log import info
+
+
+def set_windows_resolution(height, width):
+    dm = win32api.EnumDisplaySettings(None, 0)
+    dm.PelsHeight = height
+    dm.PelsWidth = width
+    dm.BitsPerPel = 32
+    dm.DisplayFixedOutput = 0
+    win32api.ChangeDisplaySettings(dm, 0)
+
+
+def close_ie():
+    task_kill("IEDriverServer.exe")
+    task_kill("iexplore.exe")
+    info("关闭ie相关进程")
+
+
+def task_kill(name):
+    if os.system("tasklist |findstr {}".format(name)) == 0:
+        os.system("taskkill /f /im {}".format(name))
 
 
 class BusinessType(Enum):
