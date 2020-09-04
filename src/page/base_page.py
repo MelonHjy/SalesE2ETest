@@ -10,6 +10,7 @@ from selenium.webdriver.support import expected_conditions
 from selenium.webdriver.support.select import Select
 
 from config.global_var import *
+from src.utils.common_util import close_ie
 from src.utils.driver_util import set_wait
 from src.utils.except_util import catch_except, close
 from src.utils.high_light_element import high_light
@@ -277,10 +278,11 @@ class BasePage:
         关闭浏览器
         """
         sleep(0.5)
-        try:
-            g.driver.quit()
-        except Exception as e:
-            pass
+        # try:
+        #     g.driver.quit()
+        # except Exception as e:
+        #     pass
+        close_ie()
 
     @catch_except
     def close_tab(self):

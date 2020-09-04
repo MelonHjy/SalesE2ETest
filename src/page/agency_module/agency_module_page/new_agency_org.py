@@ -50,7 +50,9 @@ class NewAgencyOrg(CommonPage):
 
     def double_click_org(self, xpath, code):
         com_code_el = self.get_element_xpath(xpath)
-        self.send_keys(com_code_el, code)
+        self.execute_script_s("arguments[0].setAttribute('value',arguments[1]);",
+                              com_code_el, code)
+        # self.send_keys(com_code_el, code)
         self.double_click(com_code_el)
         sleep(3)
         self.switch_to_window()
