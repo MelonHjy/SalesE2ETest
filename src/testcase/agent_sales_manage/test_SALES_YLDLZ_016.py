@@ -94,12 +94,12 @@ class Test_YLDLZ_016():
 
     @allure.story("人员转制-（营销团队经理聘任与解聘）--复核")
     @pytest.mark.dependency(name='test_002', depends=['test_001'])
-    @pytest.mark.usefixtures("login_jiangsu_p")
+    @pytest.mark.usefixtures("login_jiangsu_p_fun")
     def test_002(self, id_cards, com_group, group, qualifytype, qualifyno, qualifystartdate, agentType, qualifytype1,
                  qualifyno1,
                  qualifystartdate1, contractstartdate0, contractenddate0, ruleNo, accountno, cardtype,
                  saDAccount_bankName, saDAccount_bankareaname, bankName):
-        self.ASR.switch_to_default_content()
+        # self.ASR.switch_to_default_content()
         info("综合管理->销售人员->代理制销售人员代码复核")
         self.ASR.into_page()
         info("查询人员代码{}->选择".format(Test_YLDLZ_016.msg["user_code"]))
@@ -125,7 +125,7 @@ class Test_YLDLZ_016():
                  qualifyno1,
                  qualifystartdate1, contractstartdate0, contractenddate0, ruleNo, accountno, cardtype,
                  saDAccount_bankName, saDAccount_bankareaname, bankName):
-        self.SQ.switch_to_window()
+        # self.SQ.switch_to_window()
         info("个代渠道->销售人员->销售人员查询")
         self.SQ.into_page()
         info("查询人员代码：{}，未提交状态".format(Test_YLDLZ_016.msg["user_code"]))

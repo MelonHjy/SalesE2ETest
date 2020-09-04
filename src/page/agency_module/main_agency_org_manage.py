@@ -41,7 +41,7 @@ class MainAgencyOrgManage(CommonMainPage):
                 self.click(el)
             j = j + 1
         self.click_btn("查询")
-        sleep(5)
+        sleep(8)
 
     def table_cell_text(self, head, text):
         list = self.get_cell_text_by_head(head)

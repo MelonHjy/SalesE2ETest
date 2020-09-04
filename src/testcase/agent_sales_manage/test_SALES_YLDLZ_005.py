@@ -59,12 +59,12 @@ class Test_YLDLZ_005():
         get_screenshot("提交")
         self.DM.assertEqual("验证解聘提交成功", text, "保存成功!")
         self.DM.click(self.DM.wait_until_el_xpath(self.DM.submit_close_btn))
+        self.DM.switch_to_window()
 
     # @pytest.mark.skip
     @allure.story("有效的经理解聘该人员经理职务-复核")
     @pytest.mark.dependency(name='test_002', depends=["test_001"])
     def test_YLDLZ_005_recheck(self, user_code):
-        self.ASR.switch_to_window()
         info("综合管理->销售人员->代理制销售人员代码复核")
         self.ASR.into_page()
         info("查询人员代码{}".format(user_code))
@@ -82,11 +82,11 @@ class Test_YLDLZ_005():
         self.DMR.assertEqual("验证复核成功", text, "保存成功!")
         get_screenshot("提交")
         self.DMR.close_button_ty()
+        self.DMR.switch_to_window()
 
     @allure.story("验证审核通过后核对人员信息")
     @pytest.mark.dependency(name='test_003', depends=["test_001", "test_002"])
     def test_003_sales_query(self, user_code):
-        self.SQ.switch_to_window()
         info("验证")
         self.SQ.into_page()
         info("查询人员的代码{}".format(user_code))

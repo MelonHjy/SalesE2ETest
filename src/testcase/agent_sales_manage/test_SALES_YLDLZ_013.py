@@ -65,6 +65,7 @@ class Test_YLDLZ_013():
         self.BP.assertResult("验证提交成功", "保存成功!" in text)
         get_screenshot("提交")
         self.PP.close_button_ty()
+        self.BP.switch_to_window()
         # sleep(60)
         # 专职营销员会出现提示框
         # dissmiss_text = self.deputy_check.get_alert_text()
@@ -128,7 +129,6 @@ class Test_YLDLZ_013():
     @pytest.mark.dependency(name='test_002', depends=['test_001'])
     @allure.step("代理制销售人员出单权注销复核成功")
     def test_004(self, user_code):
-        self.ASR.switch_to_window()
         info("综合管理->销售人员->代理制销售人员代码复核")
         self.ASR.into_page()
         info("查询人员代码{}".format(user_code))
@@ -146,11 +146,11 @@ class Test_YLDLZ_013():
         self.BP.assertResult("验证复核成功", "保存成功!" in text)
         get_screenshot("提交")
         self.PP.close_button_ty()
+        self.BP.switch_to_window()
 
     @allure.story("有效人员进行信息变更-查询验证")
     @pytest.mark.dependency(name='test_003', depends=["test_001", "test_002"])
     def test_003(self, user_code):
-        self.MOAS.switch_to_window()
         info("经营机构->销售人员->代理制销售人员代码管理")
         self.MOAS.into_page()
         info("查询人员代码{}->选择".format(user_code))

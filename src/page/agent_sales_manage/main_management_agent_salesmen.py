@@ -46,7 +46,7 @@ class ManagementOfAgentSalesmen(TablePage):
                 self.click(el)
             j = j + 1
         self.click(self.wait_until_el_xpath(self.input_btn.format("查询")))
-        sleep(3)
+        sleep(5)
 
     def assert_table_msg(self, usercode, name, id_cards, sjjg, group):
         # 需要加一个等待数据加载完成

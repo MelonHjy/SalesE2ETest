@@ -268,10 +268,10 @@ class BasePage:
         return g.wait.until(
             expected_conditions.presence_of_all_elements_located((By.XPATH, xpath)))
 
-    from wrapt_timeout_decorator import timeout
+    #from wrapt_timeout_decorator import timeout
 
-    @close
-    @timeout(120)
+    #@close
+    #@timeout(120)
     def close_browser(self):
         """
         关闭浏览器
