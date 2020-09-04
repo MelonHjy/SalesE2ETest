@@ -57,11 +57,11 @@ class Test_YLDLZ_009():
         self.GI.assertResult("验证提交成功", "保存成功!" in text)
         get_screenshot("提交")
         self.GI.close_button_ty()
+        self.GI.switch_to_window()
 
     @allure.story("无效人员复效为团队成员-复核")
     @pytest.mark.dependency(name='test_002', depends=["test_001"])
     def test_002(self, user_code, contractstartdate1, contractenddate1, ruleNo):
-        self.ASR.switch_to_window()
         info("综合管理->销售人员->代理制销售人员代码复核")
         self.ASR.into_page()
         info("查询无效人员代码{}->选择".format(user_code))
@@ -77,11 +77,11 @@ class Test_YLDLZ_009():
         self.GIR.assertEqual("验证复核成功", text, "保存成功!")
         get_screenshot("提交")
         self.GIR.close_button_ty()
+        self.GIR.switch_to_window()
 
     @allure.story("代理制销售人员代码查询验证")
     @pytest.mark.dependency(name='test_003', depends=["test_001", "test_002"])
     def test_003(self, user_code, contractstartdate1, contractenddate1, ruleNo):
-        self.MOAS.switch_to_window()
         info("经营机构->销售人员->代理制销售人员代码管理")
         self.MOAS.into_page()
         info("查询人员代码{}".format(user_code))

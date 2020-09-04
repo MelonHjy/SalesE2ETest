@@ -72,6 +72,7 @@ class Test_YLDLZ_011():
         self.EASM.assertResult("验证提交成功", "保存成功!" in text)
         get_screenshot("提交")
         self.EASM.close_button_ty()
+        self.EASM.switch_to_window()
 
     @allure.story("有效人员进行信息变更-复核")
     @pytest.mark.dependency(name='test_002', depends=["test_001"])
@@ -95,6 +96,7 @@ class Test_YLDLZ_011():
         self.EASMR.assertResult("验证提交成功", "保存成功!" in text)
         get_screenshot("提交")
         self.EASMR.close_button_ty()
+        self.EASMR.switch_to_window()
         # self.EASMR.click(self.ASR.wait_until_el_xpath(self.EASMR.submit_close))
 
     @allure.story("有效人员进行信息变更-查询验证")
@@ -103,7 +105,6 @@ class Test_YLDLZ_011():
     def test_003(self, user_code, mobile, nation, visage, culture, qualifytype, qualifyno,
                  qualifystartdate, agentType, qualifytype1, qualifyno1, qualifystartdate1, contractstartdate0,
                  contractenddate0):
-        self.MOAS.switch_to_window()
         info("经营机构->销售人员->代理制销售人员代码管理")
         self.MOAS.into_page()
         info("查询人员代码{}->选择".format(user_code))

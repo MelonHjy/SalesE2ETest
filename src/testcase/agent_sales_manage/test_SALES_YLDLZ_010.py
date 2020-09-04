@@ -54,7 +54,7 @@ class Test_YLDLZ_010():
     @pytest.mark.dependency(name='test_002', depends=["test_001"])
     # @pytest.mark.usefixtures("login_jiangsu_p_fun")
     def test_002(self, user_code, group_code):
-        self.ASR.switch_to_default_content()
+        # self.ASR.switch_to_default_content()
         info("综合管理->销售人员->代理制销售人员代码复核")
         self.ASR.into_page()
         info("查询人员代码{}->选择".format(user_code))
@@ -75,7 +75,7 @@ class Test_YLDLZ_010():
     @pytest.mark.dependency(name='test_003', depends=["test_001", "test_002"])
     # @pytest.mark.usefixtures("login_jiangsu_p")
     def test_003(self, user_code, group_code):
-        self.MOAS.switch_to_window()
+        # self.MOAS.switch_to_window()
         info("经营机构->销售人员->代理制销售人员代码管理")
         self.MOAS.into_page()
         info("查询人员代码{}->选择".format(user_code))

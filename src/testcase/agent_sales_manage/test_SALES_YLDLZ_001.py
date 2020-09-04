@@ -50,6 +50,7 @@ class Test_YLDLZ_001():
         random_sex = random.randint(0, 1)  # 随机生成男(1)或女(0)
         idCard = IdNumber.generate_id(random_sex)  # 随机生成身份证号
         accountno = idCard[0:13]
+        info("身份证：{0}，银行账号：{1}".format(idCard,accountno))
         info("经营机构->销售人员->代理制销售人员代码管理->营销团队经理聘任与解聘")
         self.MOAS.into_page()
         self.MOAS.click_btn('营销团队经理聘任与解聘')

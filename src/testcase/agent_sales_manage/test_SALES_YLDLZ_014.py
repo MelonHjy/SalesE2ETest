@@ -51,10 +51,10 @@ class Test_YLDLZ_014():
         self.CR.assertResult("验证提交成功", "保存成功!" in text)
         get_screenshot("提交")
         self.CR.close_button_ty()
+        self.CR.switch_to_window()
 
     @allure.story("有效人员进行合同续签-复核")
     def test_002(self, user_code):
-        self.MOAS.switch_to_window()
         info("综合管理->销售人员->代理制销售人员代码复核")
         self.ASR.into_page()
         info("查询人员代码{}->选择".format(user_code))

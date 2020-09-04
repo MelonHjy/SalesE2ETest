@@ -28,6 +28,7 @@ def setup():
     if width == 1536 and height == 864:
         set_windows_resolution(768, 1366)
     write_properties(g.root_path + '/report/allure-results/environment.properties')
+    info("生成环境配置信息文件")
     yield
     if width == 1536 and height == 864:
         set_windows_resolution(1080, 1920)

@@ -49,11 +49,11 @@ class Test_YLDLZ_012():
         self.EASM.manage_account()
         get_screenshot("变更账号信息")
         self.EASM.close_tab()
+        self.EASM.switch_to_window()
         # self.EASM.click(self.EASM.wait_until_el_xpath(self.EASM.close_btn))
 
     @allure.story("无效人员进行信息变更-验证修改信息")
     def test_002(self, user_code, accountno, cardtype, saDAccount_bankName, saDAccount_bankareaname, bankName):
-        self.MOAS.switch_to_window()
         info("经营机构->销售人员->代理制销售人员代码管理")
         self.MOAS.into_page()
         info("查询人员代码{}->选择".format(user_code))
