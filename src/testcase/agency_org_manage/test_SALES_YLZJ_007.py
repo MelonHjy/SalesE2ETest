@@ -24,7 +24,7 @@ class Test_SALES_YLZJ_007:
     @pytest.mark.parametrize("channel,contract_no", data)
     def test_001(self, channel, contract_no):
         self.MAOQ.switch_to_default_content()
-        info("中介机构查询页")
+        info("中介机构查询页：{}".format(channel))
         self.MAOQ.into_page(channel)
         self.MAOQ.assertEqual("验证页面标题", self.MAOQ.get_head_text(), "中介机构查询")
         info("输入合同号")

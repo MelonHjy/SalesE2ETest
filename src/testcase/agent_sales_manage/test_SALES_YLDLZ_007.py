@@ -89,8 +89,8 @@ class Test_YLDLZ_007():
         # sleep(3)
         Test_YLDLZ_007.msg = self.GI.get_msg()
         info("人员代码{0}，合同号{1}".format(Test_YLDLZ_007.msg['usercode'], Test_YLDLZ_007.msg['contract']))
-        text = self.GI.get_text(self.GI.get_element_xpath(self.GI.save_success))
-        self.GI.assertResult("验证提交成功", "保存成功!" in text)
+        # text = self.GI.get_text(self.GI.get_element_xpath(self.GI.save_success))
+        # self.GI.assertResult("验证提交成功", "保存成功!" in text)
         get_screenshot("提交")
         self.GI.close_button_ty()
 
@@ -101,7 +101,7 @@ class Test_YLDLZ_007():
                                qualifystartdate, agentType, qualifytype1, qualifyno1,
                                qualifystartdate1, contractstartdate0, contractenddate0, ruleNo, cardtype,
                                saDAccount_bankName, saDAccount_bankareaname, bankName):
-        self.ASR.switch_to_default_content()
+        # self.ASR.switch_to_default_content()
         info("综合管理->销售人员->代理制销售人员代码复核")
         self.ASR.into_page()
         info("查询人员代码{}".format(Test_YLDLZ_007.msg['usercode']))

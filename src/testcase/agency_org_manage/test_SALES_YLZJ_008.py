@@ -23,7 +23,7 @@ class Test_SALES_YLZJ_008():
     @pytest.mark.parametrize("channel", data)
     def test_001(self, channel):
         self.MCTCQ.switch_to_default_content()
-        info("渠道类型码查询页")
+        info("渠道类型码查询页:{}".format(channel))
         self.MCTCQ.into_page(channel)
         self.MCTCQ.assertEqual("验证页面标题", self.MCTCQ.get_head_text(), "渠道类型码查询")
         info("查询")
