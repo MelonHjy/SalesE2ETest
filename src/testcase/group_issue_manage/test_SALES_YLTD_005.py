@@ -71,6 +71,7 @@ class Test_SALES_YLTD_005():
         self.DGR.assertEqual("判断提示信息", text, "{}:团队信息推送成功！".format(group_name))
         self.DGR.choose_ok_on_alert()
         self.DGR.close_tab()
+        self.DGR.switch_to_window()
 
     @allure.story("模拟Hr推送至销管系统")
     @pytest.mark.dependency(name='test_send', depends=['test_001'])
@@ -81,14 +82,13 @@ class Test_SALES_YLTD_005():
     @pytest.mark.dependency(name='test_002', depends=["test_send"])
     @pytest.mark.usefixtures("login_jiangsu_p")
     def test_002(self, pk_deptdoc, group_name):
-        self.MGIM.switch_to_window()
         info("团队出单权管理页")
         self.MGIM.into_page()
         info("查询团队名称：{}".format(group_name))
         self.MGIM.query(group_name=group_name)
         get_screenshot("团队注销验证")
         text = self.MGIM.get_text(self.MGIM.get_element_xpath(self.MGIM.query_data))
-        if text not in "无记录.":
+        if text.strip() != "无记录.":
             text = self.MGIM.get_cell_text_by_head("团队状态", 0)
             self.MGIM.assertEqual("判断团队状态是否有效", text, "注销")
             process = self.MGIM.get_cell_text_by_head("终止流程", 0)

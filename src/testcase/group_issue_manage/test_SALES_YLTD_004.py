@@ -68,12 +68,12 @@ class Test_SALES_YLTD_004():
         self.VGER.submit_interaction(iframe_xpath=self.VGER.submit_iframe, textarea="ui测试-变更团队非重要信息-审核")
         get_screenshot("团队非重要信息变更审核")
         self.VGER.close_button_ty()
+        self.VGER.switch_to_window()
         sleep(2)
 
     @allure.story("变更团队非重要信息-验证")
     @pytest.mark.dependency(name='test_002', depends=['test_001'])
     def test_002(self, pk_deptdoc, group_name, business_focus, business_desc, build_date):
-        self.MGIM.switch_to_window()
         info("团队出单权管理页")
         self.MGIM.into_page()
         info("查询团队名称：{}".format(group_name))

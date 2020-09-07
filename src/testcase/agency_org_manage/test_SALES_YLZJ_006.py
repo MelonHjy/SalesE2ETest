@@ -25,10 +25,9 @@ class Test_SALES_YLZJ_006():
     MAOA = MainAgencyOrgApproval()  # 审批
     ACCA = AgencyContractConcelApproval()
 
-
     @allure.story("中介机构合同终止")
     @pytest.mark.dependency(name='test_001')
-    @pytest.mark.usefixtures("login_jiangsu_p_fun","restore_data")
+    @pytest.mark.usefixtures("login_jiangsu_p_fun", "restore_data")
     def test_001(self, channel, contract_no, contractType):
         self.MAOM.switch_to_default_content()
         info("中介机构>>中介机构新增和变更申报>>终止")
@@ -64,6 +63,9 @@ class Test_SALES_YLZJ_006():
         self.ACCA.assertEqual("验证页面标题", self.ACCA.get_head_text(), "中介合同注销审批")
         info("审批")
         self.ACCA.click(self.ACCA.get_element_xpath(self.ACCA.pass_check))
+        sleep(2)
+        if self.ACCA.alert_is_present():
+            self.ACCA.choose_ok_on_alert()
         info("保存提交")
         self.ACCA.submit_interaction(self.ACCA.submit_frame, textarea="ui测试-中介机构合同终止审批")
         text = self.ACCA.get_text(self.ACCA.get_element_xpath(self.ACCA.save_success))
@@ -72,17 +74,17 @@ class Test_SALES_YLZJ_006():
         self.ACCA.close_button_ty()
         info("中介机构合同终止-验证")
         self.MAOM.switch_to_window()
-        info("中介机构审批页")
+        info("中介机构新增和变更申报页")
         self.MAOM.into_page(channel)
         info("查询合同号：{}".format(contract_no))
         self.MAOM.query(contract_no, contractType, "1")
+        sleep(3)
         text = self.MAOM.get_text(self.MAOM.get_element_xpath(self.MAOM.query_data))
-        if text not in "无记录.":
+        if text.strip() == "无记录.":
+            self.MAOM.assertResult("查询无该条记录", True)
+            get_screenshot("中介机构{}终止合同验证".format(channel))
+        else:
             text = self.MAOM.get_cell_text_by_head("状态", 0)
             self.MAOM.assertEqual("验证机构是否有效", text, "无效")
             get_screenshot("中介机构{}终止合同验证".format(channel))
-        else:
-            self.MAOM.assertResult("查询无该条记录", False)
-            get_screenshot("中介机构{}终止合同验证".format(channel))
         sleep(2)
-

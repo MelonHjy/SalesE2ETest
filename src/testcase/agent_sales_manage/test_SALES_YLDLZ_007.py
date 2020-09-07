@@ -118,7 +118,7 @@ class Test_YLDLZ_007():
         text = self.GIR.get_text(self.GIR.get_element_xpath(self.GIR.save_success))
         self.GIR.assertEqual("验证复核成功", text, "保存成功!")
         get_screenshot("提交")
-        self.GIR.close_button_ty()
+        # self.GIR.close_button_ty()
 
     @allure.story("新增普通代理制成员查询验证")
     @pytest.mark.dependency(name='test_003', depends=["test_001", "test_002"])
