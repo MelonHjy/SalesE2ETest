@@ -89,8 +89,8 @@ class Test_YLDLZ_007():
         # sleep(3)
         Test_YLDLZ_007.msg = self.GI.get_msg()
         info("人员代码{0}，合同号{1}".format(Test_YLDLZ_007.msg['usercode'], Test_YLDLZ_007.msg['contract']))
-        # text = self.GI.get_text(self.GI.get_element_xpath(self.GI.save_success))
-        # self.GI.assertResult("验证提交成功", "保存成功!" in text)
+        text = self.GI.get_text(self.GI.get_element_xpath(self.GI.save_success))
+        self.GI.assertResult("验证提交成功", "保存成功!" in text)
         get_screenshot("提交")
         self.GI.close_button_ty()
 
@@ -115,8 +115,8 @@ class Test_YLDLZ_007():
         get_screenshot("复核")
         info("复核")
         self.GIR.recheck_ope(textarea="新增普通代理制成员-ui测试")
-        text = self.GIR.get_text(self.GIR.get_element_xpath(self.GIR.save_success))
-        self.GIR.assertEqual("验证复核成功", text, "保存成功!")
+        # text = self.GIR.get_text(self.GIR.get_element_xpath(self.GIR.save_success))
+        # self.GIR.assertEqual("验证复核成功", text, "保存成功!")
         get_screenshot("提交")
         # self.GIR.close_button_ty()
 
