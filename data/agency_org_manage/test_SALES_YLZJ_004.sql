@@ -1,5 +1,5 @@
 delete from saaagentresult where agentcode=(select a.agentcode from saaagentcontract a,saacontract b where a.acontractid=b.acontractid and b.agentname='ui测试-中介004');
--- delete from sainterfaceinfo where businessno=(select to_char(a.agentid) from saaagentcontract a,saacontract b where a.acontractid=b.acontractid and b.agentname='ui测试-中介银保004')
+delete from sainterfaceinfo where businessno=(select to_char(a.agentid) from saaagentcontract a,saacontract b where a.acontractid=b.acontractid and b.agentname='ui测试-中介银保004')
 delete from sainterfaceinfo where businessno=(select to_char(a.acontractid) from saaagentcontract a,saacontract b where a.acontractid=b.acontractid and b.agentname='ui测试-中介004');
 delete from sainterfaceinfo where businessno in(select to_char(accountid) from sadaccount where accountno='1111110');
 delete from saaagentcontract where acontractid=(select acontractid from saacontract where agentname='ui测试-中介004');
@@ -15,7 +15,7 @@ INSERT INTO saaagenthis (id, agentid, agentcode, agentname, agenttype, permitno,
 
 
 delete from saaagentresult where agentcode=(select a.agentcode from saaagentcontract a,saacontract b where a.acontractid=b.acontractid and b.agentname='ui测试-中介经代004');
--- delete from sainterfaceinfo where businessno=(select to_char(a.agentid) from saaagentcontract a,saacontract b where a.acontractid=b.acontractid and b.agentname='ui测试-中介经代004')
+delete from sainterfaceinfo where businessno=(select to_char(a.agentid) from saaagentcontract a,saacontract b where a.acontractid=b.acontractid and b.agentname='ui测试-中介经代004')
 delete from sainterfaceinfo where businessno=(select to_char(a.acontractid) from saaagentcontract a,saacontract b where a.acontractid=b.acontractid and b.agentname='ui测试-中介经代004');
 delete from sainterfaceinfo where businessno in(select to_char(accountid) from sadaccount where accountno='1111112');
 delete from saaagentcontract where acontractid=(select acontractid from saacontract where agentname='ui测试-中介经代004');
@@ -28,7 +28,7 @@ delete from sadaccount where accountno='1111112';
 
 
 delete from saaagentresult where agentcode=(select a.agentcode from saaagentcontract a,saacontract b where a.acontractid=b.acontractid and b.agentname='ui测试-中介银保004');
--- delete from sainterfaceinfo where businessno=(select to_char(a.agentid) from saaagentcontract a,saacontract b where a.acontractid=b.acontractid and b.agentname='ui测试-中介银保004')
+delete from sainterfaceinfo where businessno=(select to_char(a.agentid) from saaagentcontract a,saacontract b where a.acontractid=b.acontractid and b.agentname='ui测试-中介银保004')
 delete from sainterfaceinfo where businessno=(select to_char(a.acontractid) from saaagentcontract a,saacontract b where a.acontractid=b.acontractid and b.agentname='ui测试-中介银保004');
 delete from sainterfaceinfo where businessno in(select to_char(accountid) from sadaccount where accountno='1111114');
 delete from saaagentcontract where acontractid=(select acontractid from saacontract where agentname='ui测试-中介银保004');
@@ -42,7 +42,7 @@ delete from sadaccount where accountno='1111114';
 
 
 delete from saaagentresult where agentcode=(select a.agentcode from saaagentcontract a,saacontract b where a.acontractid=b.acontractid and b.agentname='ui测试-中介车商004-1');
--- delete from sainterfaceinfo where businessno=(select to_char(a.agentid) from saaagentcontract a,saacontract b where a.acontractid=b.acontractid and b.agentname='ui测试-中介银保004')
+delete from sainterfaceinfo where businessno=(select to_char(a.agentid) from saaagentcontract a,saacontract b where a.acontractid=b.acontractid and b.agentname='ui测试-中介银保004')
 delete from sainterfaceinfo where businessno=(select to_char(a.acontractid) from saaagentcontract a,saacontract b where a.acontractid=b.acontractid and b.agentname='ui测试-中介车商004-1');
 delete from sainterfaceinfo where businessno in(select to_char(accountid) from sadaccount where accountno='1111116');
 delete from saaagentcontract where acontractid=(select acontractid from saacontract where agentname='ui测试-中介车商004-1');

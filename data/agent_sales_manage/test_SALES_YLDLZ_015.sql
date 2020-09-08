@@ -9,7 +9,7 @@ delete from sainterfaceinfo where businessno in('32748460','1000000000028821');
 delete from scmssalesinfosyn where usercode='32748460';
 delete from sauuserrank where usercode='32748460';
 delete from sauuserrankhis where usercode='32748460';
-delete from sauusersyn where usercode='32748460';
+-- delete from sauusersyn where usercode='32748460';
 delete from saucontracthis where usercode='32748460';
 delete from prpdsellerno where SellerCode='32748460';
 
