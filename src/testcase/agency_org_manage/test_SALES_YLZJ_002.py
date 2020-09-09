@@ -42,7 +42,8 @@ class Test_SALES_YLZJ_002():
         self.MAOM.switch_max_window()
         self.ACR.assertEqual("判断页面标题", self.ACR.get_head_text(), "中介合同续签")
         self.ACR.click(self.ACR.get_element_xpath(self.ACR.renew_submit))
-        self.ACR.choose_ok_on_alert()
+        if self.ACR.alert_is_present():
+            self.ACR.choose_ok_on_alert()
         self.ACR.submit_interaction(self.ACR.submit_frame)
         text = self.ACR.get_text(self.ACR.get_element_xpath(self.ACR.save_success))
         self.ACR.assertResult("验证提交成功", "保存成功!" in text)

@@ -10,7 +10,7 @@ from src.utils.create_identity import IdNumber
 
 def data_reader(filename, decorator_type=DecoratorType.parametrize, ignore_heads=True):
     if not os.path.exists(filename):
-        filename = g.root_path + '/data/' + filename
+        filename = g.root_path + '/data/{}/{}'.format(g.config['DEFAULT']['datafile'], filename)  # + filename    #
     with open(filename, encoding='utf-8') as file:
         # csv.reader返回一个迭代器，因其惰性计算没法获取长度，使用next()获取下一个值
         table = csv.reader(file)
@@ -64,12 +64,12 @@ if __name__ == '__main__':
                        ignore_heads=False)
     # data = data_reader("agent_sales_manage/004_data.csv", DecoratorType.fixture)
     # print(data)
-    old_id = by_col_get_calue(data,"D:/env/pycharm/PycharmProjects/SalesE2ETest/data/agent_sales_manage/test_001.csv","idCard",1)
+    old_id = by_col_get_calue(data, "/data/default/agent_sales_manage/test_001.csv", "idCard", 1)
     random_sex = random.randint(0, 1)  # 随机生成男(1)或女(0)
     new_id = IdNumber.generate_id(random_sex)  # 随机生成身份证号
     # print(id)
     edit_data_dict = [("idCard",new_id),("old_id",old_id)]
-    data_edit(data,"D:/env/pycharm/PycharmProjects/SalesE2ETest/data/agent_sales_manage/test_001.csv",edit_data_dict)
+    data_edit(data, "/data/default/agent_sales_manage/test_001.csv", edit_data_dict)
     # aa = by_col_get_calue("D:/env/pycharm/PycharmProjects/SalesE2ETest/data/agent_sales_manage/test_001.csv",
     #                       "userName", 1)
     # print(aa)

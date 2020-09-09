@@ -1,7 +1,7 @@
 #  -*- coding:utf-8 -*-
 # @Time : 2020/8/14 1:47
 # @Author: fyl
-# @File : test_SALES_YLTD_003.py    团队出单权管理>>团队信息变更（变更团队重要信息）   待处理
+# @File : test_SALES_YLTD_003.py    团队出单权管理>>团队信息变更（变更团队重要信息）
 import sys
 
 import allure

@@ -1,7 +1,7 @@
 #  -*- coding:utf-8 -*-
 # @Time : 2020/8/3 10:39
 # @Author: fyl
-# @File : test_SALES_YLDLZ_009.py   代理制销售人员代码管理>>团队成员出单权赋予与变更（无效人员复效为团队成员）待测
+# @File : test_SALES_YLDLZ_009.py   代理制销售人员代码管理>>团队成员出单权赋予与变更（无效人员复效为团队成员）
 import allure
 import pytest
 

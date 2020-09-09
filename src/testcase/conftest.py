@@ -41,8 +41,8 @@ def restore_data():
     current = os.environ.get('PYTEST_CURRENT_TEST').split('/')
     test_dir = current[2]
     test_name = current[3].split('.')[0]
-    sql_path = g.root_path + '/data/' + test_dir + '/' + test_name + '.sql'
-    csv_path = g.root_path + '/data/' + test_dir + '/' + test_name + '.csv'
+    sql_path = g.root_path + '/data/' + g.config['DEFAULT']['datafile'] + '/' + test_dir + '/' + test_name + '.sql'
+    csv_path = g.root_path + '/data/' + g.config['DEFAULT']['datafile'] + '/' + test_dir + '/' + test_name + '.csv'
     g.db.test_name = test_name
 
     if os.path.exists(sql_path):
@@ -91,3 +91,13 @@ def get_sql(csv_path, sql_path):
         else:
             sql = f.read()
     return sql
+
+
+# def pytest_addoption(parser):
+#     parser.addoption(
+#         "--datafile", action="store", default="default", help="my option: default or haerbin"
+#     )
+
+# @pytest.fixture()
+# def cmdopt(request):
+#     g.dataFile = request.config.getoption("--datafile")
