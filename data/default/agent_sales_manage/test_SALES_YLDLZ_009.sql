@@ -4,7 +4,7 @@ delete from sadqualifyhis where usercode='83258605';
 delete from saucontracthis where usercode='83258605';
 delete from prpdsellernohis where SellerCode='83258605';
 delete from sauuserrankhis where usercode='83258605';
-delete from sauusersyn where usercode = '83258605';
+-- delete from sauusersyn where usercode = '83258605';
 delete from sainterfaceinfo where businessno=('83258605');
 
 /*合同信息表*/

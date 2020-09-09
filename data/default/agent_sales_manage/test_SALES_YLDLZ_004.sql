@@ -32,7 +32,7 @@ delete from sauuserhistory where usercode = '83258604';
 delete from saugroupjobhistory where usercode = '83258604';
 delete from sauuserrankhis where usercode = '83258604';
 delete from sainterfaceinfo where businessno in ('83258604','1000000001354681','1000000002300817');
-delete from sauusersyn where usercode = '83258604';
+-- delete from sauusersyn where usercode = '83258604';
 
 
 

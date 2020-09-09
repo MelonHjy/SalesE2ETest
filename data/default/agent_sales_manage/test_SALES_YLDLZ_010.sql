@@ -35,4 +35,4 @@ delete from saucontracthis  where usercode = '83258549';
 delete from prpdsellernohis where sellercode='83258549';
 delete from sauuserhistory where usercode = '83258549';
 delete from sauuserrankhis where usercode = '83258549';
-delete from sauusersyn where usercode = '83258549';
+-- delete from sauusersyn where usercode = '83258549';

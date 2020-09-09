@@ -39,7 +39,8 @@ INSERT INTO saugroupjob (groupjobid, groupid, pk_deptdoc, groupcode, groupname, 
 --step7 清空佣金系统营销员信息推送表
 delete from scmssalesinfosyn where usercode = '83258491';
 --step8 清空人员清分表数据
-delete from sauusersyn where usercode =  '83258491';
+
+-- delete from sauusersyn where usercode =  '83258491';
 --step9.删除主表信息sabpmmain
 delete from sabpmmain where businessno = '83258491';
 --step10.删除人员修改历史表数据

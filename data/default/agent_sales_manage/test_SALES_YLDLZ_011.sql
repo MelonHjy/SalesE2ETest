@@ -30,7 +30,7 @@ delete from prpdsellernohis where sellercode='83258580';
 delete from sauuserhistory where usercode = '83258580';
 delete from sauuserrankhis where usercode = '83258580';
 delete from sainterfaceinfo where businessno in ('83258580','1000000002297848','1000000001354639');
-delete from sauusersyn where usercode = '83258580';
+-- delete from sauusersyn where usercode = '83258580';
 
 
 -- SELECT * from sauuser where usercode = '83258580';
