@@ -9,5 +9,5 @@ if __name__ == '__main__':
     # pytest.main(['-s', 'src/testcase/group_issue_manage/test_01.PY'])
     # pytest.main(['-s', 'src/testcase/agent_sales_manage/test_SALES_YLDLZ_001.PY'])
     # pytest.main(['-s', 'src/testcase/agent_sales_manage/test_001.PY'])
-    # pytest.main(['-s', 'src/testcase/agen_org_manage/test_SALES_YLZJ_006.py'])
-    pytest.main(['-s'])
+    pytest.main(['-s', 'src/testcase/agency_org_manage/test_SALES_YLZJ_006.py'])
+    # pytest.main(['-s'])
