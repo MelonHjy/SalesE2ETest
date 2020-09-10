@@ -19,7 +19,7 @@ import jpype
 
 from config.global_var import g
 from src.utils.driver_util import get_config
-from src.utils.log import info
+from src.utils.log import info,debug,warning
 
 
 def get_conn():
@@ -40,11 +40,11 @@ def catch_socket_exception(func):
         try:
             return func(*args, **kwargs)
         except jpype.java.sql.SQLException as e:
-            info("出现SQLException异常，详细信息：%s，重新进行连接" % traceback.format_exc())
+            warning("出现SQLException异常，详细信息：%s，重新进行连接" % traceback.format_exc())
             get_conn()
             return func(*args, **kwargs)
         except Exception as e:
-            info("出现异常，详细信息：%s，重新进行连接" % traceback.format_exc())
+            warning("出现异常，详细信息：%s，重新进行连接" % traceback.format_exc())
             get_conn()
             raise e
 
@@ -71,7 +71,7 @@ class DBUtils:
 
     def set_conn(self, url, user, password):
         self.conn = jaydebeapi.connect('com.informix.jdbc.IfxDriver', url, [user, password], self.jar_path)
-        info('连接conn id：%s' % (id(self.conn)))
+        debug('连接conn id：%s' % (id(self.conn)))
         self.execute("SET LOCK MODE TO WAIT 30")
 
     def close_connection(self):
@@ -79,7 +79,7 @@ class DBUtils:
             info('%s关闭conn id：%s' % (self.test_name, id(self.conn)))
             self.conn.close()
         except BaseException as e:
-            info('关闭连接错误信息:%s' % e)
+            warning('关闭连接错误信息:%s' % e)
 
     @staticmethod
     def random_choice(results, num=1):
@@ -99,7 +99,7 @@ class DBUtils:
         :param limit: 只取limit前的数据，默认为__limit
         :return: 查询的结果
         '''
-        info('%s执行select语句conn id：%s' % (self.test_name, id(self.conn)))
+        debug('%s执行select语句conn id：%s' % (self.test_name, id(self.conn)))
         cur = self.conn.cursor()
         cur.execute(sql, args)
         results = cur.fetchmany(limit) if limit else cur.fetchall()  # fetchmany()获取最多指定数量的记录
@@ -114,7 +114,7 @@ class DBUtils:
         :param args:参数（数据类型为元组）  ('37010000','haha')
         :return: 影响的行数
         '''
-        info('%s执行execute语句conn id：%s' % (self.test_name, id(self.conn)))
+        debug('%s执行execute语句conn id：%s' % (self.test_name, id(self.conn)))
         cur = self.conn.cursor()
         if args:
             cur.execute(sql, args)
