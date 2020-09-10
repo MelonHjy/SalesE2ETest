@@ -10,7 +10,7 @@ from src.utils.create_identity import IdNumber
 
 def data_reader(filename, decorator_type=DecoratorType.parametrize, ignore_heads=True):
     if not os.path.exists(filename):
-        filename = g.root_path + '/data/{}/{}'.format(g.config['DEFAULT']['datafile'], filename)  # + filename    #
+        filename = '{}/data/{}/{}'.format(g.root_path, g.config['DEFAULT']['datafile'], filename)
     with open(filename, encoding='utf-8') as file:
         # csv.reader返回一个迭代器，因其惰性计算没法获取长度，使用next()获取下一个值
         table = csv.reader(file)
