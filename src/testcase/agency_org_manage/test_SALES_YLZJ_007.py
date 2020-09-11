@@ -18,7 +18,6 @@ class Test_SALES_YLZJ_007:
 
     data = csv_util.data_reader("agency_org_manage/test_SALES_YLZJ_007.csv")
 
-
     @allure.story("中介机构查询")
     @pytest.mark.usefixtures("login_jiangsu_p")
     @pytest.mark.parametrize("channel,contract_no", data)
@@ -33,6 +32,11 @@ class Test_SALES_YLZJ_007:
         self.MAOQ.click(self.MAOQ.get_element_xpath(self.MAOQ.query_btn))
         sleep(3)
         info("验证")
-        self.MAOQ.assertEqual("验证查询到的数据合同号是否一致", self.MAOQ.get_cell_text_by_head("合同编号", 0), contract_no)
+        text = self.MAOM.get_text(self.MAOM.get_element_xpath(self.MAOM.query_data))
+        if text.strip() == "无记录.":
+            self.MAOQ.assertResult("判断查询数据是否有数据", "加载中" in text.strip())
+        else:
+            self.MAOQ.assertEqual("验证查询到的数据合同号是否一致", self.MAOQ.get_cell_text_by_head("合同编号", 0), contract_no)
+
         get_screenshot("中介机构{}查询".format(channel))
         sleep(2)

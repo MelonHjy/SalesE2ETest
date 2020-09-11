@@ -22,10 +22,9 @@ data = csv_util.data_reader("agent_sales_manage/test_SALES_YLDLZ_001.csv")
 
 @allure.feature("代理制人员代码管理>>营销团队经理聘任与解聘(新增人员聘任为经理)-001")
 @pytest.mark.parametrize(
-    "userName, mobile, group, rolecode, nation, visage, culture, qualifytype, qualifyno,"
+    "userName, group, qualifytype, qualifyno,"
     "qualifystartdate, agentType, qualifytype1, qualifyno1, qualifystartdate1, contractstartdate0,"
-    "contractenddate0, ruleNo, cardtype, saDAccount_bankName, saDAccount_bankareaname,"
-    "bankName", data, scope='class')
+    "contractenddate0, ruleNo", data, scope='class')
 @pytest.mark.usefixtures("login_jiangsu_p_fun")
 class Test_YLDLZ_001():
     AM = AppointmentManager()
@@ -44,26 +43,25 @@ class Test_YLDLZ_001():
     @allure.story("新增人员聘任为经理--填写信息")
     @pytest.mark.dependency(name='test_001')
     # @pytest.mark.usefixtures("flash_idcard")
-    def test_001(self, userName, mobile, group, rolecode, nation, visage, culture, qualifytype, qualifyno,
-                 qualifystartdate, agentType, qualifytype1, qualifyno1, qualifystartdate1, contractstartdate0,
-                 contractenddate0, ruleNo, cardtype, saDAccount_bankName, saDAccount_bankareaname, bankName):
+    def test_001(self, userName, group, qualifytype, qualifyno, qualifystartdate, agentType, qualifytype1, qualifyno1,
+                 qualifystartdate1, contractstartdate0, contractenddate0, ruleNo):
         random_sex = random.randint(0, 1)  # 随机生成男(1)或女(0)
         idCard = IdNumber.generate_id(random_sex)  # 随机生成身份证号
         accountno = idCard[0:13]
-        info("身份证：{0}，银行账号：{1}".format(idCard,accountno))
+        info("身份证：{0}，银行账号：{1}".format(idCard, accountno))
         info("经营机构->销售人员->代理制销售人员代码管理->营销团队经理聘任与解聘")
         self.MOAS.into_page()
         self.MOAS.click_btn('营销团队经理聘任与解聘')
         info("营销团队经理聘任与解聘检查")
         self.AM.assertEqual("判断页面标题", self.AM.get_head_text(), "营销团队经理聘任")
         info("填入基本信息")
-        self.AM.user_tab_input(userName, idCard, mobile)
+        self.AM.user_tab_input(userName, idCard, "13000000000")
         self.AM.select_group(group)
         # self.AM.js_group(self.AM.group_code, self.AM.group_name, group, self.AM.group_code_hold, groupcodehold)
-        self.AM.select_rolecode(rolecode)
-        self.AM.select_nation(nation)
-        self.AM.select_visage(visage)
-        self.AM.select_culture(culture)
+        self.AM.select_rolecode("经理")
+        self.AM.select_nation("汉族")
+        self.AM.select_visage("中共党员")
+        self.AM.select_culture("研究生")
         info("检查填写身份证号码后，性别和出生日期是否自动填入")
         self.AM.select(self.AM.sex, self.AM.get_sex_by_idCard(idCard))
         # self.AM.assertEqual("验证出生日期是否与身份证匹配", self.AM.get_birthday(),
@@ -81,8 +79,8 @@ class Test_YLDLZ_001():
                                ruleNo)
         self.AM.js_group(self.AM.ruleNo, self.AM.saUContracts1.format('0'), ruleNo)
         info("填写账户信息（收款人账号,卡折标志,银行名称,银行区域名称,联行号）")
-        self.AM.input_account(accountno, cardtype, saDAccount_bankName, saDAccount_bankareaname,
-                              bankName)
+        self.AM.input_account(accountno, "折", "中国工商银行股份有限公司", "新疆维吾尔自治区_巴音郭楞蒙古自治州",
+                              "中国工商银行股份有限公司库尔勒人民东路支行")
         get_screenshot("合同信息")
         self.AM.switch_user_tab()
         self.AM.click(self.AM.wait_until_el_xpath(self.AM.save_commit1))
@@ -98,9 +96,8 @@ class Test_YLDLZ_001():
     @allure.story("新增人员聘任为经理--复核")
     # @pytest.mark.usefixtures("login_jiangsu_p_fun")
     @pytest.mark.dependency(name='test_002', depends=['test_001'])
-    def test_002(self, userName, mobile, group, rolecode, nation, visage, culture, qualifytype, qualifyno,
-                 qualifystartdate, agentType, qualifytype1, qualifyno1, qualifystartdate1, contractstartdate0,
-                 contractenddate0, ruleNo, cardtype, saDAccount_bankName, saDAccount_bankareaname, bankName):
+    def test_002(self, userName, group, qualifytype, qualifyno, qualifystartdate, agentType, qualifytype1, qualifyno1,
+                 qualifystartdate1, contractstartdate0, contractenddate0, ruleNo):
         # self.ASR.switch_to_default_content()
         info("综合管理->销售人员->代理制销售人员代码复核")
         self.ASR.into_page()
@@ -122,15 +119,13 @@ class Test_YLDLZ_001():
     @allure.story("新增人员聘任为经理--验证人员状态")
     # @pytest.mark.usefixtures("login_jiangsu_p_fun")
     @pytest.mark.dependency(name='test_003', depends=['test_002'])
-    def test_003(self, userName, mobile, group, rolecode, nation, visage, culture, qualifytype, qualifyno,
-                 qualifystartdate, agentType, qualifytype1, qualifyno1, qualifystartdate1, contractstartdate0,
-                 contractenddate0, ruleNo, cardtype, saDAccount_bankName, saDAccount_bankareaname, bankName):
+    def test_003(self, userName, group, qualifytype, qualifyno, qualifystartdate, agentType, qualifytype1, qualifyno1,
+                 qualifystartdate1, contractstartdate0, contractenddate0, ruleNo):
         # self.MOAS.switch_to_window()
         info("经营机构->销售人员->代理制销售人员代码管理")
         self.MOAS.into_page()
         info("查询人员代码：{}，未提交状态".format(Test_YLDLZ_001.msg["usercode"]))
         self.MOAS.query(Test_YLDLZ_001.msg["usercode"])
         self.MOAS.assertEqual("判断该人员状态为‘有效’", self.MOAS.get_cell_text_by_head("状态", 0), "有效")
-
         # get_screenshot("复核页")
         sleep(2)

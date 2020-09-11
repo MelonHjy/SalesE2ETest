@@ -52,7 +52,7 @@ def login_jiangsu_p_fun():
 
 
 def get_config_content():
-    g.config = get_config()
+    # g.config = get_config()
     url = g.config['DEFAULT']['url']
     browser = g.config['DEFAULT']['browser']
     g.driver = get_browser(browser)
