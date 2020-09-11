@@ -20,10 +20,9 @@ from src.utils.log import info
 data = csv_util.data_reader("agent_sales_manage/test_SALES_YLDLZ_007.csv")
 
 
-@pytest.mark.parametrize("username, mobile, group_com, nation, visage, culture,qualifytype, qualifyno,"
+@pytest.mark.parametrize("username, group_com,qualifytype, qualifyno,"
                          "qualifystartdate, agentType, qualifytype1, qualifyno1, qualifystartdate1, contractstartdate0,"
-                         "contractenddate0, ruleNo, cardtype, saDAccount_bankName, saDAccount_bankareaname,"
-                         "bankName", data, scope='class')
+                         "contractenddate0, ruleNo", data, scope='class')
 @allure.feature("代理制销售人员代码管理>>团队成员出单权赋予与变更（新增普通代理制成员）-007")
 @pytest.mark.usefixtures("login_jiangsu_p_fun")
 class Test_YLDLZ_007():
@@ -43,10 +42,8 @@ class Test_YLDLZ_007():
     @allure.story("新增普通代理制成员-填写信息")
     # @pytest.mark.usefixtures("login_jiangsu_p_fun","restore_data")
     @pytest.mark.dependency(name='test_001')
-    def test_001_base_msg(self, username, mobile, group_com, nation, visage, culture, qualifytype, qualifyno,
-                          qualifystartdate, agentType, qualifytype1, qualifyno1,
-                          qualifystartdate1, contractstartdate0, contractenddate0, ruleNo, cardtype,
-                          saDAccount_bankName, saDAccount_bankareaname, bankName):
+    def test_001_base_msg(self, username, group_com, qualifytype, qualifyno, qualifystartdate, agentType, qualifytype1,
+                          qualifyno1, qualifystartdate1, contractstartdate0, contractenddate0, ruleNo):
         random_sex = random.randint(0, 1)  # 随机生成男(1)或女(0)
         id_cards = IdNumber.generate_id(random_sex)  # 随机生成身份证号
         accountno = id_cards[0:13]
@@ -56,13 +53,13 @@ class Test_YLDLZ_007():
         info("团队成员出单权赋予与变更")
         self.MOAS.click_btn('团队成员出单权赋予与变更')
         self.GI.assertEqual("判断页面标题", self.GI.get_head_text(), "团队成员出单权赋予")
-        info("填入姓名:{0}->身份证号：{1}->手机号码：{2}".format(username, id_cards, mobile))
-        self.GI.user_tab_input(username, id_cards, mobile)
+        info("填入姓名:{0}->身份证号：{1}->手机号码：{2}".format(username, id_cards, "13999999999"))
+        self.GI.user_tab_input(username, id_cards, "13999999999")
         info("选择上级机构:32000000--中国人民财产保险股份有限公司江苏省分公司，归属机构:{0}".format(group_com))
         self.GI.select_org(self.GI.com_code, "32000000--中国人民财产保险股份有限公司江苏省分公司")
         self.GI.select_org(self.GI.group_code, group_com)
-        info("民族:{0}->政治面貌:{1}->学历:{2}".format(nation, visage, culture))
-        self.GI.select_base(nation, visage, culture)
+        info("民族:{0}->政治面貌:{1}->学历:{2}".format("汉族", "中共党员", "研究生"))
+        self.GI.select_base("汉族", "中共党员", "研究生")
         get_screenshot("基本信息")
         info("切换到合同信息tab")
         self.GI.switch_contract_tab()
@@ -76,9 +73,9 @@ class Test_YLDLZ_007():
                                                                              contractenddate0, ruleNo))
         self.GI.input_contract(qualifyno, qualifyno1, contractstartdate0, contractenddate0, ruleNo)
         self.GI.js_group(self.GI.ruleNo, self.GI.saUContracts1.format('0'), ruleNo)
-        info("收款人账号:{0}->卡折标志:{1}->银行名称：{2}->银行区域名称：{3}->联行号：{4}".format(accountno, cardtype, saDAccount_bankName,
-                                                                         saDAccount_bankareaname, bankName))
-        self.GI.input_account(accountno, cardtype, saDAccount_bankName, saDAccount_bankareaname, bankName)
+        info("收款人账号:{0}->卡折标志:{1}->银行名称：{2}->银行区域名称：{3}->联行号：{4}".format(accountno, "折", "中国工商银行股份有限公司",
+                                                                         "新疆维吾尔自治区_巴音郭楞蒙古自治州", "中国工商银行股份有限公司库尔勒人民东路支行"))
+        self.GI.input_account(accountno, "折", "中国工商银行股份有限公司", "新疆维吾尔自治区_巴音郭楞蒙古自治州", "中国工商银行股份有限公司库尔勒人民东路支行")
         get_screenshot("合同信息")
         info("切换到基本信息tab")
         self.GI.switch_user_tab()
@@ -97,10 +94,8 @@ class Test_YLDLZ_007():
     @allure.story("新增普通代理制成员-复核")
     @pytest.mark.dependency(name='test_002', depends=["test_001"])
     # @pytest.mark.usefixtures("login_jiangsu_p")
-    def test_002_issue_recheck(self, username, mobile, group_com, nation, visage, culture, qualifytype, qualifyno,
-                               qualifystartdate, agentType, qualifytype1, qualifyno1,
-                               qualifystartdate1, contractstartdate0, contractenddate0, ruleNo, cardtype,
-                               saDAccount_bankName, saDAccount_bankareaname, bankName):
+    def test_002_issue_recheck(self, username, group_com, qualifytype, qualifyno, qualifystartdate, agentType, qualifytype1,
+                          qualifyno1, qualifystartdate1, contractstartdate0, contractenddate0, ruleNo):
         # self.ASR.switch_to_default_content()
         info("综合管理->销售人员->代理制销售人员代码复核")
         self.ASR.into_page()
@@ -123,10 +118,8 @@ class Test_YLDLZ_007():
     @allure.story("新增普通代理制成员查询验证")
     @pytest.mark.dependency(name='test_003', depends=["test_001", "test_002"])
     # @pytest.mark.usefixtures("login_jiangsu_p")
-    def test_003(self, username, mobile, group_com, nation, visage, culture, qualifytype, qualifyno, qualifystartdate,
-                 agentType, qualifytype1, qualifyno1,
-                 qualifystartdate1, contractstartdate0, contractenddate0, ruleNo, cardtype,
-                 saDAccount_bankName, saDAccount_bankareaname, bankName):
+    def test_003(self, username, group_com, qualifytype, qualifyno, qualifystartdate, agentType, qualifytype1,
+                          qualifyno1, qualifystartdate1, contractstartdate0, contractenddate0, ruleNo):
         # self.MOAS.switch_to_window()
         info("经营机构->销售人员->代理制销售人员代码管理")
         self.MOAS.into_page()

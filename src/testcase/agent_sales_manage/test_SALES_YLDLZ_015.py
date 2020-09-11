@@ -19,7 +19,7 @@ data = csv_util.data_reader("agent_sales_manage/test_SALES_YLDLZ_015.csv")
 
 @allure.feature("团队成员出单权赋予与变更（人员转制-无效的合同制销售/合同制非销售转制为代理制人员)-（团队成员出单权赋予）-015")
 @pytest.mark.parametrize(
-    "id_cards,com_group,group,qualifytype,qualifyno,qualifystartdate,agentType,qualifytype1,qualifyno1,qualifystartdate1,contractstartdate0,contractenddate0,ruleNo,accountno,cardtype,saDAccount_bankName,saDAccount_bankareaname,bankName",
+    "id_cards,com_group,group,qualifytype,qualifyno,qualifystartdate,agentType,qualifytype1,qualifyno1,qualifystartdate1,contractstartdate0,contractenddate0,ruleNo",
     data, scope='class')
 class Test_YLDLZ_015():
     MOAS = ManagementOfAgentSalesmen()
@@ -34,8 +34,7 @@ class Test_YLDLZ_015():
     @pytest.mark.usefixtures("login_jiangsu_p_fun", "restore_data")
     @pytest.mark.dependency(name='test_001')
     def test_001(self, id_cards, com_group, group, qualifytype, qualifyno, qualifystartdate, agentType, qualifytype1,
-                 qualifyno1, qualifystartdate1, contractstartdate0, contractenddate0, ruleNo, accountno, cardtype,
-                 saDAccount_bankName, saDAccount_bankareaname, bankName):
+                 qualifyno1, qualifystartdate1, contractstartdate0, contractenddate0, ruleNo):
         info("经营机构->销售人员->代理制销售人员代码管理")
         self.MOAS.into_page()
         info("团队成员出单权赋予与变更")
@@ -67,9 +66,9 @@ class Test_YLDLZ_015():
                                                                              contractenddate0, ruleNo))
         self.GI.input_contract(qualifyno, qualifyno1, contractstartdate0, contractenddate0, ruleNo)
         self.GI.js_group(self.GI.ruleNo, self.GI.saUContracts1.format('0'), ruleNo)
-        info("收款人账号:{0}->卡折标志:{1}->银行名称：{2}->银行区域名称：{3}->联行号：{4}".format(accountno, cardtype, saDAccount_bankName,
-                                                                         saDAccount_bankareaname, bankName))
-        self.GI.input_account(accountno, cardtype, saDAccount_bankName, saDAccount_bankareaname, bankName)
+        info("收款人账号:{0}->卡折标志:{1}->银行名称：{2}->银行区域名称：{3}->联行号：{4}".format("1222223335299", "折", "中国工商银行股份有限公司",
+                                                                         "新疆维吾尔自治区_巴音郭楞蒙古自治州", "中国工商银行股份有限公司库尔勒人民东路支行"))
+        self.GI.input_account("1222223335299", "折", "中国工商银行股份有限公司", "新疆维吾尔自治区_巴音郭楞蒙古自治州", "中国工商银行股份有限公司库尔勒人民东路支行")
         get_screenshot("合同信息")
         info("切换到基本信息tab")
         self.GI.switch_user_tab()
@@ -86,8 +85,7 @@ class Test_YLDLZ_015():
     @pytest.mark.dependency(name='test_002', depends=['test_001'])
     @pytest.mark.usefixtures("login_jiangsu_p_fun")
     def test_002(self, id_cards, com_group, group, qualifytype, qualifyno, qualifystartdate, agentType, qualifytype1,
-                 qualifyno1, qualifystartdate1, contractstartdate0, contractenddate0, ruleNo, accountno, cardtype,
-                 saDAccount_bankName, saDAccount_bankareaname, bankName):
+                 qualifyno1, qualifystartdate1, contractstartdate0, contractenddate0, ruleNo):
         # self.MOAS.switch_to_default_content()
         info("综合管理->销售人员->代理制销售人员代码复核")
         self.ASR.into_page()
@@ -111,8 +109,7 @@ class Test_YLDLZ_015():
     @pytest.mark.dependency(name='test_003', depends=['test_001', 'test_002'])
     @pytest.mark.usefixtures("login_jiangsu_p_fun")
     def test_003(self, id_cards, com_group, group, qualifytype, qualifyno, qualifystartdate, agentType, qualifytype1,
-                 qualifyno1, qualifystartdate1, contractstartdate0, contractenddate0, ruleNo, accountno, cardtype,
-                 saDAccount_bankName, saDAccount_bankareaname, bankName):
+                 qualifyno1, qualifystartdate1, contractstartdate0, contractenddate0, ruleNo):
         # self.MOAS.switch_to_window()
         info("经营机构->销售人员->代理制销售人员代码管理")
         self.MOAS.into_page()
