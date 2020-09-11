@@ -41,24 +41,21 @@ def restore_data():
     current = os.environ.get('PYTEST_CURRENT_TEST').split('/')
     test_dir = current[2]
     test_name = current[3].split('.')[0]
-    sql_path = g.root_path + '/data/' + g.config['DEFAULT']['datafile'] + '/' + test_dir + '/' + test_name + '.sql'
-    csv_path = g.root_path + '/data/' + g.config['DEFAULT']['datafile'] + '/' + test_dir + '/' + test_name + '.csv'
+    sql_path = '{}/data/{}/{}/{}.sql'.format(g.root_path, g.config['DEFAULT']['datafile'], test_dir, test_name)
+    csv_path = '{}/data/{}/{}/{}.csv'.format(g.root_path, g.config['DEFAULT']['datafile'], test_dir, test_name)
     g.db.test_name = test_name
 
     if os.path.exists(sql_path):
         restore_log('CURRENT_TEST:%s/%s 正在准备数据' % (test_dir, test_name))
-        sql = get_sql(csv_path, sql_path)
-        data = g.db.execute(sql)
-        restore_log('CURRENT_TEST:%s/%s 准备数据成功' % (test_dir, test_name))
-        # success = True
-        # for sql in get_sql(csv_path, sql_path):
-        #     try:
-        #         data = g.db.execute(sql)
-        #     except Exception as e:
-        #         restore_log('CURRENT_TEST:%s/%s 准备数据失败。详细信息:%s' % (test_dir, test_name, e))
-        #         success = False
-        # if success:
-        #     restore_log('CURRENT_TEST:%s/%s 准备数据成功' % (test_dir, test_name))
+        # sql = get_sql(csv_path, sql_path)
+        # data = g.db.execute(sql)
+        # restore_log('CURRENT_TEST:%s/%s 准备数据成功' % (test_dir, test_name))
+        for sql in get_sql(csv_path, sql_path):
+            try:
+                data = g.db.execute(sql)
+            except Exception as e:
+                restore_log('CURRENT_TEST:%s/%s 准备数据失败。详细信息:%s \n sql:%s' % (test_dir, test_name, e, sql))
+        restore_log('CURRENT_TEST:%s/%s 准备数据完毕' % (test_dir, test_name))
     else:
         restore_log('CURRENT_TEST:%s/%s 没有准备数据sql脚本文件' % (test_dir, test_name))
     yield
@@ -70,27 +67,23 @@ def restore_log(log):
 
 
 def get_sql(csv_path, sql_path):
-    sql = ""
+    # sql = ""
     with open(sql_path, 'r', encoding='utf-8') as f:
         if os.path.exists(csv_path):
             datas = data_reader(csv_path, DecoratorType.fixture)
             for line in f:
-                if line.__contains__('{'):
-                    params = re.findall(r"{(.*?)}", line)
-                    for data in datas:
-                        format_data = ""
-                        for param in params:
-                            format_data += "{0}='{1}',".format(param, data[param])
-                        format_data = format_data[:-1]
-                        sql += eval("line.format({})".format(format_data))
-                        # yield eval("sql.format({})".format(format_data))
-                # elif not sql.startswith('--') and sql.strip():  # 如果此行不以--开头，或不为空行
-                #     yield sql
+                if not is_valid_sql(line):
+                    continue
+                elif line.__contains__('{'):
+                    yield format_sql(line, datas)
+                    # sql += eval("line.format({})".format(format_data))
                 else:
-                    sql += line
-        else:
-            sql = f.read()
-    return sql
+                    yield line
+    #             else:
+    #                 sql += line
+    #     else:
+    #         sql = f.read()
+    # return sql
 
 
 # def pytest_addoption(parser):
@@ -101,3 +94,19 @@ def get_sql(csv_path, sql_path):
 # @pytest.fixture()
 # def cmdopt(request):
 #     g.dataFile = request.config.getoption("--datafile")
+
+def is_valid_sql(sql):
+    sql = sql.strip().lower()
+    return sql and not (sql.startswith('--') or sql.startswith('/*')) and (sql.__contains__(
+        'insert') or sql.__contains__('delete') or sql.__contains__('update') or sql.__contains__(
+        'select'))
+
+
+def format_sql(sql, datas):
+    params = re.findall(r"{(.*?)}", sql)
+    for data in datas:
+        format_data = ""
+        for param in params:
+            format_data += "{0}='{1}',".format(param, data[param])
+        format_data = format_data[:-1]
+        return eval("sql.format({})".format(format_data))
